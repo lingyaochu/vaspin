@@ -366,7 +366,7 @@ class poscar:
 
         return distance_list
 
-    def find_neighbor(self, inputatom: int or float, dmax: float = 0.5) -> dict[str, str or float]:
+    def find_neighbor(self, inputatom: int | float, dmax: float = 0.5) -> dict[str, str | float]:
         """
         找出对应原子的最近邻原子
 
@@ -460,7 +460,7 @@ class poscar:
         return inputlist[idx[sorted_index]].tolist(), counts[sorted_index].tolist()
 
     @staticmethod
-    def pull_coor_frac(coor_frac: list or np.ndarray) -> list[float]:
+    def pull_coor_frac(coor_frac: list | np.ndarray) -> list[float]:
         """
         将超过第一晶胞范围的原子坐标转换回第一晶胞
 
@@ -486,7 +486,7 @@ class poscar:
         return coor_frac.tolist()
 
     @staticmethod
-    def find_rotation(arrow1: list or np.ndarray, arrow2: list or np.ndarray) -> np.ndarray:
+    def find_rotation(arrow1: list | np.ndarray, arrow2: list | np.ndarray) -> np.ndarray:
         """
         根据一般三维空间中的一般转动矩阵形式，找到将arrow1转到arrow2的旋转矩阵
 
