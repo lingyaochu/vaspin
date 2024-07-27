@@ -339,19 +339,27 @@ class poscar:
 
         return disp_random.tolist()
 
-    def distance(self, atom_index: int) -> np.ndarray:
+    def distance(self, atom_index: int = None, frac_coor: list[float] = None, detail: bool = False) -> np.ndarray | tuple[np.ndarray, tuple[np.int64, str, np.float64]]:
         """
-        计算结构中某个原子和其他原子之间的距离
+        计算结构中某个原子或者某个坐标和其他原子之间的距离, 并返回相应的信息
         Args:
             atom_index: 目标原子在结构中的序号
+            frac_coor: 某个具体的坐标
+            detail: 是否返回详细的距离信息
 
         Returns:
-            distance: 按照原子顺序的距离列表
+            distance_list: 按照原子顺序的距离列表
+            按照距离排序的原子序号，元素符号，距离
 
         """
 
         # 将目标原子摆在结构的中心
-        center_atom_coor_frac = np.array(self.coor_frac[atom_index-1])
+        assert atom_index is None and frac_coor is not None, "Please input the atom index or the fractional coordinate"
+        if atom_index is not None:
+            center_atom_coor_frac = np.array(self.coor_frac[atom_index-1])
+        else:
+            center_atom_coor_frac = np.array(frac_coor)
+
         cell_center = np.array([0.5, 0.5, 0.5])
         arrow_to_middle = cell_center - center_atom_coor_frac
 
@@ -364,9 +372,15 @@ class poscar:
         distance_arrow = self.frac_to_cate(self.lattice, coor_frac_moved - cell_center)
         distance_list = np.linalg.norm(distance_arrow, axis=1)
 
-        return distance_list
+        if not detail:
+            return distance_list
+        else:
+            sorted_index = np.argsort(distance_list)
+            distance_sorted = distance_list[sorted_index]
+            species_sorted = np.array(self.species)[sorted_index]
+            return distance_list, tuple(zip(sorted_index, species_sorted, distance_sorted))
 
-    def find_neighbor(self, inputatom: int or float, dmax: float = 0.5) -> dict[str, str or float]:
+    def find_neighbor(self, inputatom: int | float, dmax: float = 0.5) -> dict[str, str | float]:
         """
         找出对应原子的最近邻原子
 
@@ -460,7 +474,7 @@ class poscar:
         return inputlist[idx[sorted_index]].tolist(), counts[sorted_index].tolist()
 
     @staticmethod
-    def pull_coor_frac(coor_frac: list or np.ndarray) -> list[float]:
+    def pull_coor_frac(coor_frac: list | np.ndarray) -> list[float]:
         """
         将超过第一晶胞范围的原子坐标转换回第一晶胞
 
@@ -486,7 +500,7 @@ class poscar:
         return coor_frac.tolist()
 
     @staticmethod
-    def find_rotation(arrow1: list or np.ndarray, arrow2: list or np.ndarray) -> np.ndarray:
+    def find_rotation(arrow1: list | np.ndarray, arrow2: list | np.ndarray) -> np.ndarray:
         """
         根据一般三维空间中的一般转动矩阵形式，找到将arrow1转到arrow2的旋转矩阵
 
