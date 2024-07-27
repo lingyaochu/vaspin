@@ -7,6 +7,7 @@ Created on Fri Jun  2 14:52:04 2023
 from json import load
 
 import numpy as np
+import numpy.typing as npt
 
 
 class poscar:
@@ -48,28 +49,30 @@ class poscar:
                     'c': np.linalg.norm(self.lattice[2])}
         self.volume = self.volume(self.lattice)
 
-        self.species = []
-        for i in range(len(__data['species'])):
-            self.species += [__data['species'][i]] * __data['number'][i]
+        self.atom = np.array(__data['species'])
+        self.number = np.array(__data['number'])
 
-        self.atom = __data['species']
-        self.number = __data['number']
+        self.species = []
+        for i in range(len(self.atom)):
+            self.species += [self.atom[i]] * self.number[i]
+        self.species = np.array(self.species)
 
         self.mass = []
         append = self.mass.append
         for i in self.species:
             append(__massdict[i])
+        self.mass = np.array(self.mass)
 
         if __data['coortype'] == 'Direct':
-            self.coor_frac = __data['coordinate']
+            self.coor_frac = np.array(__data['coordinate'])
             self.coor_cate = self.frac_to_cate(self.lattice, self.coor_frac)
 
         elif __data['coortype'] == 'Cartesian':
-            self.coor_cate = __data['coordinate']
+            self.coor_cate = np.array(__data['coordinate'])
             self.coor_frac = self.cate_to_frac(self.lattice, self.coor_cate)
 
     @staticmethod
-    def lattice(coe: float, lat: list[list[float]]) -> list[list[float]]:
+    def lattice(coe: float, lat: list[list[float]]) -> npt.NDArray[np.float64]:
         """
         根据输入的coe和lat，计算晶格矢量
 
@@ -82,17 +85,17 @@ class poscar:
 
         Examples:
             >>> poscar.lattice(1.0, [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0, 0, 1.0]])
-            [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0, 0, 1.0]]
+            array([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0, 0, 1.0]])
 
             >>> poscar.lattice(2.0, [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0, 0, 1.0]])
-            [[2.0, 0.0, 0.0], [0.0, 2.0, 0.0], [0, 0, 2.0]]
+            array([[2.0, 0.0, 0.0], [0.0, 2.0, 0.0], [0, 0, 2.0]])
         """
         lat = np.array(lat)
 
-        return (coe * lat).tolist()
+        return coe * lat
 
     @staticmethod
-    def volume(lattice: list[list[float]]) -> float:
+    def volume(lattice: list[list[float]] | npt.NDArray) -> np.float64:
         """
         对输入的晶格矢量，通过行列式的方法计算晶胞体积
 
@@ -106,17 +109,17 @@ class poscar:
             >>> poscar.volume([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0, 0, 1.0]])
             1.0
 
-            >>> poscar.volume([[2.0, 0.0, 0.0], [0.0, 2.0, 0.0], [0, 0, 2.0]])
+            >>> poscar.volume(array([[2.0, 0.0, 0.0], [0.0, 2.0, 0.0], [0, 0, 2.0]]))
             8.0
 
         """
         lattice = np.array(lattice)
         vol = np.linalg.det(lattice)
 
-        return float(vol)
+        return vol
 
     @staticmethod
-    def frac_to_cate(lattice: list[list[float]], frac: list[list[float]]) -> list[list[float]]:
+    def frac_to_cate(lattice: npt.NDArray, frac: npt.NDArray) -> npt.NDArray[np.float64]:
         """
         将直接坐标转化成笛卡尔坐标
 
@@ -128,20 +131,18 @@ class poscar:
             原子的笛卡尔坐标
 
         Examples:
-            >>> _lattice = [[10,0,0],[0,10,0],[0,0,10]]
-            >>> _frac = [[0.5,0.5,0.5],[0.1,0.1,0.1]]
+            >>> _lattice = np.array([[10,0,0],[0,10,0],[0,0,10]])
+            >>> _frac = np.array([[0.5,0.5,0.5],[0.1,0.1,0.1]])
             >>> poscar.frac_to_cate(_lattice, _frac)
-            [[5.0, 5.0, 5.0], [1.0, 1.0, 1.0]]
+            array([[5.0, 5.0, 5.0], [1.0, 1.0, 1.0]])
 
         """
-        lattice = np.array(lattice).reshape(3, 3)
-        frac = np.array(frac).reshape(-1, 3)
         cate = frac @ lattice
 
-        return cate.tolist()
+        return cate
 
     @staticmethod
-    def cate_to_frac(lattice: list[list[float]], cate: list[list[float]]) -> list[list[float]]:
+    def cate_to_frac(lattice: npt.NDArray, cate: npt.NDArray) -> npt.NDArray[np.float64]:
         """
         将笛卡尔坐标转化成直接坐标
 
@@ -153,21 +154,18 @@ class poscar:
             原子的分数坐标
 
         Examples:
-            >>> _lattice = [[10,0,0],[0,10,0],[0,0,10]]
-            >>> _cate = [[5.0, 5.0, 5.0], [1.0, 1.0, 1.0]]
+            >>> _lattice = np.array([[10,0,0],[0,10,0],[0,0,10]])
+            >>> _cate = np.array([[5.0, 5.0, 5.0], [1.0, 1.0, 1.0]])
             >>> poscar.cate_to_frac(_lattice, _cate)
-            [[0.5, 0.5, 0.5], [0.1, 0.1, 0.1]]
+            array([[0.5, 0.5, 0.5], [0.1, 0.1, 0.1]])
 
         """
-        lattice = np.array(lattice).reshape(3, 3)
-        cate = np.array(cate).reshape(-1, 3)
-
         frac = cate @ np.linalg.inv(lattice)
 
-        return frac.tolist()
+        return frac
 
     @staticmethod
-    def _lattice_to_str(lattice: list[list[float]]) -> str:
+    def _lattice_to_str(lattice: npt.NDArray) -> str:
         """
         将晶格矢量转化成字符串
 
@@ -178,7 +176,7 @@ class poscar:
             转换成字符串形式的晶格矢量
 
         Examples:
-            >>> _lattice = [[10,0,0],[0,10,0],[0,0,10]]
+            >>> _lattice = np.array([[10,0,0],[0,10,0],[0,0,10]])
             >>> poscar._lattice_to_str(_lattice)
             '   10.0000000000000000    0.0000000000000000    0.0000000000000000
                0.0000000000000000   10.0000000000000000    0.0000000000000000
@@ -195,7 +193,7 @@ class poscar:
         return fullstr
 
     @staticmethod
-    def _atoms_and_numbers(species: list[str]) -> tuple[list[str], list[int]]:
+    def _atoms_and_numbers(species: npt.NDArray[np.str_]) -> tuple[list[str], list[int]]:
 
         """
         将原子种类转换成可以写入POSCAR的格式
@@ -208,7 +206,7 @@ class poscar:
             numbers: 元素数量
 
         Examples:
-            >>> _species = ['Ga', 'Ga', 'Ga', 'O', 'O', 'O']
+            >>> _species = np.array(['Ga', 'Ga', 'Ga', 'O', 'O', 'O'])
             >>> poscar._atoms_and_numbers(_species)
             (['Ga', 'O'], [3, 3])
         """
@@ -249,7 +247,7 @@ class poscar:
         return fullstr
 
     @staticmethod
-    def _coordinate_to_str(coordinate: list[list[float]]) -> str:
+    def _coordinate_to_str(coordinate: npt.NDArray) -> str:
         """
         将坐标转换成字符串形式
 
@@ -260,7 +258,7 @@ class poscar:
             字符串形式的原子坐标
 
         Examples:
-            >>> _coordinate = [[0.5, 0.5, 0.5], [0.1, 0.1, 0.1]]
+            >>> _coordinate = np.array([[0.5, 0.5, 0.5], [0.1, 0.1, 0.1]])
             >>> poscar._coordinate_to_str(_coordinate)
             '   0.5000000000000000    0.5000000000000000    0.5000000000000000
                0.1000000000000000    0.1000000000000000    0.1000000000000000'
@@ -319,7 +317,7 @@ class poscar:
 
         return None
 
-    def random_disp(self, magnitude: float = 0.1) -> list[list[float]]:
+    def random_disp(self, magnitude: float = 0.1) -> npt.NDArray[np.float64]:
         """
         对结构中的原子施加随机扰动
 
@@ -335,11 +333,11 @@ class poscar:
         """
         magnitude_one_direction = magnitude / np.sqrt(3)
 
-        disp_random = magnitude_one_direction * np.random.random(np.array(self.coor_cate).shape)
+        disp_random = magnitude_one_direction * np.random.random(self.coor_cate.shape)
 
-        return disp_random.tolist()
+        return disp_random
 
-    def distance(self, atom_index: int = None, frac_coor: list[float] = None, detail: bool = False) -> np.ndarray | tuple[np.ndarray, tuple[np.int64, str, np.float64]]:
+    def distance(self, atom_index: int = None, frac_coor: npt.NDArray | list[float] = None, detail: bool = False) -> npt.NDArray | tuple[npt.NDArray, tuple[np.int64, str, np.float64]]:
         """
         计算结构中某个原子或者某个坐标和其他原子之间的距离, 并返回相应的信息
         Args:
@@ -354,9 +352,8 @@ class poscar:
         """
 
         # 将目标原子摆在结构的中心
-        assert atom_index is None and frac_coor is not None, "Please input the atom index or the fractional coordinate"
         if atom_index is not None:
-            center_atom_coor_frac = np.array(self.coor_frac[atom_index-1])
+            center_atom_coor_frac = self.coor_frac[atom_index-1]
         else:
             center_atom_coor_frac = np.array(frac_coor)
 
@@ -364,7 +361,7 @@ class poscar:
         arrow_to_middle = cell_center - center_atom_coor_frac
 
         # 移动所有原子，保证目标原子摆在中心
-        coor_frac_moved = np.array(self.coor_frac) + arrow_to_middle
+        coor_frac_moved = self.coor_frac + arrow_to_middle
         for i in range(coor_frac_moved.shape[0]):
             coor_frac_moved[i] = self.pull_coor_frac(coor_frac_moved[i])
 
@@ -377,7 +374,7 @@ class poscar:
         else:
             sorted_index = np.argsort(distance_list)
             distance_sorted = distance_list[sorted_index]
-            species_sorted = np.array(self.species)[sorted_index]
+            species_sorted = self.species[sorted_index]
             return distance_list, tuple(zip(sorted_index, species_sorted, distance_sorted))
 
     def find_neighbor(self, inputatom: int | float, dmax: float = 0.5) -> dict[str, str | float]:
@@ -410,10 +407,11 @@ class poscar:
         # 首先把中心原子移动到胞的中心
         center_atom_coor_frac = self.coor_frac[atomnumber]
         center_coor_frac = [0.5, 0.5, 0.5]
-        disp_frac = np.array(center_coor_frac) - np.array(center_atom_coor_frac)
+        disp_frac = np.array(center_coor_frac) - center_atom_coor_frac
         all_disped_frac = []
         for i in range(len(self.species)):
-            all_disped_frac.append(self.pull_coor_frac(np.array(self.coor_frac[i]) + disp_frac))
+            all_disped_frac.append(self.pull_coor_frac(self.coor_frac[i] + disp_frac))
+        all_disped_frac = np.array(all_disped_frac)
 
         all_disped_cate = self.frac_to_cate(self.lattice, all_disped_frac)
 
@@ -421,7 +419,7 @@ class poscar:
             if i == atomnumber:
                 continue
             else:
-                distance[i] = np.linalg.norm(np.array(all_disped_cate[i]) - np.array(all_disped_cate[atomnumber]))
+                distance[i] = np.linalg.norm(all_disped_cate[i] - all_disped_cate[atomnumber])
         min_distance = min(list(distance.values()))
         max_distance = min(list(distance.values())) + dmax
 
@@ -433,13 +431,13 @@ class poscar:
         # 将中心原子添加到得到的最近邻原子列表中
         neighbor_index.append(atomnumber)
 
-        neighbor_species = np.array(self.species)[neighbor_index].tolist()
-        neighbor_coor_frac = np.array(self.coor_frac)[neighbor_index].tolist()
-        neighbor_disped_frac = np.array(all_disped_frac)[neighbor_index].tolist()
+        neighbor_species = self.species[neighbor_index]
+        neighbor_coor_frac = self.coor_frac[neighbor_index]
+        neighbor_disped_frac = all_disped_frac[neighbor_index]
 
         neighbor_origin_frac = []
         for i in range(len(neighbor_coor_frac)):
-            neighbor_origin_frac.append(np.array(neighbor_coor_frac[i]) - np.array(neighbor_coor_frac[-1]).tolist())
+            neighbor_origin_frac.append(neighbor_coor_frac[i] - neighbor_coor_frac[-1])
 
         results = {"species": neighbor_species,
                    "coor_frac": neighbor_coor_frac,
@@ -452,7 +450,7 @@ class poscar:
         return results
 
     @staticmethod
-    def _unique_with_order_and_counts(inputlist):
+    def _unique_with_order_and_counts(inputlist: list | npt.NDArray) -> tuple[list, list]:
         """
         在顺序不变的情况下，返回列表中的唯一值，以及每个唯一值出现的次数。和np.unique()相比，这个函数可以保证顺序不变
 
@@ -474,7 +472,7 @@ class poscar:
         return inputlist[idx[sorted_index]].tolist(), counts[sorted_index].tolist()
 
     @staticmethod
-    def pull_coor_frac(coor_frac: list | np.ndarray) -> list[float]:
+    def pull_coor_frac(coor_frac: list[float] | npt.NDArray) -> npt.NDArray[np.float64]:
         """
         将超过第一晶胞范围的原子坐标转换回第一晶胞
 
@@ -497,10 +495,10 @@ class poscar:
         coor_frac = np.array(coor_frac)
         coor_frac = coor_frac - np.floor(coor_frac)
 
-        return coor_frac.tolist()
+        return coor_frac
 
     @staticmethod
-    def find_rotation(arrow1: list | np.ndarray, arrow2: list | np.ndarray) -> np.ndarray:
+    def find_rotation(arrow1: list[float] | npt.NDArray, arrow2: list[float] | npt.NDArray) -> npt.NDArray[np.float64]:
         """
         根据一般三维空间中的一般转动矩阵形式，找到将arrow1转到arrow2的旋转矩阵
 
@@ -538,7 +536,7 @@ class poscar:
 
         return _matrix
 
-    def lattice_rotation(self, matrix_rot: np.ndarray):
+    def lattice_rotation(self, matrix_rot: npt.NDArray):
         """
         转动晶格矢量
 
@@ -548,9 +546,9 @@ class poscar:
         Returns:
             旋转后的晶格矢量构成的矩阵
         """
-        lattice = np.array(self.lattice).reshape(3, 3)
-        matrix_rot = np.array(matrix_rot).reshape(3, 3)
+        lattice = self.lattice
+        matrix_rot = matrix_rot.reshape(3, 3)
 
         lattice_rotated = lattice @ matrix_rot.T
 
-        return lattice_rotated.tolist()
+        return lattice_rotated
