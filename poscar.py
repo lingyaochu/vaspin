@@ -65,11 +65,11 @@ class poscar:
 
         if __data['coortype'] == 'Direct':
             self.coor_frac = np.array(__data['coordinate'])
-            self.coor_cate = self.frac_to_cate(self.lattice, self.coor_frac)
+            self.coor_cate = self.frac_to_cate(self.coor_frac)
 
         elif __data['coortype'] == 'Cartesian':
             self.coor_cate = np.array(__data['coordinate'])
-            self.coor_frac = self.cate_to_frac(self.lattice, self.coor_cate)
+            self.coor_frac = self.cate_to_frac(self.coor_cate)
 
     @staticmethod
     def lattice(coe: float, lat: list[list[float]]) -> npt.NDArray[np.float64]:
@@ -118,14 +118,13 @@ class poscar:
 
         return vol
 
-    @staticmethod
-    def frac_to_cate(lattice: npt.NDArray, frac: npt.NDArray) -> npt.NDArray[np.float64]:
+    def frac_to_cate(self, frac: npt.NDArray, lattice: npt.NDArray = np.array([])) -> npt.NDArray[np.float64]:
         """
         将直接坐标转化成笛卡尔坐标
 
         Args:
-            lattice: 晶格矢量
             frac: 原子的分数坐标
+            lattice: 晶格矢量
 
         Returns:
             原子的笛卡尔坐标
@@ -137,18 +136,21 @@ class poscar:
             array([[5.0, 5.0, 5.0], [1.0, 1.0, 1.0]])
 
         """
+        if len(lattice) == 0:
+            lattice = self.lattice
+        else:
+            lattice = np.array(lattice)
         cate = frac @ lattice
 
         return cate
 
-    @staticmethod
-    def cate_to_frac(lattice: npt.NDArray, cate: npt.NDArray) -> npt.NDArray[np.float64]:
+    def cate_to_frac(self, cate: npt.NDArray, lattice: npt.NDArray = np.array([])) -> npt.NDArray[np.float64]:
         """
         将笛卡尔坐标转化成直接坐标
 
         Args:
-            lattice: 放缩后的晶格矢量
             cate: 原子的笛卡尔坐标
+            lattice: 放缩后的晶格矢量
 
         Returns:
             原子的分数坐标
@@ -156,10 +158,14 @@ class poscar:
         Examples:
             >>> _lattice = np.array([[10,0,0],[0,10,0],[0,0,10]])
             >>> _cate = np.array([[5.0, 5.0, 5.0], [1.0, 1.0, 1.0]])
-            >>> poscar.cate_to_frac(_lattice, _cate)
+            >>> poscar.cate_to_frac(_cate, _lattice)
             array([[0.5, 0.5, 0.5], [0.1, 0.1, 0.1]])
 
         """
+        if len(lattice) == 0:
+            lattice = self.lattice
+        else:
+            lattice = np.array(lattice)
         frac = cate @ np.linalg.inv(lattice)
 
         return frac
