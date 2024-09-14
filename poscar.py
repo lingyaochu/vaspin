@@ -5,9 +5,28 @@ Created on Fri Jun  2 14:52:04 2023
 @author: Administrator
 """
 from json import load
+import os
 
 import numpy as np
 import numpy.typing as npt
+
+
+def clean(target_dir: str) -> None:
+    """
+    若targetdir不存在，那么创建它
+
+    Args:
+        target_dir: 目标文件夹的路径
+
+    Returns:
+        None
+    """
+    if os.path.exists(target_dir):
+        pass
+    else:
+        os.makedirs(target_dir)
+
+    return None
 
 
 class poscar:
@@ -313,6 +332,7 @@ class poscar:
         lattice_str = self._lattice_to_str(lattice)
         coor_str = self._coordinate_to_str(coor_frac)
         species_str = self._specie_to_str(species)
+        clean(directory)
         with open(directory + f"/{name}", "w") as f:
             f.write(comment + "\n")
             f.write(" 1.0\n")
