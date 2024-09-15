@@ -73,7 +73,7 @@ def write_json():
 def get_lattice():
     write_json()
 
-    from poscar import poscar
+    from vaspin import poscar
     pos = poscar(args.directory + "/pos.json")
     a = '{:.7f}'.format(pos.abc['a'])
     b = '{:.7f}'.format(pos.abc['b'])
