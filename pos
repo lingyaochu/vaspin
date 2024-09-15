@@ -1,11 +1,18 @@
-#!/home/ckduangroup/zhaoxin01/miniconda3/envs/xin/bin/python
+#!/usr/bin/python3
 #this script is to get information from poscar
 import re
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-d","--directory",default=".",
+                    help="the directory of the POSCAR file")
+parser.add_argument('-j', '--job', default='json', choices=["json","lattice"],help="the job need to be done")
+args = parser.parse_args()
 
 
 def write_json():
     #打开poscar读取
-    with open("POSCAR",'r') as f:
+    with open(args.directory + "/POSCAR",'r') as f:
         f.readline()
         data_str = "{\n"
         coe_lattice = f.readline().strip()
@@ -58,7 +65,7 @@ def write_json():
         data_str = data_str + "\"coordinate\": \n" + coor_str + '}' 
 
 
-    with open("pos.json",'w') as f:
+    with open(args.directory + "/pos.json",'w') as f:
         f.writelines(data_str)
 
     return None
@@ -67,30 +74,19 @@ def get_lattice():
     write_json()
 
     from poscar import poscar
-    pos = poscar("pos.json")
+    pos = poscar(args.directory + "/pos.json")
     a = '{:.7f}'.format(pos.abc['a'])
     b = '{:.7f}'.format(pos.abc['b'])
     c = '{:.7f}'.format(pos.abc['c'])
     print(a,b,c)
 
-    
 
-
-
-def main():
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-j', '--job', default='json', choices=["json","lattice"],help="the job need to be done")
-
-    operation = {
-        "json": write_json,
-        "lattice": get_lattice
-    }
-
-    args = parser.parse_args()
-    job = args.job
-    if job in operation:
-        operation[job]()
-
-main()
+operation = {
+    "json": write_json,
+    "lattice": get_lattice
+}
+if args.job in operation:
+    operation[args.job]()
+else:
+    print("The job is not supported")
+    exit(1)
