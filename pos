@@ -6,7 +6,8 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("-d","--directory",default=".",
                     help="the directory of the POSCAR file")
-parser.add_argument('-j', '--job', default='json', choices=["json","lattice"],help="the job need to be done")
+parser.add_argument('-j', '--job', default='json', choices=["json","lattice","disp"],help="the job need to be done")
+parser.add_argument('-l', '--length', default=0.0, type=float, help="the length of random displacement, only for job=distort")
 args = parser.parse_args()
 
 
@@ -81,9 +82,21 @@ def get_lattice():
     print(a,b,c)
 
 
+def pos_disp(length=args.length):
+    """
+    Randomly distort the structure by length
+    """
+    write_json()
+    from vaspin import poscar
+    pos = poscar(args.directory + "/pos.json")
+    cate = pos.coor_cate + pos.random_disp(length)
+    pos.write_poscar(coor_frac=pos.cate_to_frac(cate), directory=args.directory, name="POSCAR_disp")
+
+
 operation = {
     "json": write_json,
-    "lattice": get_lattice
+    "lattice": get_lattice,
+    "disp": pos_disp
 }
 if args.job in operation:
     operation[args.job]()
