@@ -392,7 +392,7 @@ class poscar:
             coor_frac_moved[i] = self.pull_coor_frac(coor_frac_moved[i])
 
         # 计算距离
-        distance_arrow = self.frac_to_cate(self.lattice, coor_frac_moved - cell_center)
+        distance_arrow = self.frac_to_cate(coor_frac_moved - cell_center)
         distance_list = np.linalg.norm(distance_arrow, axis=1)
 
         if not detail:
