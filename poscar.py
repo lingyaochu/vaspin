@@ -4,8 +4,9 @@ Created on Fri Jun  2 14:52:04 2023
 
 @author: Administrator
 """
-from json import load
+from json import load,loads
 import os
+import re
 
 import numpy as np
 import numpy.typing as npt
@@ -58,8 +59,11 @@ class poscar:
             'Rf': 267.122, 'Db': 268.126, 'Sg': 269.129, 'Bh': 274.144, 'Hs': 277.152, 'Mt': 278, 'others': 281
         }
 
-        with open(posfile, 'r') as f:
-            __data = load(f)
+        try:
+            with open(posfile, 'r') as f:
+                __data = load(f)
+        except:
+            __data = loads(poscar.poscar_to_json(posfile))
 
         self.lattice = self.lattice(__data['coe'], __data['lattice'])
 
@@ -346,6 +350,65 @@ class poscar:
             f.write(coor_str)
 
         return None
+    
+    @staticmethod
+    def poscar_to_json(filepath: str) -> str:
+        """
+        将POSCAR读取成json格式的字符串
+        """
+        with open(filepath,'r') as f:
+            f.readline()
+            data_str = "{\n"
+            coe_lattice = f.readline().strip()
+            
+            data_str = data_str + "\"coe\": " + coe_lattice + ",\n"
+            data_str = data_str + "\"lattice\": \n"
+            
+            lattice_a = re.split(r'\s{1,}',f.readline().strip())
+            lattice_b = re.split(r'\s{1,}',f.readline().strip())
+            lattice_c = re.split(r'\s{1,}',f.readline().strip())
+            
+            data_str = data_str + "[[" + lattice_a[0] + "," + lattice_a[1] + "," + lattice_a[2] + "],\n"
+            data_str = data_str + " [" + lattice_b[0] + "," + lattice_b[1] + "," + lattice_b[2] + "],\n"
+            data_str = data_str + " [" + lattice_c[0] + "," + lattice_c[1] + "," + lattice_c[2] + "]],\n"
+            
+            # for i in range(3):
+            #     lattice_a[i] = float(lattice_a[i])
+            #     lattice_b[i] = float(lattice_b[i])
+            #     lattice_c[i] = float(lattice_c[i])
+                
+            atom_type = re.split(r'\s{1,}',f.readline().strip())
+            for i in range(len(atom_type)):
+                # 为了适配vasp6.4版本之后的POSCAR
+                atom_type[i] = re.split(r'/', atom_type[i])[0]
+
+            atom_numb = re.split(r'\s{1,}',f.readline().strip())
+            atom_numb_str = "\"number\": " + "["
+            data_str = data_str + "\"species\": ["
+            atoms = 0
+            for i in range(len(atom_numb)):
+                data_str = data_str + "\"" + atom_type[i] + "\"" + ","
+                atom_numb_str = atom_numb_str + atom_numb[i] + ","
+                atom_numb[i] = int(atom_numb[i])
+                atoms = atoms + atom_numb[i]
+            
+            data_str = data_str.rstrip(',')
+            data_str = data_str + "],\n"
+            atom_numb_str = atom_numb_str.rstrip(',') + "],"
+            data_str = data_str + atom_numb_str + "\n"
+            
+            type_coor = f.readline().strip()
+            data_str = data_str + "\"coortype\": " + "\""+type_coor+"\",\n"
+            coor_str = "["
+            for i in range(atoms):
+                coor_x, coor_y, coor_z = re.split(r'\s{1,}',f.readline().strip())
+                coor_str = coor_str + "[" + coor_x + "," + coor_y + "," + coor_z + "],\n"
+            
+            coor_str = coor_str.rsplit('\n',1)[0].rstrip(',') + "]\n"
+            
+            data_str = data_str + "\"coordinate\": \n" + coor_str + '}'
+        return data_str
+
 
     def random_disp(self, magnitude: float = 0.1) -> npt.NDArray[np.float64]:
         """
