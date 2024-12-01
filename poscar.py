@@ -329,6 +329,10 @@ class poscar:
         if species is None:
             species = self.species
 
+        sort = np.argsort(species)
+        coor_frac = coor_frac[sort]
+        species = species[sort]
+
         lattice_str = self._lattice_to_str(lattice)
         coor_str = self._coordinate_to_str(coor_frac)
         species_str = self._specie_to_str(species)
@@ -402,7 +406,27 @@ class poscar:
             distance_sorted = distance_list[sorted_index]
             species_sorted = self.species[sorted_index]
             return distance_list, tuple(zip(sorted_index, species_sorted, distance_sorted))
+    
+    def find_local(self, atom_index: int = None, frac_coor: npt.NDArray | list[float] = None, dmax: float = 0.2) -> list[int]:
+        """
+        找出对应原子为中心，限定半径下的局域结构
 
+        Args:
+            atom_index: 中心原子的序号
+            frac_coor: 中心原子的分数坐标
+            dmax: 搜索半径，默认为0.2
+        
+        Returns:
+            局域结构的原子序号列表
+        """
+        distance_tuple = self.distance(atom_index, frac_coor, detail=True)[1]
+        local_stru_index = []
+        for i in distance_tuple:
+            if i[2] <= dmax:
+                local_stru_index.append(i[0])
+        
+        return local_stru_index
+    
     def find_neighbor(self, inputatom: int | float, dmax: float = 0.5) -> dict[str, str | float]:
         """
         找出对应原子的最近邻原子
