@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jun  2 14:52:04 2023
-
-@author: Administrator
-"""
 from json import load,loads
 import os
 import re
@@ -160,7 +154,7 @@ class poscar:
 
         """
         if len(lattice) == 0:
-            lattice = self.lattice
+            lattice = self.lattice.copy()
         else:
             lattice = np.array(lattice)
         cate = frac @ lattice
@@ -186,7 +180,7 @@ class poscar:
 
         """
         if len(lattice) == 0:
-            lattice = self.lattice
+            lattice = self.lattice.copy()
         else:
             lattice = np.array(lattice)
         frac = cate @ np.linalg.inv(lattice)
@@ -262,8 +256,8 @@ class poscar:
 
         """
         if species is None:
-            atoms = self.atom
-            numbers = self.number
+            atoms = self.atom.copy()
+            numbers = self.number.copy()
         else:
             atoms, numbers = self._atoms_and_numbers(species)
         fullstr = ""
@@ -325,13 +319,13 @@ class poscar:
 
         """
         if lattice is None:
-            lattice = self.lattice
+            lattice = self.lattice.copy()
 
         if coor_frac is None:
-            coor_frac = self.coor_frac
+            coor_frac = self.coor_frac.copy()
 
         if species is None:
-            species = self.species
+            species = self.species.copy()
 
         sort = np.argsort(species)
         coor_frac = coor_frac[sort]
@@ -446,7 +440,7 @@ class poscar:
 
         # 将目标原子摆在结构的中心
         if atom_index is not None:
-            center_atom_coor_frac = self.coor_frac[atom_index-1]
+            center_atom_coor_frac = self.coor_frac[atom_index-1].copy()
         else:
             center_atom_coor_frac = np.array(frac_coor)
 
@@ -518,8 +512,8 @@ class poscar:
         distance = {}
 
         # 首先把中心原子移动到胞的中心
-        center_atom_coor_frac = self.coor_frac[atomnumber]
-        center_coor_frac = [0.5, 0.5, 0.5]
+        center_atom_coor_frac = self.coor_frac[atomnumber].copy()
+        center_coor_frac = np.array([0.5, 0.5, 0.5])
         disp_frac = np.array(center_coor_frac) - center_atom_coor_frac
         all_disped_frac = []
         for i in range(len(self.species)):
@@ -633,7 +627,7 @@ class poscar:
         if rotation_axis[2] < 0:
             rotation_axis = -rotation_axis
             theta = -theta
-        x, y, z = rotation_axis
+        x, y, z = rotation_axis.copy()
 
         # 有转轴和转角，我们可以自行构造旋转矩阵
         _matrix = np.zeros((3, 3))
@@ -659,9 +653,10 @@ class poscar:
         Returns:
             旋转后的晶格矢量构成的矩阵
         """
-        lattice = self.lattice
+        lattice = self.lattice.copy()
         matrix_rot = matrix_rot.reshape(3, 3)
 
         lattice_rotated = lattice @ matrix_rot.T
 
         return lattice_rotated
+    
