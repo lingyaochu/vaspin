@@ -327,7 +327,7 @@ class poscar:
         if species is None:
             species = self.species.copy()
 
-        sort = np.argsort(species)
+        sort = np.argsort(species,kind='stable')
         coor_frac = coor_frac[sort]
         species = species[sort]
 
@@ -459,7 +459,7 @@ class poscar:
         if not detail:
             return distance_list
         else:
-            sorted_index = np.argsort(distance_list)
+            sorted_index = np.argsort(distance_list,kind='stable')
             distance_sorted = distance_list[sorted_index]
             species_sorted = self.species[sorted_index]
             return distance_list, tuple(zip(sorted_index, species_sorted, distance_sorted))
