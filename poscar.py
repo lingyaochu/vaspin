@@ -342,7 +342,8 @@ class poscar:
             f.write(species_str + "\n")
             f.write("Direct" + "\n")
             f.write(coor_str)
-
+        if not np.array_equal(self.species,species):
+            print("Warning: The order of the elements in the POSCAR file may be changed.")
         return None
     
     @staticmethod
