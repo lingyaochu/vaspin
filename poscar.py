@@ -405,12 +405,13 @@ class poscar:
         return data_str
 
 
-    def random_disp(self, magnitude: float = 0.1) -> npt.NDArray[np.float64]:
+    def random_disp(self, magnitude: float = 0.1, method="cate") -> npt.NDArray[np.float64]:
         """
         对结构中的原子施加随机扰动
 
         Args:
             magnitude: 原子扰动的最大距离，默认为0.1 A
+            method: 扰动的方式 cate: 沿x,y,z三个方向进行随机大小的扰动；sphere: 随机长度，随机方向的扰动
 
         Returns:
             扰动的方向矢量
@@ -419,9 +420,24 @@ class poscar:
             >>> self.random_disp(0.1)
             [[0.057737,0.01256,0.02355],[0.011204,0.013489,0.022355],...]
         """
-        magnitude_one_direction = magnitude / np.sqrt(3)
+        assert method in ["cate", "sphere"], "method must be cate or sphere"
+        assert magnitude > 0, "magnitude must be greater than 0"
 
-        disp_random = magnitude_one_direction * np.random.random(self.coor_cate.shape)
+        if method == "cate":
+            magnitude_one_direction = magnitude / np.sqrt(3)
+
+            disp_random = magnitude_one_direction * np.random.random(self.coor_cate.shape)
+
+        else:
+            theta = np.random.uniform(0, np.pi, size = self.coor_cate.shape[0])
+            phi = np.random.uniform(0, 2 * np.pi, size = self.coor_cate.shape[0])
+            r = np.random.uniform(0, magnitude, size = self.coor_cate.shape[0])
+            disp_random = np.zeros(self.coor_cate.shape)
+
+            r_sin_theta = r * np.sin(theta)
+            disp_random[:,0] = r * r_sin_theta * np.cos(phi)
+            disp_random[:,1] = r * r_sin_theta * np.sin(phi)
+            disp_random[:,2] = r * np.cos(theta)
 
         return disp_random
 
