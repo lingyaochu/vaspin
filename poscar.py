@@ -429,14 +429,14 @@ class poscar:
             disp_random = magnitude_one_direction * np.random.random(self.coor_cate.shape)
 
         else:
-            theta = np.random.uniform(0, np.pi, size = self.coor_cate.shape[0])
             phi = np.random.uniform(0, 2 * np.pi, size = self.coor_cate.shape[0])
-            r = np.random.uniform(0, magnitude, size = self.coor_cate.shape[0])
+            theta = np.arccos(np.random.uniform(-1, 1, size = self.coor_cate.shape[0]))
+            r = np.power(np.random.uniform(0, magnitude**3, size = self.coor_cate.shape[0]),1/3)
             disp_random = np.zeros(self.coor_cate.shape)
 
             r_sin_theta = r * np.sin(theta)
-            disp_random[:,0] = r * r_sin_theta * np.cos(phi)
-            disp_random[:,1] = r * r_sin_theta * np.sin(phi)
+            disp_random[:,0] = r_sin_theta * np.cos(phi)
+            disp_random[:,1] = r_sin_theta * np.sin(phi)
             disp_random[:,2] = r * np.cos(theta)
 
         return disp_random
