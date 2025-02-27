@@ -1,0 +1,73 @@
+#!/usr/bin/python3
+"""this script is to get information from poscar"""
+
+import argparse
+
+from vaspin import Poscar
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "-d", "--directory", default=".", help="the directory of the POSCAR file"
+)
+parser.add_argument(
+    "-j",
+    "--job",
+    default="json",
+    choices=["json", "lattice", "disp"],
+    help="the job need to be done",
+)
+parser.add_argument(
+    "-l",
+    "--length",
+    default=0.0,
+    type=float,
+    help="the length of random displacement, only for job=distort",
+)
+parser.add_argument(
+    "-m",
+    "--method",
+    default="cate",
+    choices=["cate", "sphere"],
+    help="the method to distort the structure, only for job=distort",
+)
+args = parser.parse_args()
+
+
+def write_json() -> None:
+    """Write the POSCAR file to JSON file"""
+    pos = Poscar(args.directory + "/POSCAR")
+    pos.write_poscar(directory=args.directory, name="pos.json")
+
+
+def get_lattice() -> None:
+    """Get the lattice parameters from POSCAR file"""
+    write_json()
+
+    pos = Poscar(args.directory + "/pos.json")
+    a = "{:.7f}".format(pos.abc["a"])
+    b = "{:.7f}".format(pos.abc["b"])
+    c = "{:.7f}".format(pos.abc["c"])
+    print(a, b, c)
+
+
+def pos_disp(length: float = args.length, method: str = args.method) -> None:
+    """Randomly distort the structure by length"""
+    write_json()
+
+    pos = Poscar(args.directory + "/pos.json")
+    cate = pos.coor_cate + pos.random_disp(magnitude=length, method=method)
+    pos.write_poscar(
+        coor_frac=pos.cate2frac(cate), directory=args.directory, name="POSCAR_disp"
+    )
+
+
+operation = {
+    "json": write_json,
+    "lattice": get_lattice,
+    "disp": lambda: pos_disp(args.length, args.method),
+}
+if args.job in operation:
+    operation[args.job]()
+else:
+    print("The job is not supported")
+    exit(1)

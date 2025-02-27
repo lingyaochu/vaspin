@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Fri Jun  2 16:52:08 2023
+"""Vaspin - VASP Interface Python Package.
 
-@author: Administrator
+A Python package for handling VASP input/output files and structures.
 """
-from . import poscar
-from .poscar import poscar
+
+from .core import Poscar
+from .utils import StrainTensor
