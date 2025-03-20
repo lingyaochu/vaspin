@@ -1,0 +1,23 @@
+[project]
+name = "vaspin"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [
+    { name = "Xin Zhao", email = "zx0@mail.ustc.edu.cn"}
+]
+dependencies = [
+    "numpy>=1.24.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2.0",
+    "pre-commit>=4.0.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/lingyaochu/vaspin"
+Repository = "https://github.com/lingyaochu/vaspin.git"

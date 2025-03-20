@@ -9,7 +9,6 @@ repos:
     - id: check-added-large-files
     - id: detect-private-key
 
-repos:
 - repo: https://github.com/astral-sh/ruff-pre-commit
   rev: v0.11.0
   hooks:
@@ -21,3 +20,11 @@ repos:
   rev: v1.15.0
   hooks:
     - id: mypy
+
+- repo: https://github.com/executablebooks/mdformat
+  rev: 0.7.17
+  hooks:
+    - id: mdformat
+      additional_dependencies:
+        - mdformat-gfm  # GitHub Flavored Markdown
+        - mdformat-frontmatter  # YAML front matter
