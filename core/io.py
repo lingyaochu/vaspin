@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """IO Module.
 
 Contains functionality for reading and writing VASP files.
@@ -25,7 +24,6 @@ def read_poscar(posfile: str) -> dict[str, Any]:
 
     Raises:
         FileNotFoundError: File does not exist
-        ValueError: Invalid file format
     """
     if not os.path.exists(posfile):
         raise FileNotFoundError(f"File does not exist: {posfile}")
@@ -34,11 +32,8 @@ def read_poscar(posfile: str) -> dict[str, Any]:
         with open(posfile, "r") as f:
             data: dict[str, Any] = load(f)
     except JSONDecodeError:
-        try:
-            posdata: dict[str, Any] = loads(poscar_to_json(posfile))
-            data = posdata
-        except Exception as e:
-            raise ValueError(f"Cannot parse file {posfile}: {e}")
+        posdata: dict[str, Any] = loads(poscar_to_json(posfile))
+        data = posdata
 
     return data
 
@@ -53,7 +48,6 @@ def poscar_to_json(filepath: str) -> str:
         JSON formatted string
 
     Raises:
-        FileNotFoundError: File does not exist
         ValueError: Invalid file format
     """
     try:

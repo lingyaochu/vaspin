@@ -294,7 +294,6 @@ class Poscar:
 
         Returns:
             distance_list: Array of distances between target and all atoms, in the same order as atoms
-
         """
         coor_frac_moved = self.move2center(target)
         cell_center = np.array([0.5, 0.5, 0.5])
@@ -315,12 +314,10 @@ class Poscar:
             New rotated lattice vector matrix
         """
         lattice = self.lattice
-        # Ensure rotation matrix is 3x3
         if matrix_rot.size != 9:
             raise ValueError("Rotation matrix must be 3x3")
         matrix_rot = matrix_rot.reshape(3, 3)
 
-        # Check if rotation matrix is valid (determinant = 1)
         det = np.linalg.det(matrix_rot)
         if not np.isclose(abs(det), 1.0):
             raise ValueError(
@@ -340,15 +337,11 @@ class Poscar:
         Returns:
             New strained lattice vector matrix
         """
-        # Get strain tensor matrix
         strain_matrix = strain.get_matrix_unsym()
 
-        # build deformation matrix
         identity = np.eye(3)
         deform_matrix = identity + strain_matrix
 
-        # apply strain
-        lattice = self.lattice
-        lattice_strained = lattice @ deform_matrix.T
+        lattice_strained = self.lattice @ deform_matrix.T
 
         return lattice_strained
