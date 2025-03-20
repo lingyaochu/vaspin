@@ -9,7 +9,7 @@ authors = [
     { name = "Xin Zhao", email = "zx0@mail.ustc.edu.cn"}
 ]
 dependencies = [
-    "numpy>=1.24.0"
+    "numpy>=1.24.0,<=2.1.0"
 ]
 
 [project.optional-dependencies]
