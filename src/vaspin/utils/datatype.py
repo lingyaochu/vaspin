@@ -5,7 +5,7 @@ from typing import ClassVar, Sequence, Tuple
 
 import numpy as np
 
-from ..types.array import FloatArray, IntArray, StrArray
+from vaspin.types.array import FloatArray, IntArray, StrArray
 
 
 @dataclass

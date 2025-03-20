@@ -5,7 +5,7 @@ import os
 
 import numpy as np
 
-from ..types.array import FloatArray
+from vaspin.types.array import FloatArray
 
 
 def clean(target_dir: str) -> None:

@@ -10,7 +10,7 @@ from typing import Any
 
 import numpy as np
 
-from ..types.array import FloatArray, StrArray
+from vaspin.types.array import FloatArray, StrArray
 
 
 def read_poscar(posfile: str) -> dict[str, Any]:

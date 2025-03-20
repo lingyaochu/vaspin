@@ -7,9 +7,9 @@ Contains functionality for handling VASP POSCAR files and structure manipulation
 import numpy as np
 from numpy import float64
 
-from ..types.array import FloatArray, StrArray
-from ..utils import MASS_DICT, PosData, StrainTensor, wrap_frac
-from .io import read_poscar, write_poscar
+from vaspin.types.array import FloatArray, StrArray
+from vaspin.utils import MASS_DICT, PosData, StrainTensor, wrap_frac
+from vaspin.core.io import read_poscar, write_poscar
 
 
 class Poscar:
