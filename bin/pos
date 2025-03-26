@@ -4,6 +4,8 @@
 import argparse
 
 from vaspin import Poscar
+from vaspin.core.io import read_poscar
+import json
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -35,8 +37,9 @@ args = parser.parse_args()
 
 def write_json() -> None:
     """Write the POSCAR file to JSON file"""
-    pos = Poscar(args.directory + "/POSCAR")
-    pos.write_poscar(directory=args.directory, name="pos.json")
+    pos_json_str = read_poscar(args.directory + "/POSCAR")
+    with open(args.directory + "/pos.json", "w") as f:
+        json.dump(pos_json_str, f, indent=4)
 
 
 def get_lattice() -> None:
