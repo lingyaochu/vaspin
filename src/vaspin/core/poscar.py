@@ -446,31 +446,31 @@ class Poscar:
         )
 
         unique_indices_list = []
-        if len(sort_indices) > 0:
-            last_unique_idx = sort_indices[0]
-            unique_indices_list.append(last_unique_idx)
 
-            last_species = candidates_species[last_unique_idx]
-            last_rounded_coor = rounded_coor[last_unique_idx]
+        last_unique_idx = sort_indices[0]
+        unique_indices_list.append(last_unique_idx)
 
-            for i in range(1, len(sort_indices)):
-                current_idx = sort_indices[i]
-                current_species = candidates_species[current_idx]
-                current_rounded_coor = rounded_coor[current_idx]
+        last_species = candidates_species[last_unique_idx]
+        last_rounded_coor = rounded_coor[last_unique_idx]
 
-                is_different = False
-                if current_species != last_species:
-                    is_different = True
-                elif not np.all(
-                    np.abs(current_rounded_coor - last_rounded_coor) < 10 ** (-decimals)
-                ):
-                    is_different = True
+        for i in range(1, len(sort_indices)):
+            current_idx = sort_indices[i]
+            current_species = candidates_species[current_idx]
+            current_rounded_coor = rounded_coor[current_idx]
 
-                if is_different:
-                    unique_indices_list.append(current_idx)
-                    last_unique_idx = current_idx
-                    last_species = current_species
-                    last_rounded_coor = current_rounded_coor
+            is_different = False
+            if current_species != last_species:
+                is_different = True
+            elif not np.all(
+                np.abs(current_rounded_coor - last_rounded_coor) < 10 ** (-decimals)
+            ):
+                is_different = True
+
+            if is_different:
+                unique_indices_list.append(current_idx)
+                last_unique_idx = current_idx
+                last_species = current_species
+                last_rounded_coor = current_rounded_coor
 
         unique_indices = np.array(unique_indices_list, dtype=int)
         species_final = candidates_species[unique_indices]
