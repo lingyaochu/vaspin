@@ -7,7 +7,11 @@ Contains functionality for handling VASP POSCAR files and structure manipulation
 import numpy as np
 from numpy import float64
 
-from vaspin.types.array import FloatArray, StrArray
+import os
+
+from itertools import product
+
+from vaspin.types.array import FloatArray, StrArray, IntArray
 from vaspin.utils import MASS_DICT, PosData, StrainTensor, wrap_frac
 from vaspin.core.io import read_poscar, write_poscar
 
@@ -345,3 +349,65 @@ class Poscar:
         lattice_strained = self.lattice @ deform_matrix.T
 
         return lattice_strained
+
+    def build_sc(self, transmat: IntArray) -> "Poscar":
+        """Build supercell according to the transformation matrix
+
+        mat:
+            [[t11, t12, t13],
+            [t21, t22, t23],
+            [t31, t32, t33]]
+
+        transform:
+        a' = t11 * a + t12 * b + t13 * c
+        b' = t21 * a + t22 * b + t23 * c
+        c' = t31 * a + t32 * b + t33 * c
+
+        Args:
+            transmat: the transformation matrix, the matrix is the transverse of vesta convention
+        """
+        assert transmat.size == 9 or transmat.size == 3, (
+            "transmat should have 3 main value or 9 values"
+        )
+        if transmat.size == 9 and transmat.shape != (3, 3):
+            print("the transmat is not a 3*3 matrix, reshape it.")
+            transmat = transmat.reshape(3, 3)
+        if transmat.size == 3:
+            transmat = np.diag(transmat)
+
+        if ncells := int(np.linalg.det(transmat)) < 0:
+            print("Please keep the chirality unchanged.")
+
+        # build the new lattice
+        lattice_expand = transmat @ self.lattice
+
+        range_list = [(np.min(col), np.max(col)) for col in transmat.T]
+        ranges_expand = [range(*r) for r in range_list]
+
+        coor_cate_expand = self.coor_cate
+        species_expand = self.species
+        for x_expand, y_expand, z_expand in product(*ranges_expand):
+            # expand new coordinates and new species
+            trasnslation_x = (x_expand - 1) * self.lattice[0] if x_expand != 1 else 0
+            trasnslation_y = (y_expand - 1) * self.lattice[1] if y_expand != 1 else 0
+            trasnslation_z = (z_expand - 1) * self.lattice[2] if z_expand != 1 else 0
+            translation = trasnslation_x + trasnslation_y + trasnslation_z
+
+            coor_cate_expand = np.append(coor_cate_expand, self.coor_cate + translation)
+            species_expand = np.append(species_expand, self.species)
+
+        # delete the atoms that are out of the cell
+        coor_frac_expand = self.cate2frac(coor_cate_expand, lattice_expand)
+        out_bound_judge = (coor_frac_expand < -1e-5) | (coor_frac_expand > 1 + 1e-5)
+        whether_out_bound = np.any(out_bound_judge, axis=1)
+
+        coor_frac_final = coor_frac_expand[~whether_out_bound]
+        species_final = species_expand[~whether_out_bound]
+
+        # TODO add function to build Poscar from lattice, species, coor_frac
+        self.write_poscar(
+            lattice_expand, species_final, coor_frac_final, name="POSCAR_tmp"
+        )
+        poscar_sc = Poscar("POSCAR_tmp")
+        os.remove("POSCAR_tmp")
+        return poscar_sc
