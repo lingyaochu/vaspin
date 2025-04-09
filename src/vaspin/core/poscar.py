@@ -350,6 +350,22 @@ class Poscar:
 
         return lattice_strained
 
+    def get_corner(self, lattice: FloatArray | None = None) -> FloatArray:
+        """Get the catesian coordinates of eight corners of the cell
+
+        Args:
+            lattice: Lattice vectors
+
+        Returns:
+            The eight corners of the cell
+        """
+        if lattice is None:
+            lattice = self.lattice
+
+        ranges = [range(2) for _ in range(3)]
+        corners = np.array(list(product(*ranges)))
+        return corners @ lattice
+
     def build_sc(self, transmat: IntArray) -> "Poscar":
         """Build supercell according to the transformation matrix
 
@@ -375,39 +391,59 @@ class Poscar:
         if transmat.size == 3:
             transmat = np.diag(transmat)
 
-        if ncells := int(np.linalg.det(transmat)) < 0:
-            print("Please keep the chirality unchanged.")
+        ncells = int(np.linalg.det(transmat))
+        if ncells < 0:
+            print("It is recommended to keep the chirality unchanged.")
 
         # build the new lattice
-        lattice_expand = transmat @ self.lattice
+        lattice_sc = transmat @ self.lattice
 
-        range_list = [(np.min(col), np.max(col)) for col in transmat.T]
-        ranges_expand = [range(*r) for r in range_list]
+        # find the range that primitive cell need to be expanded to add atoms
+        sc_corners = self.get_corner(lattice_sc)
+        sc_corners_frac = self.cate2frac(sc_corners)
+        min_multiplier = np.floor(np.min(sc_corners_frac, axis=0)).astype(int)
+        max_multiplier = np.ceil(np.max(sc_corners_frac, axis=0)).astype(int)
+        multiply_range = [range(min_multiplier[i], max_multiplier[i]) for i in range(3)]
 
-        coor_cate_expand = self.coor_cate
-        species_expand = self.species
-        for x_expand, y_expand, z_expand in product(*ranges_expand):
-            # expand new coordinates and new species
-            trasnslation_x = (x_expand - 1) * self.lattice[0] if x_expand != 1 else 0
-            trasnslation_y = (y_expand - 1) * self.lattice[1] if y_expand != 1 else 0
-            trasnslation_z = (z_expand - 1) * self.lattice[2] if z_expand != 1 else 0
-            translation = trasnslation_x + trasnslation_y + trasnslation_z
+        prim_coor_frac = self.coor_frac
+        prim_species = self.species
 
-            coor_cate_expand = np.append(coor_cate_expand, self.coor_cate + translation)
-            species_expand = np.append(species_expand, self.species)
+        candidates_coor_frac_prim = []
+        candidates_species = []
+
+        for i, j, k in product(*multiply_range):
+            translation_vec = np.array([i, j, k])
+            translated_coor = prim_coor_frac + translation_vec
+            candidates_coor_frac_prim.extend(translated_coor)
+            candidates_species.extend(prim_species)
+
+        candidates_coor_frac_prim = np.array(candidates_coor_frac_prim)
+        candidates_species = np.array(candidates_species)
+
+        candidates_coor_cate = self.frac2cate(candidates_coor_frac_prim)
+
+        candidates_coor_frac_sc = self.cate2frac(candidates_coor_cate, lattice_sc)
 
         # delete the atoms that are out of the cell
-        coor_frac_expand = self.cate2frac(coor_cate_expand, lattice_expand)
-        out_bound_judge = (coor_frac_expand < -1e-5) | (coor_frac_expand > 1 + 1e-5)
+        tol = 1e-5
+        out_bound_judge = (candidates_coor_frac_sc < -tol) | (
+            candidates_coor_frac_sc > 1 + tol
+        )
         whether_out_bound = np.any(out_bound_judge, axis=1)
 
-        coor_frac_final = coor_frac_expand[~whether_out_bound]
-        species_final = species_expand[~whether_out_bound]
+        coor_frac_final = candidates_coor_frac_sc[~whether_out_bound]
+        species_final = candidates_species[~whether_out_bound]
 
-        # TODO add function to build Poscar from lattice, species, coor_frac
-        self.write_poscar(
-            lattice_expand, species_final, coor_frac_final, name="POSCAR_tmp"
-        )
+        # TODO we need to check the boundary condition
+
+        # final check
+        if len(coor_frac_final) / len(self.coor_frac) != abs(ncells):
+            raise ValueError(
+                f"the atoms numbers should be {len(self.coor_frac) * abs(ncells)}, but get {len(coor_frac_final)}, it wrong."
+            )
+
+        # build new Poscar
+        self.write_poscar(lattice_sc, species_final, coor_frac_final, name="POSCAR_tmp")
         poscar_sc = Poscar("POSCAR_tmp")
         os.remove("POSCAR_tmp")
         return poscar_sc
