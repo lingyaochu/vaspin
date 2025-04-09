@@ -424,22 +424,63 @@ class Poscar:
 
         candidates_coor_frac_sc = self.cate2frac(candidates_coor_cate, lattice_sc)
 
-        # delete the atoms that are out of the cell
         tol = 1e-5
-        out_bound_judge = (candidates_coor_frac_sc < -tol) | (
-            candidates_coor_frac_sc > 1 + tol
+
+        # dealing boundary atoms
+        mapped_coor = candidates_coor_frac_sc % 1.0
+        mapped_coor[np.abs(mapped_coor - 1.0) < tol] = 0.0
+        mapped_coor[np.abs(mapped_coor) < tol] = 0.0
+
+        # round the float decimals
+        decimals = int(-np.log10(tol)) + 1
+        rounded_coor = np.round(mapped_coor, decimals=decimals)
+        rounded_coor[np.abs(rounded_coor - 1.0) < 10 ** (-decimals)] = 0.0
+
+        sort_indices = np.lexsort(
+            (
+                rounded_coor[:, 2],
+                rounded_coor[:, 1],
+                rounded_coor[:, 0],
+                candidates_species,
+            )
         )
-        whether_out_bound = np.any(out_bound_judge, axis=1)
 
-        coor_frac_final = candidates_coor_frac_sc[~whether_out_bound]
-        species_final = candidates_species[~whether_out_bound]
+        unique_indices_list = []
+        if len(sort_indices) > 0:
+            last_unique_idx = sort_indices[0]
+            unique_indices_list.append(last_unique_idx)
 
-        # TODO we need to check the boundary condition
+            last_species = candidates_species[last_unique_idx]
+            last_rounded_coor = rounded_coor[last_unique_idx]
+
+            for i in range(1, len(sort_indices)):
+                current_idx = sort_indices[i]
+                current_species = candidates_species[current_idx]
+                current_rounded_coor = rounded_coor[current_idx]
+
+                is_different = False
+                if current_species != last_species:
+                    is_different = True
+                elif not np.all(
+                    np.abs(current_rounded_coor - last_rounded_coor) < 10 ** (-decimals)
+                ):
+                    is_different = True
+
+                if is_different:
+                    unique_indices_list.append(current_idx)
+                    last_unique_idx = current_idx
+                    last_species = current_species
+                    last_rounded_coor = current_rounded_coor
+
+        unique_indices = np.array(unique_indices_list, dtype=int)
+        species_final = candidates_species[unique_indices]
+        coor_frac_final = mapped_coor[unique_indices]
 
         # final check
-        if len(coor_frac_final) / len(self.coor_frac) != abs(ncells):
+        expected_natoms = len(self.coor_frac) * abs(ncells)
+        if len(coor_frac_final) != expected_natoms:
             raise ValueError(
-                f"the atoms numbers should be {len(self.coor_frac) * abs(ncells)}, but get {len(coor_frac_final)}, it wrong."
+                f"the number of atoms is wrong, expect {expected_natoms}, but get {len(coor_frac_final)}"
             )
 
         # build new Poscar
