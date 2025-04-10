@@ -65,6 +65,7 @@ class PosData:
     """the data structure of POSCAR class"""
 
     coe: float
+    comment: str
     lattice: FloatArray
     species: StrArray
     atom: StrArray
