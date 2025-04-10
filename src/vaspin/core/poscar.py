@@ -69,27 +69,27 @@ class Poscar:
     @property
     def lattice(self) -> FloatArray:
         """Get the lattice"""
-        return self.data.lattice
+        return self.data.lattice.copy()
 
     @property
     def coor_frac(self) -> FloatArray:
         """Get the fractional coordinates"""
-        return self.data.frac
+        return self.data.frac.copy()
 
     @property
     def coor_cate(self) -> FloatArray:
         """Get the cartesian coordinates"""
-        return self.data.cate
+        return self.data.cate.copy()
 
     @property
     def atoms(self) -> StrArray:
         """Get the atom lists"""
-        return self.data.atoms
+        return self.data.atoms.copy()
 
     @property
     def abc(self) -> dict[str, float]:
         """Get the lattice length"""
-        return self.data.abc
+        return self.data.abc.copy()
 
     @staticmethod
     def calculate_lattice(coe: float, lat: list[list[float]]) -> FloatArray:
@@ -360,3 +360,102 @@ class Poscar:
         lattice_strained = self.lattice @ deform_matrix.T
 
         return lattice_strained
+
+    def check_coor(
+        self, coor_frac: FloatArray, tol: float = 1e-3
+    ) -> tuple[np.bool, int]:
+        """Check one coordinate whether in current Poscar class, return its index if exsist
+
+        Args:
+            coor_frac: the fractional coordinate to be checked
+            tol: the absolute error tolerance
+
+        Return:
+            whether exsist
+            the index of the target coordinate, return 0 if not exsist
+        """
+        exsist = np.all(np.isclose(self.coor_frac, coor_frac, atol=tol), axis=1)
+        return np.any(exsist), int(np.argmax(exsist))
+
+    def _species_numbers_coor(
+        self, atoms: StrArray | None = None, coor_frac: FloatArray | None = None
+    ) -> tuple[StrArray, IntArray, FloatArray]:
+        """An auxiliary function for get species and numbers from atoms list and the corresponding fractional coordinates
+
+        Under processing, the order of the atoms may change, so we would change the fractional coordinates also, to maintain the consistancy.
+
+        Args:
+            atoms: the atom list, default to be the atoms in current Poscar
+            coor_frac: the fractional coordinates, default to be the coordinates in current Poscar
+
+        Returns:
+            species: the unique elements list
+            numbers: the list of numbers of the unqiue elements
+            new_coor: the new fractional coordinates that obeys the new order
+        """
+        if atoms is None:
+            atoms = self.atoms
+        if coor_frac is None:
+            coor_frac = self.coor_frac
+
+        sort = np.argsort(atoms)
+        new_atoms = atoms[sort]
+        new_coor = coor_frac[sort]
+
+        species, numbers = np.unique(new_atoms, return_counts=True)
+        return species, numbers, new_coor
+
+    def defect_create_sub(self, coor_frac: FloatArray, newatom: str) -> PosData:
+        """Create a substitution defect in the POSCAR
+
+        Args:
+            coor_frac: the coordinate to create defect
+            newatom: the substitution atom
+        """
+        exsist, index = self.check_coor(coor_frac)
+        if not exsist:
+            raise ValueError(
+                "You can't create a substitution at this site, the site is empty!"
+            )
+
+        if newatom == self.atoms[index]:
+            raise ValueError("The sub atom is the same as the original, please check!")
+
+        atoms_new = self.atoms
+        atoms_new[index] = newatom
+
+        species_new, numbers_new, coor_frac_new = self._species_numbers_coor(atoms_new)
+
+        return PosData(
+            lattice=self.lattice,
+            species=species_new,
+            number=numbers_new,
+            frac=coor_frac_new,
+            comment=f"{newatom}_{self.atoms[index]} at ({self.coor_frac[index][0]:.3f}, {self.coor_frac[index][1]:.3f}, {self.coor_frac[index][2]:.3f})",
+        )
+
+    def defect_create_vac(self, coor_frac: FloatArray) -> PosData:
+        """Create a vacancy defect in the POSCAR
+
+        Args:
+            coor_frac: the coordinate to create defect
+        """
+        exsist, index = self.check_coor(coor_frac)
+        if not exsist:
+            raise ValueError(
+                "You can't create a vacancy at this site, the site is empty!"
+            )
+        atoms_new = np.delete(self.atoms, index, axis=0)
+        coor_frac_new = np.delete(self.coor_frac, index, axis=0)
+
+        species_final, number_final, coor_frac_final = self._species_numbers_coor(
+            atoms_new, coor_frac_new
+        )
+
+        return PosData(
+            lattice=self.lattice,
+            species=species_final,
+            number=number_final,
+            frac=coor_frac_final,
+            comment=f"Va_{self.atoms[index]} at ({self.coor_frac[index][0]:.3f}, {self.coor_frac[index][1]:.3f}, {self.coor_frac[index][2]:.3f})",
+        )
