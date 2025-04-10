@@ -9,6 +9,8 @@ from numpy import float64
 
 from itertools import product
 
+from typing import Literal
+
 from vaspin.types.array import FloatArray, StrArray, IntArray
 from vaspin.utils import MASS_DICT, PosData, StrainTensor, wrap_frac
 from vaspin.core.io import read_poscar, write_poscar
@@ -169,7 +171,9 @@ class Poscar:
             lattice = self.lattice
         return np.dot(coor_cate, np.linalg.inv(lattice))
 
-    def random_disp(self, magnitude: float = 0.1, method: str = "cate") -> FloatArray:
+    def random_disp(
+        self, magnitude: float = 0.1, method: Literal["cate", "sphere"] = "cate"
+    ) -> FloatArray:
         """Generate random displacement
 
         Args:
@@ -185,31 +189,53 @@ class Poscar:
             ValueError: When an unsupported method is provided
         """
         assert magnitude >= 0, "Displacement magnitude must be non-negative"
-        # Get number of atoms
-        n_atoms = self.coor_cate.shape[0]
 
-        if method == "cate":
-            # Generate uniform random displacement in Cartesian coordinates
-            return np.random.uniform(-magnitude, magnitude, self.coor_cate.shape)
-
-        elif method == "sphere":
-            phi = np.random.uniform(0, 2 * np.pi, size=n_atoms)
-            cos_theta = np.random.uniform(-1, 1, size=n_atoms)
-            theta = np.arccos(cos_theta)
-
-            r = np.power(np.random.uniform(0, magnitude**3, size=n_atoms), 1 / 3)
-
-            sin_theta = np.sin(theta)
-            disp_random = np.zeros((n_atoms, 3))
-            disp_random[:, 0] = r * sin_theta * np.cos(phi)
-            disp_random[:, 1] = r * sin_theta * np.sin(phi)
-            disp_random[:, 2] = r * cos_theta
-
-            return disp_random
-        else:
+        if method not in ["cate", "sphere"]:
             raise ValueError(
                 f"Unsupported method: {method}. Use either 'cate' or 'sphere'."
             )
+
+        if method == "cate":
+            # Generate uniform random displacement in Cartesian coordinates
+            return self._random_disp_cate(magnitude)
+
+        else:
+            return self._random_disp_sphere(magnitude)
+
+    def _random_disp_cate(self, magnitude: float) -> FloatArray:
+        """Generate random displacement in Cartesian coordinates
+
+        Args:
+            magnitude: Displacement magnitude
+
+        Returns:
+            Random displacement array with same shape as atomic coordinates
+        """
+        return np.random.uniform(-magnitude, magnitude, self.coor_cate.shape)
+
+    def _random_disp_sphere(self, magnitude: float) -> FloatArray:
+        """Generate random displacement on a sphere surface, ensuring displacement magnitude is within [0, magnitude]
+
+        Args:
+            magnitude: Displacement magnitude
+
+        Returns:
+            Random displacement array with same shape as atomic coordinates
+        """
+        n_atoms = self.coor_cate.shape[0]
+
+        phi = np.random.uniform(0, 2 * np.pi, size=n_atoms)
+        cos_theta = np.random.uniform(-1, 1, size=n_atoms)
+        theta = np.arccos(cos_theta)
+
+        r = np.power(np.random.uniform(0, magnitude**3, size=n_atoms), 1 / 3)
+
+        sin_theta = np.sin(theta)
+        disp_random = np.zeros((n_atoms, 3))
+        disp_random[:, 0] = r * sin_theta * np.cos(phi)
+        disp_random[:, 1] = r * sin_theta * np.sin(phi)
+        disp_random[:, 2] = r * cos_theta
+        return disp_random
 
     def write_poscar(
         self,
