@@ -3,6 +3,7 @@
 
 import argparse
 
+from typing import Literal
 from vaspin import Poscar
 from vaspin.core.io import read_poscar
 import json
@@ -53,7 +54,9 @@ def get_lattice() -> None:
     print(a, b, c)
 
 
-def pos_disp(length: float = args.length, method: str = args.method) -> None:
+def pos_disp(
+    length: float = args.length, method: Literal["cate", "sphere"] = args.method
+) -> None:
     """Randomly distort the structure by length"""
     write_json()
 

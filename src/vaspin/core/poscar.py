@@ -19,64 +19,41 @@ from vaspin.core.io import read_poscar, write_poscar
 class Poscar:
     """A class for handling POSCAR files in VASP"""
 
-    def __init__(self, posfile: str):
+    def __init__(self, posdata: PosData):
         """Initialize a Poscar object
 
         Args:
-            posfile: Path to POSCAR file or JSON file
+            posdata: the PosData object containing the information
 
         Raises:
             FileNotFoundError: File does not exist
             ValueError: Invalid file format
         """
-        __data = read_poscar(posfile)
-        __comment = __data["comment"]
+        self.data = posdata
 
-        # Calculate lattice vectors using static method to avoid naming conflicts
-        __lattice = Poscar.calculate_lattice(__data["coe"], __data["lattice"])
+    @classmethod
+    def from_file(cls, filepath: str) -> "Poscar":
+        """Create a Poscar object from a json or POSCAR file
 
-        __abc = {
-            "a": np.linalg.norm(__lattice[0]),
-            "b": np.linalg.norm(__lattice[1]),
-            "c": np.linalg.norm(__lattice[2]),
-        }
-        # Calculate volume using static method to avoid naming conflicts
-        __volume = Poscar.calculate_volume(__lattice)
+        Args:
+            filepath: Path to json or POSCAR file
 
-        __atom = np.array(__data["species"], dtype=str)
-        __number = np.array(__data["number"], dtype=int)
-
-        __species = np.repeat(__atom, __number)
-
-        # Use list comprehension instead of generator expression to ensure correct array creation
-        __mass = np.array([MASS_DICT[i] for i in __species], dtype=float)
-
+        Returns:
+            Poscar object
+        """
+        __data = read_poscar(filepath)
         if __data["coortype"] == "Direct":
-            __coor_frac = np.array(__data["coordinate"])
-            __coor_cate = self.frac2cate(__coor_frac, __lattice)
-
-        elif __data["coortype"] == "Cartesian":
-            __coor_cate = np.array(__data["coordinate"])
-            __coor_frac = self.cate2frac(__coor_cate, __lattice)
+            __data["frac"] = np.array(__data["coordinate"])
 
         else:
-            raise ValueError(
-                f"Unsupported coordinate type: {__data['coortype']}, only 'Direct' or 'Cartesian' are supported"
+            __data["frac"] = np.dot(
+                np.array(__data["coordinate"]), np.linalg.inv(__data["lattice"])
             )
 
-        self.data = PosData(
-            coe=__data["coe"],
-            comment=__comment,
-            lattice=__lattice,
-            species=__species,
-            atom=__atom,
-            number=__number,
-            frac=__coor_frac,
-            cate=__coor_cate,
-            volume=__volume,
-            mass=__mass,
-            abc=__abc,
-        )
+        # delete the "coordinate" and "coortype" key-value pairs
+        __data.pop("coordinate")
+        __data.pop("coortype")
+        return cls(PosData(**__data))
 
     def __eq__(self, other: object) -> bool:
         """Compare two Poscar objects for equality"""
@@ -105,12 +82,12 @@ class Poscar:
         return self.data.cate
 
     @property
-    def species(self) -> StrArray:
-        """Get the atomic species"""
-        return self.data.species
+    def atoms(self) -> StrArray:
+        """Get the atom lists"""
+        return self.data.atoms
 
     @property
-    def abc(self) -> dict[str, float64]:
+    def abc(self) -> dict[str, float]:
         """Get the lattice length"""
         return self.data.abc
 
@@ -240,7 +217,7 @@ class Poscar:
     def write_poscar(
         self,
         lattice: FloatArray | None = None,
-        species: StrArray | None = None,
+        atoms: StrArray | None = None,
         coor_frac: FloatArray | None = None,
         directory: str = ".",
         comment: str | None = None,
@@ -250,7 +227,7 @@ class Poscar:
 
         Args:
             lattice: Lattice data, defaults to object's own data
-            species: Atomic species data, defaults to object's own data
+            atoms: the atom list data, defaults to object's own data
             coor_frac: Fractional coordinate data, defaults to object's own data
             directory: Directory to write file to, defaults to current directory
             comment: Description in first line of POSCAR file
@@ -269,19 +246,19 @@ class Poscar:
         if coor_frac is None:
             coor_frac = self.coor_frac
 
-        if species is None:
-            species = self.species
+        if atoms is None:
+            atoms = self.atoms
 
         if comment is None:
             comment = self.comment
 
-        sort = np.argsort(species, kind="stable")
+        sort = np.argsort(atoms, kind="stable")
         coor_frac = coor_frac[sort]
-        species = species[sort]
+        atoms = atoms[sort]
 
-        write_poscar(lattice, species, coor_frac, directory, comment, name)
+        write_poscar(lattice, atoms, coor_frac, directory, comment, name)
 
-        if not np.array_equal(self.species, species):
+        if not np.array_equal(self.atoms, atoms):
             print(
                 "Warning: The order of the elements in the POSCAR file may be changed."
             )
