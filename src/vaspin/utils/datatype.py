@@ -72,7 +72,7 @@ class PosData:
     frac: FloatArray
 
     coe: float = 1.0
-    comment: str = "Generate by vaspin"
+    comment: str = " "
 
     atoms: StrArray = field(init=False)
     volume: float = field(init=False)

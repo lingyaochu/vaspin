@@ -432,7 +432,7 @@ class Poscar:
             species=species_new,
             number=numbers_new,
             frac=coor_frac_new,
-            comment=f"{newatom}_{self.atoms[index]} at ({coor_sub[0]:.3f}, {coor_sub[1]:.3f}, {coor_sub[2]:.3f})",
+            comment=f"{self.comment}  {newatom}_{self.atoms[index]} at ({coor_sub[0]:.3f}, {coor_sub[1]:.3f}, {coor_sub[2]:.3f})",
         )
 
     def defect_create_vac(self, coor_frac: FloatArray) -> PosData:
@@ -459,5 +459,5 @@ class Poscar:
             species=species_final,
             number=number_final,
             frac=coor_frac_final,
-            comment=f"Va_{self.atoms[index]} at ({coor_vac[0]:.3f}, {coor_vac[1]:.3f}, {coor_vac[2]:.3f})",
+            comment=f"{self.comment}  Va_{self.atoms[index]} at ({coor_vac[0]:.3f}, {coor_vac[1]:.3f}, {coor_vac[2]:.3f})",
         )
