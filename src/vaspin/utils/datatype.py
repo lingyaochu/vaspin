@@ -1,6 +1,6 @@
 """some dataclass for vaspin"""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import ClassVar, Sequence, Tuple
 
 import numpy as np
@@ -64,13 +64,28 @@ class StrainTensor:
 class PosData:
     """the data structure of POSCAR class"""
 
-    coe: float
+    # we would only support direct coordinates
+
     lattice: FloatArray
     species: StrArray
-    atom: StrArray
     number: IntArray
     frac: FloatArray
-    cate: FloatArray
-    abc: dict[str, np.float64]
-    volume: np.float64
-    mass: FloatArray
+
+    coe: float = 1.0
+    comment: str = " "
+
+    atoms: StrArray = field(init=False)
+    volume: float = field(init=False)
+    cate: FloatArray = field(init=False)
+    abc: dict[str, float] = field(init=False)
+
+    def __post_init__(self) -> None:
+        """Post-initialization hook"""
+        self.atoms = np.repeat(self.species, self.number)
+        self.volume = np.linalg.det(self.lattice)
+        self.cate = np.dot(self.frac, self.lattice)
+        self.abc = {
+            "a": float(np.linalg.norm(self.lattice[0])),
+            "b": float(np.linalg.norm(self.lattice[1])),
+            "c": float(np.linalg.norm(self.lattice[2])),
+        }
