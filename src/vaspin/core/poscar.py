@@ -351,7 +351,7 @@ class Poscar:
         return lattice_strained
 
     def get_corner(self, lattice: FloatArray | None = None) -> FloatArray:
-        """Get the catesian coordinates of eight corners of the cell
+        """Get the cartesian coordinates of eight corners of the cell
 
         Args:
             lattice: Lattice vectors
