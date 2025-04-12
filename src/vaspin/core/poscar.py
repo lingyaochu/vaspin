@@ -408,7 +408,7 @@ class Poscar:
             lattice_sc: the supercell lattice vectors
 
         Returns:
-            candidates_species: the candidate species
+            candidates_atoms: the candidate atoms
             candidates_coor_frac_sc: the candidate fractional coordinates in supercell
         """
         sc_corners = self.get_corner(lattice_sc)
@@ -419,35 +419,35 @@ class Poscar:
         multiply_range = [range(min_multiplier[i], max_multiplier[i]) for i in range(3)]
 
         prim_coor_frac = self.coor_frac
-        prim_species = self.species
+        prim_atoms = self.atoms
 
         candidates_coor_frac_prim = []
-        candidates_species = []
+        candidates_atoms = []
 
         for i, j, k in product(*multiply_range):
             translation_vec = np.array([i, j, k])
             translated_coor = prim_coor_frac + translation_vec
             candidates_coor_frac_prim.extend(translated_coor)
-            candidates_species.extend(prim_species)
+            candidates_atoms.extend(prim_atoms)
 
         candidates_coor_frac_prim = np.array(candidates_coor_frac_prim)
-        candidates_species = np.array(candidates_species)
+        candidates_atoms = np.array(candidates_atoms)
 
         candidates_coor_cate = self.frac2cate(candidates_coor_frac_prim)
 
         candidates_coor_frac_sc = self.cate2frac(candidates_coor_cate, lattice_sc)
-        return candidates_species, candidates_coor_frac_sc
+        return candidates_atoms, candidates_coor_frac_sc
 
     def _filter_outbound_atoms(
         self,
-        candidates_species: StrArray,
+        candidates_atoms: StrArray,
         candidates_coor_frac_sc: FloatArray,
         position_tolerence: float = 1e-5,
     ) -> tuple[StrArray, FloatArray]:
         """Filter out the atoms that are out of the supercell range
 
         Args:
-            candidates_species: the candidate species to be filtered
+            candidates_atoms: the candidate species to be filtered
             candidates_coor_frac_sc: the candidate fractional coordinates to be filtered
             position_tolerence: the tolerance for the position, default is 1e-5
 
@@ -470,7 +470,7 @@ class Poscar:
                 rounded_coor[:, 2],
                 rounded_coor[:, 1],
                 rounded_coor[:, 0],
-                candidates_species,
+                candidates_atoms,
             )
         )
 
@@ -479,12 +479,12 @@ class Poscar:
         last_unique_idx = sort_indices[0]
         unique_indices_list.append(last_unique_idx)
 
-        last_species = candidates_species[last_unique_idx]
+        last_species = candidates_atoms[last_unique_idx]
         last_rounded_coor = rounded_coor[last_unique_idx]
 
         for i in range(1, len(sort_indices)):
             current_idx = sort_indices[i]
-            current_species = candidates_species[current_idx]
+            current_species = candidates_atoms[current_idx]
             current_rounded_coor = rounded_coor[current_idx]
 
             is_different = False
@@ -502,12 +502,12 @@ class Poscar:
                 last_rounded_coor = current_rounded_coor
 
         unique_indices = np.array(unique_indices_list, dtype=int)
-        species_final = candidates_species[unique_indices]
+        species_final = candidates_atoms[unique_indices]
         coor_frac_final = mapped_coor[unique_indices]
 
         return species_final, coor_frac_final
 
-    def build_sc(self, transmat: IntArray) -> "Poscar":
+    def build_sc(self, transmat: IntArray) -> PosData:
         """Build supercell according to the transformation matrix
 
         mat:
@@ -531,11 +531,11 @@ class Poscar:
 
         lattice_sc = transmat @ self.lattice
 
-        candidates_species, candidates_coor_frac_sc = (
+        candidates_atoms, candidates_coor_frac_sc = (
             self._generate_candidate_atoms_and_coor(lattice_sc)
         )
-        species_final, coor_frac_final = self._filter_outbound_atoms(
-            candidates_species, candidates_coor_frac_sc
+        atoms_final, coor_frac_final = self._filter_outbound_atoms(
+            candidates_atoms, candidates_coor_frac_sc
         )
 
         # check if the number of atoms is correct
@@ -545,11 +545,14 @@ class Poscar:
                 f"the number of atoms is wrong, expect {expected_natoms}, but get {len(coor_frac_final)}"
             )
 
-        # build new Poscar
-        self.write_poscar(lattice_sc, species_final, coor_frac_final, name="POSCAR_tmp")
-        poscar_sc = Poscar("POSCAR_tmp")
-        os.remove("POSCAR_tmp")
-        return poscar_sc
+        # build new PosData
+        species, numbers, coor_frac_sc = self._species_numbers_coor(
+            atoms_final, coor_frac_final
+        )
+        posdata_sc = PosData(
+            lattice=lattice_sc, species=species, number=numbers, frac=coor_frac_sc
+        )
+        return posdata_sc
 
     def check_coor(
         self, coor_frac: FloatArray, tol: float = 1e-3
