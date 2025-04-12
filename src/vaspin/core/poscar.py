@@ -366,21 +366,14 @@ class Poscar:
         corners = np.array(list(product(*ranges)))
         return corners @ lattice
 
-    def build_sc(self, transmat: IntArray) -> "Poscar":
-        """Build supercell according to the transformation matrix
-
-        mat:
-            [[t11, t12, t13],
-            [t21, t22, t23],
-            [t31, t32, t33]]
-
-        transform:
-        a' = t11 * a + t12 * b + t13 * c
-        b' = t21 * a + t22 * b + t23 * c
-        c' = t31 * a + t32 * b + t33 * c
+    def _prepare_transformation_matrix(self, transmat: IntArray) -> IntArray:
+        """Prepare the transformation matrix for supercell generation
 
         Args:
-            transmat: the transformation matrix, the matrix is the transverse of vesta convention
+            transmat: the Transformation matrix
+
+        Returns:
+            transmat: the identified transformation matrix
         """
         assert transmat.size == 9 or transmat.size == 3, (
             "transmat should have 3 main value or 9 values"
@@ -390,17 +383,27 @@ class Poscar:
             transmat = transmat.reshape(3, 3)
         if transmat.size == 3:
             transmat = np.diag(transmat)
+        return transmat
 
-        ncells = int(np.linalg.det(transmat))
-        if ncells < 0:
-            print("It is recommended to keep the chirality unchanged.")
+    def _generate_candidate_atoms_and_coor(
+        self, lattice_sc: FloatArray
+    ) -> tuple[StrArray, FloatArray]:
+        """Generate candidate atoms and coordinates for the supercell
 
-        # build the new lattice
-        lattice_sc = transmat @ self.lattice
+        firstly, we find the corners of the supercell,
+        and then we find the range that primitive cell need to expand to add atoms,
+        the returned atoms and coordinates is larger than the supercell size for sure.
 
-        # find the range that primitive cell need to be expanded to add atoms
+        Args:
+            lattice_sc: the supercell lattice vectors
+
+        Returns:
+            candidates_species: the candidate species
+            candidates_coor_frac_sc: the candidate fractional coordinates in supercell
+        """
         sc_corners = self.get_corner(lattice_sc)
         sc_corners_frac = self.cate2frac(sc_corners)
+
         min_multiplier = np.floor(np.min(sc_corners_frac, axis=0)).astype(int)
         max_multiplier = np.ceil(np.max(sc_corners_frac, axis=0)).astype(int)
         multiply_range = [range(min_multiplier[i], max_multiplier[i]) for i in range(3)]
@@ -423,16 +426,32 @@ class Poscar:
         candidates_coor_cate = self.frac2cate(candidates_coor_frac_prim)
 
         candidates_coor_frac_sc = self.cate2frac(candidates_coor_cate, lattice_sc)
+        return candidates_species, candidates_coor_frac_sc
 
-        tol = 1e-5
+    def _filter_outbound_atoms(
+        self,
+        candidates_species: StrArray,
+        candidates_coor_frac_sc: FloatArray,
+        position_tolerence: float = 1e-5,
+    ) -> tuple[StrArray, FloatArray]:
+        """Filter out the atoms that are out of the supercell range
 
+        Args:
+            candidates_species: the candidate species to be filtered
+            candidates_coor_frac_sc: the candidate fractional coordinates to be filtered
+            position_tolerence: the tolerance for the position, default is 1e-5
+
+        Returns:
+            species_final: the filtered species
+            coor_frac_final: the filtered fractional coordinates
+        """
         # dealing boundary atoms
         mapped_coor = candidates_coor_frac_sc % 1.0
-        mapped_coor[np.abs(mapped_coor - 1.0) < tol] = 0.0
-        mapped_coor[np.abs(mapped_coor) < tol] = 0.0
+        mapped_coor[np.abs(mapped_coor - 1.0) < position_tolerence] = 0.0
+        mapped_coor[np.abs(mapped_coor) < position_tolerence] = 0.0
 
         # round the float decimals
-        decimals = int(-np.log10(tol)) + 1
+        decimals = int(-np.log10(position_tolerence)) + 1
         rounded_coor = np.round(mapped_coor, decimals=decimals)
         rounded_coor[np.abs(rounded_coor - 1.0) < 10 ** (-decimals)] = 0.0
 
@@ -476,7 +495,40 @@ class Poscar:
         species_final = candidates_species[unique_indices]
         coor_frac_final = mapped_coor[unique_indices]
 
-        # final check
+        return species_final, coor_frac_final
+
+    def build_sc(self, transmat: IntArray) -> "Poscar":
+        """Build supercell according to the transformation matrix
+
+        mat:
+            [[t11, t12, t13],
+            [t21, t22, t23],
+            [t31, t32, t33]]
+
+        transform:
+        a' = t11 * a + t12 * b + t13 * c
+        b' = t21 * a + t22 * b + t23 * c
+        c' = t31 * a + t32 * b + t33 * c
+
+        Args:
+            transmat: the transformation matrix, the matrix is the transverse of vesta convention
+        """
+        transmat = self._prepare_transformation_matrix(transmat)
+
+        ncells = int(np.linalg.det(transmat))
+        if ncells < 0:
+            print("It is recommended to keep the chirality unchanged.")
+
+        lattice_sc = transmat @ self.lattice
+
+        candidates_species, candidates_coor_frac_sc = (
+            self._generate_candidate_atoms_and_coor(lattice_sc)
+        )
+        species_final, coor_frac_final = self._filter_outbound_atoms(
+            candidates_species, candidates_coor_frac_sc
+        )
+
+        # check if the number of atoms is correct
         expected_natoms = len(self.coor_frac) * abs(ncells)
         if len(coor_frac_final) != expected_natoms:
             raise ValueError(
