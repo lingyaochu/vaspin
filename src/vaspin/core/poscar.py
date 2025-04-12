@@ -511,8 +511,7 @@ class Poscar:
         c' = t31 * a + t32 * b + t33 * c
 
         Args:
-            transmat: the transformation matrix, the matrix is the transverse of vesta convention
-        """
+            transmat: the transformation matrix, which is the transpose of the VESTA convention
         transmat = self._prepare_transformation_matrix(transmat)
 
         ncells = int(np.linalg.det(transmat))
