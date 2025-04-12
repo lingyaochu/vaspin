@@ -432,14 +432,14 @@ class Poscar:
         self,
         candidates_species: StrArray,
         candidates_coor_frac_sc: FloatArray,
-        position_tolerance: float = 1e-5,
+        position_tolerence: float = 1e-5,
     ) -> tuple[StrArray, FloatArray]:
         """Filter out the atoms that are out of the supercell range
 
         Args:
             candidates_species: the candidate species to be filtered
             candidates_coor_frac_sc: the candidate fractional coordinates to be filtered
-            position_tolerance: the tolerance for the position, default is 1e-5
+            position_tolerence: the tolerance for the position, default is 1e-5
 
         Returns:
             species_final: the filtered species
@@ -512,6 +512,7 @@ class Poscar:
 
         Args:
             transmat: the transformation matrix, which is the transpose of the VESTA convention
+        """
         transmat = self._prepare_transformation_matrix(transmat)
 
         ncells = int(np.linalg.det(transmat))
