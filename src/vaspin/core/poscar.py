@@ -376,7 +376,7 @@ class Poscar:
             transmat: the identified transformation matrix
         """
         assert transmat.size == 9 or transmat.size == 3, (
-            "transmat should have 3 main value or 9 values"
+            "transmat should have either 3 or 9 values"
         )
         if transmat.size == 9 and transmat.shape != (3, 3):
             print("the transmat is not a 3*3 matrix, reshape it.")
