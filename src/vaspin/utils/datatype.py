@@ -78,14 +78,16 @@ class PosData:
     volume: float = field(init=False)
     cate: FloatArray = field(init=False)
     abc: dict[str, float] = field(init=False)
+    rec_lattice: FloatArray = field(init=False)
 
     def __post_init__(self) -> None:
         """Post-initialization hook"""
         self.atoms = np.repeat(self.species, self.number)
-        self.volume = np.linalg.det(self.lattice)
+        self.volume = np.abs(np.linalg.det(self.lattice * self.coe))
         self.cate = np.dot(self.frac, self.lattice)
         self.abc = {
             "a": float(np.linalg.norm(self.lattice[0])),
             "b": float(np.linalg.norm(self.lattice[1])),
             "c": float(np.linalg.norm(self.lattice[2])),
         }
+        self.rec_lattice = np.linalg.inv(self.lattice).T * 2 * np.pi
