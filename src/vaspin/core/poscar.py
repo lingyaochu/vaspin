@@ -41,6 +41,10 @@ class Poscar:
             Poscar object
         """
         __data = read_poscar(filepath)
+        __data["lattice"] = np.array(__data["lattice"])
+        __data["species"] = np.array(__data["species"])
+        __data["number"] = np.array(__data["number"])
+
         if __data["coortype"] == "Direct":
             __data["frac"] = np.array(__data["coordinate"])
 
@@ -556,7 +560,7 @@ class Poscar:
 
     def check_coor(
         self, coor_frac: FloatArray, tol: float = 1e-3
-    ) -> tuple[np.bool, int]:
+    ) -> tuple[np.bool_, int]:
         """Check one coordinate whether in current Poscar class, return its index if exsist
 
         Args:
