@@ -33,7 +33,7 @@ def wrap_frac(coordinates: FloatArray) -> FloatArray:
     Returns:
         Normalized fractional coordinates
     """
-    return coordinates - np.floor(coordinates)
+    return coordinates % 1.0
 
 
 def find_rotation(arrow1: FloatArray, arrow2: FloatArray) -> FloatArray:

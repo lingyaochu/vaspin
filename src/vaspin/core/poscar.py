@@ -446,6 +446,7 @@ class Poscar:
         self,
         candidates_atoms: StrArray,
         candidates_coor_frac_sc: FloatArray,
+        ncells: int,
         position_tolerence: float = 1e-5,
     ) -> tuple[StrArray, FloatArray]:
         """Filter out the atoms that are out of the supercell range
@@ -453,63 +454,41 @@ class Poscar:
         Args:
             candidates_atoms: the candidate species to be filtered
             candidates_coor_frac_sc: the candidate fractional coordinates to be filtered
+            ncells: the number of primitive cells in the supercell
             position_tolerence: the tolerance for the position, default is 1e-5
 
         Returns:
             species_final: the filtered species
             coor_frac_final: the filtered fractional coordinates
         """
-        # dealing boundary atoms
-        mapped_coor = candidates_coor_frac_sc % 1.0
-        mapped_coor[np.abs(mapped_coor - 1.0) < position_tolerence] = 0.0
-        mapped_coor[np.abs(mapped_coor) < position_tolerence] = 0.0
+        # dealing with boundary condition
+        decimal = round(-np.log10(position_tolerence)) + 1
+        rounded_coor = np.round(candidates_coor_frac_sc, decimals=decimal)
+        wraped_coor = wrap_frac(rounded_coor)
+        wraped_coor[np.abs(wraped_coor - 1.0) < position_tolerence] = 0.0
+        wraped_coor[np.abs(wraped_coor) < position_tolerence] = 0.0
 
-        # round the float decimals
-        decimals = int(-np.log10(position_tolerence)) + 1
-        rounded_coor = np.round(mapped_coor, decimals=decimals)
-        rounded_coor[np.abs(rounded_coor - 1.0) < 10 ** (-decimals)] = 0.0
-
+        # we should sort the int values to make sure the order is correct
+        # no matter how we round the floats, they are still floats in the memory.
+        # the lexsort will *exactly* sort the floats, and the order is not guaranteed.
+        coor_tosort = np.trunc(wraped_coor * 1 / position_tolerence).astype(int)
         sort_indices = np.lexsort(
-            (
-                rounded_coor[:, 2],
-                rounded_coor[:, 1],
-                rounded_coor[:, 0],
-                candidates_atoms,
-            )
+            (coor_tosort[:, 2], coor_tosort[:, 1], coor_tosort[:, 0])
         )
 
-        unique_indices_list = []
+        sorted_coor = wraped_coor[sort_indices]
+        coor_diff = np.diff(sorted_coor, axis=0)
+        is_different = np.any(np.abs(coor_diff) >= position_tolerence, axis=1)
+        unique_mask_sorted = np.concatenate(([True], is_different))
+        unique_indices = sort_indices[unique_mask_sorted]
 
-        last_unique_idx = sort_indices[0]
-        unique_indices_list.append(last_unique_idx)
+        expected_atoms = len(self.atoms) * abs(ncells)
+        if len(unique_indices) != expected_atoms:
+            raise ValueError(
+                f"the number of atoms is wrong, expect {expected_atoms}, but get {len(unique_indices)}"
+            )
 
-        last_species = candidates_atoms[last_unique_idx]
-        last_rounded_coor = rounded_coor[last_unique_idx]
-
-        for i in range(1, len(sort_indices)):
-            current_idx = sort_indices[i]
-            current_species = candidates_atoms[current_idx]
-            current_rounded_coor = rounded_coor[current_idx]
-
-            is_different = False
-            if current_species != last_species:
-                is_different = True
-            elif not np.all(
-                np.abs(current_rounded_coor - last_rounded_coor) < 10 ** (-decimals)
-            ):
-                is_different = True
-
-            if is_different:
-                unique_indices_list.append(current_idx)
-                last_unique_idx = current_idx
-                last_species = current_species
-                last_rounded_coor = current_rounded_coor
-
-        unique_indices = np.array(unique_indices_list, dtype=int)
-        species_final = candidates_atoms[unique_indices]
-        coor_frac_final = mapped_coor[unique_indices]
-
-        return species_final, coor_frac_final
+        return candidates_atoms[unique_indices], wraped_coor[unique_indices]
 
     def build_sc(self, transmat: IntArray) -> PosData:
         """Build supercell according to the transformation matrix
@@ -528,8 +507,7 @@ class Poscar:
             transmat: the transformation matrix, which is the transpose of the VESTA convention
         """
         transmat = self._prepare_transformation_matrix(transmat)
-
-        ncells = int(np.linalg.det(transmat))
+        ncells = round(np.linalg.det(transmat))
         if ncells < 0:
             print("It is recommended to keep the chirality unchanged.")
 
@@ -539,15 +517,8 @@ class Poscar:
             self._generate_candidate_atoms_and_coor(lattice_sc)
         )
         atoms_final, coor_frac_final = self._filter_outbound_atoms(
-            candidates_atoms, candidates_coor_frac_sc
+            candidates_atoms, candidates_coor_frac_sc, ncells
         )
-
-        # check if the number of atoms is correct
-        expected_natoms = len(self.coor_frac) * abs(ncells)
-        if len(coor_frac_final) != expected_natoms:
-            raise ValueError(
-                f"the number of atoms is wrong, expect {expected_natoms}, but get {len(coor_frac_final)}"
-            )
 
         # build new PosData
         species, numbers, coor_frac_sc = self._species_numbers_coor(
