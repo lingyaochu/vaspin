@@ -21,3 +21,15 @@ dev = [
 [project.urls]
 Homepage = "https://github.com/lingyaochu/vaspin"
 Repository = "https://github.com/lingyaochu/vaspin.git"
+
+[dependency-groups]
+dev = [
+    "vaspin",
+]
+
+[tool.uv.sources]
+vaspin = { workspace = true }
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
