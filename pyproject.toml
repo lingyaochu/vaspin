@@ -12,18 +12,14 @@ dependencies = [
     "numpy>=1.24.0,<=2.1.0"
 ]
 
-[project.optional-dependencies]
-dev = [
-    "pytest>=8.2.0",
-    "pre-commit>=4.0.0"
-]
-
 [project.urls]
 Homepage = "https://github.com/lingyaochu/vaspin"
 Repository = "https://github.com/lingyaochu/vaspin.git"
 
 [dependency-groups]
 dev = [
+    "pre-commit>=4.0.0",
+    "pytest>=8.3.5",
     "vaspin",
 ]
 
@@ -33,6 +29,31 @@ vaspin = { workspace = true }
 [tool.codespell]
 write-change = true
 skip = "src/vaspin/utils/constants.py"
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.ruff.lint]
+select = [
+    "D",
+    "C90",
+    "E",
+    "W",
+    "F",
+    "I",
+    "B",
+    "SIM"
+]
+ignore = ["D415"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
 
 [build-system]
 requires = ["setuptools"]
