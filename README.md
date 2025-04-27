@@ -5,7 +5,7 @@ A Python package for handling VASP input files, currently only supports handling
 ## Development Setup
 
 ```bash
-uv pip install -e .[dev]
+uv sync --all-extras
 pre-commit install
 ```
 
