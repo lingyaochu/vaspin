@@ -30,6 +30,10 @@ dev = [
 [tool.uv.sources]
 vaspin = { workspace = true }
 
+[tool.codespell]
+write-change = true
+skip = "src/vaspin/utils/constants.py"
+
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"

@@ -1,9 +1,10 @@
 """Test POSCAR class."""
 
+import numpy as np
 import pytest
+
 from vaspin import Poscar
 from vaspin.utils import PosData
-import numpy as np
 
 FLOAT_TOL = 1e-5
 

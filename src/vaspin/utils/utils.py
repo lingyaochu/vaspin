@@ -39,7 +39,8 @@ def wrap_frac(coordinates: FloatArray) -> FloatArray:
 def find_rotation(arrow1: FloatArray, arrow2: FloatArray) -> FloatArray:
     """Find the rotation matrix that rotates arrow1 to arrow2.
 
-    (If arrow1 and arrow2 have different lengths, the rotation matrix for their corresponding unit vectors will be found)
+    If arrow1 and arrow2 have different lengths,
+    the rotation matrix for their corresponding unit vectors will be found
 
     Args:
         arrow1: Original vector

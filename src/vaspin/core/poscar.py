@@ -4,15 +4,14 @@
 Contains functionality for handling VASP POSCAR files and structure manipulation.
 """
 
-import numpy as np
-from numpy import float64
 from itertools import product
-
 from typing import Literal
 
-from vaspin.types.array import FloatArray, StrArray, IntArray
-from vaspin.utils import MASS_DICT, PosData, StrainTensor, wrap_frac
+import numpy as np
+
 from vaspin.core.io import read_poscar, write_poscar
+from vaspin.types.array import FloatArray, IntArray, StrArray
+from vaspin.utils import PosData, StrainTensor, wrap_frac
 
 
 class Poscar:
@@ -160,7 +159,8 @@ class Poscar:
             magnitude: Displacement magnitude
             method: Displacement method
                 - 'cate': Uniform random displacement in Cartesian coordinates
-                - 'sphere': Uniform random displacement on a sphere surface, ensuring displacement magnitude is within [0, magnitude]
+                - 'sphere': Uniform random displacement on a sphere surface
+                    ensuring displacement magnitude is within [0, magnitude]
 
         Returns:
             Random displacement array with same shape as atomic coordinates
@@ -194,7 +194,7 @@ class Poscar:
         return np.random.uniform(-magnitude, magnitude, self.coor_cate.shape)
 
     def _random_disp_sphere(self, magnitude: float) -> FloatArray:
-        """Generate random displacement on a sphere surface, ensuring displacement magnitude is within [0, magnitude]
+        """Generate random displacement on a sphere surface
 
         Args:
             magnitude: Displacement magnitude
@@ -279,7 +279,7 @@ class Poscar:
         return wrap_frac(coor_frac)
 
     def move2center(self, target: int | FloatArray) -> FloatArray:
-        """Move target to the center of the cell and change all the atoms in the cell accordingly.
+        """Move target to the center of the cell
 
         Args:
             target: Either atom index or fractional coordinates to be centered
@@ -305,13 +305,13 @@ class Poscar:
         self,
         target: int | FloatArray,
     ) -> FloatArray:
-        """Calculate distances between a target atom or coordinate and other atoms in the structure
+        """Calculate distances between the target and other atoms in the structure
 
         Args:
-            target: Either index of target atom in structure or specific fractional coordinate
+            target: Either index of an atom in structure or a fractional coordinate
 
         Returns:
-            distance_list: Array of distances between target and all atoms, in the same order as atoms
+            distance_list: Array of distances between target and all atoms
         """
         coor_frac_moved = self.move2center(target)
         cell_center = np.array([0.5, 0.5, 0.5])
@@ -485,7 +485,8 @@ class Poscar:
         expected_atoms = len(self.atoms) * abs(ncells)
         if len(unique_indices) != expected_atoms:
             raise ValueError(
-                f"the number of atoms is wrong, expect {expected_atoms}, but get {len(unique_indices)}"
+                f"the number of atoms is wrong, expect {expected_atoms},"
+                f" but get {len(unique_indices)}"
             )
 
         return candidates_atoms[unique_indices], wraped_coor[unique_indices]
@@ -504,7 +505,8 @@ class Poscar:
         c' = t31 * a + t32 * b + t33 * c
 
         Args:
-            transmat: the transformation matrix, which is the transpose of the VESTA convention
+            transmat: the transformation matrix,
+                which is the transpose of the VESTA convention
         """
         transmat = self._prepare_transformation_matrix(transmat)
         ncells = round(np.linalg.det(transmat))
@@ -532,33 +534,34 @@ class Poscar:
     def check_coor(
         self, coor_frac: FloatArray, tol: float = 1e-3
     ) -> tuple[np.bool_, int]:
-        """Check one coordinate whether in current Poscar class, return its index if exsist
+        """Check one coordinate whether in current Poscar class, return index if exist
 
         Args:
             coor_frac: the fractional coordinate to be checked
             tol: the absolute error tolerance
 
         Return:
-            whether exsist
-            the index of the target coordinate, return 0 if not exsist
+            whether exist
+            the index of the target coordinate, return 0 if not exist
         """
-        exsist = np.all(np.isclose(self.coor_frac, coor_frac, atol=tol), axis=1)
-        return np.any(exsist), int(np.argmax(exsist))
+        exist = np.all(np.isclose(self.coor_frac, coor_frac, atol=tol), axis=1)
+        return np.any(exist), int(np.argmax(exist))
 
     def _species_numbers_coor(
         self, atoms: StrArray | None = None, coor_frac: FloatArray | None = None
     ) -> tuple[StrArray, IntArray, FloatArray]:
-        """An auxiliary function for get species and numbers from atoms list and the corresponding fractional coordinates
+        """Get species and numbers from atoms and coordinates list
 
-        Under processing, the order of the atoms may change, so we would change the fractional coordinates also, to maintain the consistancy.
+        Under processing, the order of the atoms may change,
+        so we would change the fractional coordinates also
 
         Args:
             atoms: the atom list, default to be the atoms in current Poscar
-            coor_frac: the fractional coordinates, default to be the coordinates in current Poscar
+            coor_frac: the fractional coordinates, default as current Poscar.coor_frac
 
         Returns:
             species: the unique elements list
-            numbers: the list of numbers of the unqiue elements
+            numbers: the list of numbers of the unique elements
             new_coor: the new fractional coordinates that obeys the new order
         """
         if atoms is None:
@@ -580,8 +583,8 @@ class Poscar:
             coor_frac: the coordinate to create defect
             newatom: the substitution atom
         """
-        exsist, index = self.check_coor(coor_frac)
-        if not exsist:
+        exist, index = self.check_coor(coor_frac)
+        if not exist:
             raise ValueError(
                 "You can't create a substitution at this site, the site is empty!"
             )
@@ -600,7 +603,8 @@ class Poscar:
             species=species_new,
             number=numbers_new,
             frac=coor_frac_new,
-            comment=f"{self.comment}  {newatom}_{self.atoms[index]} at ({coor_sub[0]:.3f}, {coor_sub[1]:.3f}, {coor_sub[2]:.3f})",
+            comment=f"{self.comment}  {newatom}_{self.atoms[index]} at"
+            f" ({coor_sub[0]:.3f}, {coor_sub[1]:.3f}, {coor_sub[2]:.3f})",
         )
 
     def defect_create_vac(self, coor_frac: FloatArray) -> PosData:
@@ -609,8 +613,8 @@ class Poscar:
         Args:
             coor_frac: the coordinate to create defect
         """
-        exsist, index = self.check_coor(coor_frac)
-        if not exsist:
+        exist, index = self.check_coor(coor_frac)
+        if not exist:
             raise ValueError(
                 "You can't create a vacancy at this site, the site is empty!"
             )
@@ -627,5 +631,6 @@ class Poscar:
             species=species_final,
             number=number_final,
             frac=coor_frac_final,
-            comment=f"{self.comment}  Va_{self.atoms[index]} at ({coor_vac[0]:.3f}, {coor_vac[1]:.3f}, {coor_vac[2]:.3f})",
+            comment=f"{self.comment}  Va_{self.atoms[index]} at "
+            f"({coor_vac[0]:.3f}, {coor_vac[1]:.3f}, {coor_vac[2]:.3f})",
         )

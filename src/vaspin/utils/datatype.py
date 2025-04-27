@@ -23,7 +23,11 @@ class StrainTensor:
 
     @classmethod
     def from_sequence(cls, values: Sequence[float]) -> "StrainTensor":
-        """Create a StrainTensor from a sequence (list, tuple, or NumPy array) of values."""
+        """Create a StrainTensor from a sequence of values.
+
+        Args:
+            values: A sequence(list, tuple, or Numpy array) of values.
+        """
         if not isinstance(values, (list, tuple, np.ndarray)):
             raise TypeError("`values` must be a list, tuple, or numpy array.")
 
@@ -33,7 +37,7 @@ class StrainTensor:
         if not all(isinstance(v, (int, float)) for v in values):
             raise TypeError("All values must be numeric (int or float).")
 
-        kwargs = {comp: val for comp, val in zip(cls._COMPONENTS, values)}
+        kwargs = {comp: val for comp, val in zip(cls._COMPONENTS, values, strict=True)}
         return cls(**kwargs)
 
     def get_matrix_sym(self) -> FloatArray:
@@ -49,7 +53,7 @@ class StrainTensor:
     def get_matrix_unsym(self) -> FloatArray:
         """Return the asymmetric deformation matrix for unidirectional strain
 
-        only for appling to lattice purpose.
+        only for applying to lattice purpose.
         """
         return np.array(
             [
