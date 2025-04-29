@@ -15,3 +15,8 @@ tmp_test
 # build
 build/
 *.egg-info/
+
+# Coverage data
+.coverage
+.coverage.*
+coverage.xml
