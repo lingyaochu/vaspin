@@ -69,7 +69,7 @@ def test_build_strain(
         "sample_strain_input_array",
     ],
 )
-def test_build_strain_from_squence(
+def test_from_squence(
     input_seq_name, request, sample_strain_tensor_sym, sample_strain_tensor_unsym
 ):
     """Test build strain tensor from sequence input
@@ -88,3 +88,26 @@ def test_build_strain_from_squence(
     assert test_strain.get_matrix_unsym() == pytest.approx(
         sample_strain_tensor_unsym, abs=FLOAT_TOL
     )
+
+
+def test_invalid_type():
+    """Test build strain tensor from invalid sequence type"""
+    invalid_input = "invalid_type"
+    match_error = "`values` must be a list, tuple, or numpy array."
+    with pytest.raises(TypeError, match=match_error):
+        StrainTensor.from_sequence(invalid_input)  # type: ignore
+
+
+def test_invalid_length(sample_strain_input_list):
+    """Test build strain tensor from invalid sequence length"""
+    invalid_input = sample_strain_input_list + [0.1]
+    with pytest.raises(ValueError, match="Too many values provided for StrainTensor."):
+        StrainTensor.from_sequence(invalid_input)
+
+
+def test_invalid_value():
+    """Test build strain tensor from invalid sequence value"""
+    invalid_input = [0.1, 0.2, "invalid_value"]
+    match_error = r"All values must be numeric \(int or float\)."
+    with pytest.raises(TypeError, match=match_error):
+        StrainTensor.from_sequence(invalid_input)
