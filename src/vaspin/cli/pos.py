@@ -2,11 +2,11 @@
 """this script is to get information from poscar"""
 
 import argparse
-
+import json
 from typing import Literal
+
 from vaspin import Poscar
 from vaspin.core.io import read_poscar
-import json
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -67,13 +67,15 @@ def pos_disp(
     )
 
 
-operation = {
-    "json": write_json,
-    "lattice": get_lattice,
-    "disp": lambda: pos_disp(args.length, args.method),
-}
-if args.job in operation:
-    operation[args.job]()
-else:
-    print("The job is not supported")
-    exit(1)
+def main():
+    """The entry point of the script"""
+    operation = {
+        "json": write_json,
+        "lattice": get_lattice,
+        "disp": lambda: pos_disp(args.length, args.method),
+    }
+    if args.job in operation:
+        operation[args.job]()
+    else:
+        print("The job is not supported")
+        exit(1)

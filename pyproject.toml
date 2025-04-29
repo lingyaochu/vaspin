@@ -23,6 +23,9 @@ dev = [
     "vaspin",
 ]
 
+[project.scripts]
+pos = "vaspin.cli.pos:main"
+
 [tool.uv.sources]
 vaspin = { workspace = true }
 
