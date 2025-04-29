@@ -19,7 +19,7 @@ class StrainTensor:
     yz: float = 0.0
     xz: float = 0.0
 
-    _COMPONENTS: ClassVar[Tuple[str, ...]] = ("xx", "yy", "zz", "xy", "yz", "xz")
+    _COMPONENTS: ClassVar[Tuple[str, ...]] = ("xx", "yy", "zz", "xy", "xz", "yz")
 
     @classmethod
     def from_sequence(cls, values: Sequence[float]) -> "StrainTensor":

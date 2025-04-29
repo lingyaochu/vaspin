@@ -103,3 +103,10 @@ def test_init_from_POSCAR(sample_poscar):
         {"a": 4.3591197305808720, "b": 4.3591197305808720, "c": 4.3591197305808720},
         FLOAT_TOL,
     )
+
+
+def test_init_from_none():
+    """Test initializing Poscar from non-exist file."""
+    nonfile = "FILE_NOT_EXSIST"
+    with pytest.raises(FileNotFoundError, match=f"File does not exist: {nonfile}"):
+        Poscar.from_file(nonfile)
