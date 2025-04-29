@@ -31,52 +31,60 @@ def sample_strain_tensor_unsym():
 
 
 @pytest.fixture
-def sample_strain_input_list():
+def sample_strain_input_list(sample_strain_input):
     """Fixture for sample strain input as a list."""
-    return list(sample_strain_input().values())
+    return list(sample_strain_input.values())
 
 
 @pytest.fixture
-def sample_strain_input_tuple():
+def sample_strain_input_tuple(sample_strain_input_list):
     """Fixture for sample strain input as a tuple."""
-    return tuple(sample_strain_input_list())
+    return tuple(sample_strain_input_list)
 
 
 @pytest.fixture
-def sample_strain_input_array():
+def sample_strain_input_array(sample_strain_input_list):
     """Fixture for sample strain input as a Numpy array."""
-    return np.array(sample_strain_input_list())
+    return np.array(sample_strain_input_list)
 
 
-def test_build_strain():
+def test_build_strain(
+    sample_strain_input, sample_strain_tensor_sym, sample_strain_tensor_unsym
+):
     """Test build strain tensor from normal input"""
-    test_strain = StrainTensor(**sample_strain_input())
+    test_strain = StrainTensor(**sample_strain_input)
     assert test_strain.get_matrix_sym() == pytest.approx(
-        sample_strain_tensor_sym(), abs=FLOAT_TOL
+        sample_strain_tensor_sym, abs=FLOAT_TOL
     )
     assert test_strain.get_matrix_unsym() == pytest.approx(
-        sample_strain_tensor_unsym(), abs=FLOAT_TOL
+        sample_strain_tensor_unsym, abs=FLOAT_TOL
     )
 
 
 @pytest.mark.parametrize(
-    "input_seq",
+    "input_seq_name",
     [
-        sample_strain_input_list(),
-        sample_strain_input_tuple(),
-        sample_strain_input_array(),
+        "sample_strain_input_list",
+        "sample_strain_input_tuple",
+        "sample_strain_input_array",
     ],
 )
-def test_build_strain_from_squence(input_seq):
+def test_build_strain_from_squence(
+    input_seq_name, request, sample_strain_tensor_sym, sample_strain_tensor_unsym
+):
     """Test build strain tensor from sequence input
 
     Args:
-        input_seq: A sequence(list, tuple, or Numpy array) of values.
+        input_seq_name: A sequence(list, tuple, or Numpy array) of values.
+        request: pytest fixture request object to access the fixture
+        sample_strain_tensor_sym: Fixture for sample symmetric strain tensor.
+        sample_strain_tensor_unsym: Fixture for sample unsymmetric strain tensor.
     """
+    input_seq = request.getfixturevalue(input_seq_name)
     test_strain = StrainTensor.from_sequence(input_seq)
     assert test_strain.get_matrix_sym() == pytest.approx(
-        sample_strain_tensor_sym(), abs=FLOAT_TOL
+        sample_strain_tensor_sym, abs=FLOAT_TOL
     )
     assert test_strain.get_matrix_unsym() == pytest.approx(
-        sample_strain_tensor_unsym(), abs=FLOAT_TOL
+        sample_strain_tensor_unsym, abs=FLOAT_TOL
     )
