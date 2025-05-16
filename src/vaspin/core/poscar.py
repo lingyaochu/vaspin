@@ -42,6 +42,9 @@ class Poscar:
         Returns:
             Poscar object
         """
+        if not isinstance(filepath, str):
+            raise ValueError("filepath must be a string")
+
         __data = read_poscar(filepath)
         __data["lattice"] = np.array(__data["lattice"])
         __data["species"] = np.array(__data["species"])
