@@ -195,6 +195,9 @@ class VaspOutcarParser:
 
     def __init__(self, outcar_path: str):
         """Initialize the parser with the path to the OUTCAR file."""
+        if not isinstance(outcar_path, str):
+            raise TypeError("The OUTCAR path must be a string.")
+
         self.outcar_path: str = outcar_path
         self.data: Dict[str, Any] = {}
         self._state: ParserState = ParserState()
