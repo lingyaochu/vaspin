@@ -27,6 +27,9 @@ class Poscar:
             FileNotFoundError: File does not exist
             ValueError: Invalid file format
         """
+        if not isinstance(posdata, PosData):
+            raise ValueError("posdata must be a PosData object")
+
         self.data = posdata
 
     @classmethod
