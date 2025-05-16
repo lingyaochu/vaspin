@@ -9,8 +9,8 @@ from vaspin.types.array import FloatArray, IntArray, StrArray
 
 
 @dataclass
-class StrainTensor:
-    """dataclass for 3*3 strain tensor"""
+class SymTensor:
+    """dataclass for 3*3 symmetric tensor"""
 
     xx: float = 0.0
     yy: float = 0.0
@@ -22,7 +22,7 @@ class StrainTensor:
     _COMPONENTS: ClassVar[Tuple[str, ...]] = ("xx", "yy", "zz", "xy", "xz", "yz")
 
     @classmethod
-    def from_sequence(cls, values: Sequence[float]) -> "StrainTensor":
+    def from_sequence(cls, values: Sequence[float]) -> "SymTensor":
         """Create a StrainTensor from a sequence of values.
 
         Args:
@@ -49,6 +49,10 @@ class StrainTensor:
                 [self.xz, self.yz, self.zz],
             ]
         )
+
+
+class StrainTensor(SymTensor):
+    """dataclass for 3*3 strain tensor"""
 
     def get_matrix_unsym(self) -> FloatArray:
         """Return the asymmetric deformation matrix for unidirectional strain
