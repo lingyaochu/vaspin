@@ -9,7 +9,8 @@ authors = [
     { name = "Xin Zhao", email = "zx0@mail.ustc.edu.cn"}
 ]
 dependencies = [
-    "numpy>=1.24.0,<=2.1.0"
+    "numpy>=1.24.0,<=2.1.0",
+    "uniplot>=0.20.1",
 ]
 
 [project.urls]
@@ -26,6 +27,7 @@ dev = [
 
 [project.scripts]
 pos = "vaspin.cli.pos:main"
+force = "vaspin.cli.force:main"
 
 [tool.uv.sources]
 vaspin = { workspace = true }

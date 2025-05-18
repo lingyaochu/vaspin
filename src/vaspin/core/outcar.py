@@ -212,8 +212,8 @@ class VaspOutcarParser:
         return [
             NIonsHandler(),
             NElectronHandler(),
-            ForceHandler(),
             IonicEnergyHandler(),
+            ForceHandler(),
             PhononHandler(),
             DTensorHandler(),
         ]
@@ -259,6 +259,16 @@ class VaspOutcarParser:
     def dmat(self) -> List[List[float]]:
         """Returns the D matrix from the parsed data."""
         return self.data.get("D tensor", [])
+
+    @property
+    def force(self) -> List[List[List[float]]]:
+        """Returns the forces from the parsed data."""
+        return self.data.get("forces", [])
+
+    @property
+    def energy(self) -> List[float]:
+        """Returns the ionic energy from the parsed data."""
+        return self.data.get("Ionic energy", [])
 
     @property
     def log(self) -> List[str]:
