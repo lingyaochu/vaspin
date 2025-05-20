@@ -33,7 +33,7 @@ def cate_sample_posdata():
 @pytest.fixture
 def sample_poscar(data_path):
     """Fixture for sample POSCAR."""
-    return data_path / "POSCAR"
+    return (data_path / "POSCAR").as_posix()
 
 
 def test_init_from_posdata(sample_posdata, cate_sample_posdata):

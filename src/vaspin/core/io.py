@@ -125,9 +125,11 @@ def write_poscar(
     # Convert coordinate data to string
     coor_str = ""
     for i in range(len(coor_frac)):
-        coor_str += f" {coor_frac[i][0]:20.16f}"
-        f" {coor_frac[i][1]:20.16f}"
-        f" {coor_frac[i][2]:20.16f}\n"
+        coor_str += (
+            f" {coor_frac[i][0]:20.16f}"
+            + f" {coor_frac[i][1]:20.16f}"
+            + f" {coor_frac[i][2]:20.16f}\n"
+        )
 
     # Convert atom list data to string
     unique_atoms = np.unique(atoms)
