@@ -48,10 +48,10 @@ def get_local_stru(pos: Poscar, defect_coor: FloatArray, dmax: float) -> PosData
     Args:
         pos: the original structure contains the defect
         defect_coor: the fractional coordinates of the defect site
-        dmax: the maximum distance of the first nearest neighbor
+        dmax: Additional distance beyond nearest neighbor for local cutoff
 
     Returns:
-        local_stru: the local structure around the defect site in the same shell
+        local_stru: the local structure around the defect site in the same lattice
     """
     distance_list = pos.distance(defect_coor)
     max_range = np.sort(distance_list)[1] + dmax
@@ -77,20 +77,20 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-a", "--atom", help="input the dopant symbol")
     parser.add_argument(
-        "-p", "--position", type=list, help="input the vacancy coordinate"
+        "-p", "--position", type=list, help="input the coordinate of the defect"
     )
     parser.add_argument(
         "-d",
         "--dmax",
         type=float,
         default=0.5,
-        help="shell range of the first nearest neighbor",
+        help="Extra distance beyond nearest neighbor for local cutoff. (Default: 0.5)",
     )
     parser.add_argument(
         "-c",
         "--center",
         action="store_true",
-        help="whether to put center atom in the center of supercell",
+        help="put the local structure in the center of supercell, default is False",
     )
     args = parser.parse_args()
 
