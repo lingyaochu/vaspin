@@ -77,7 +77,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-a", "--atom", help="input the dopant symbol")
     parser.add_argument(
-        "-p", "--position", type=list, help="input the coordinate of the defect"
+        "-p",
+        "--position",
+        type=float,
+        nargs=3,
+        metavar=("X", "Y", "Z"),
+        help="input the fractional coordinates of the defect",
     )
     parser.add_argument(
         "-d",
