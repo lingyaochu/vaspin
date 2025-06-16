@@ -99,6 +99,11 @@ class Poscar:
         """Get the lattice length"""
         return self.data.abc.copy()
 
+    @property
+    def volume(self) -> np.float64:
+        """Get the unit cell volume"""
+        return self.calculate_volume(self.lattice)
+
     @staticmethod
     def calculate_lattice(coe: float, lat: list[list[float]]) -> FloatArray:
         """Calculate lattice vectors based on input coefficient and lattice
@@ -640,3 +645,16 @@ class Poscar:
             comment=f"{self.comment}  Va_{self.atoms[index]} at "
             f"({coor_vac[0]:.3f}, {coor_vac[1]:.3f}, {coor_vac[2]:.3f})",
         )
+
+    def max_sphere_radius(self) -> np.floating:
+        """The maximum radius of a sphere that can be inscribed in the unit cell.
+
+        Returns:
+            radius: The maximum radius of the sphere.
+        """
+        plane_area = np.linalg.norm(np.cross(self.lattice[1], self.lattice[2]))
+        for i in range(1, 3):
+            area = np.linalg.norm(np.cross(self.lattice[i - 2], self.lattice[i - 1]))
+            plane_area = area if area > plane_area else plane_area
+
+        return self.volume / plane_area / 2
