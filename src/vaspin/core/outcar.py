@@ -335,6 +335,35 @@ class HyperfineDipolarHandler(InfoHandler):
         data["hyperfine_dipolar"] = hyper_dipolar
 
 
+class SitePotHandler(InfoHandler):
+    """Handles the site potentials for each atoms in the last ionic step"""
+
+    KEY = "Site potential"
+
+    @property
+    def HEADER(self) -> str:
+        """Set header string for site potentials."""
+        return "the norm of the test charge is"
+
+    def parse(
+        self, line: str, f_iter: TextIO, data: Dict[str, Any], state: ParserState
+    ):
+        """Parse the site potentials for each atom in the last ionic step."""
+        self._log(data, "Parsing site potentials for each atom.")
+
+        site_pot = []
+        while True:
+            line_str = next(f_iter).strip()
+            if line_str == "":
+                break
+
+            parts = line_str.split()
+            values = [float(parts[i]) for i in range(1, len(parts), 2)]
+            site_pot.extend(values)
+
+        data["site_potential"] = site_pot
+
+
 class VaspOutcarParser:
     """Parses VASP OUTCAR files using a modular handler system."""
 
