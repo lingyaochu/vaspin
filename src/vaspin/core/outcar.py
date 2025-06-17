@@ -241,7 +241,7 @@ class DielectricEleHandler(InfoHandler):
         self._log(data, "Parsing dielectric tensor, the electronic part.")
         self._skip_lines(f_iter, 1)
 
-        for _i in range(3):
+        for _i in repeat(None, 3):
             line_str = next(f_iter).strip().split()
             row = [float(x) for x in line_str]
             if "dielectric_ele" not in data:
@@ -266,12 +266,73 @@ class DielectricIonHandler(InfoHandler):
         self._log(data, "Parsing dielectric tensor, the ionic part.")
         self._skip_lines(f_iter, 1)
 
-        for _i in range(3):
+        for _i in repeat(None, 3):
             line_str = next(f_iter).strip().split()
             row = [float(x) for x in line_str]
             if "dielectric_ion" not in data:
                 data["dielectric_ion"] = []
             data["dielectric_ion"].append(row)
+
+
+class HyperfineFermiHandler(InfoHandler):
+    """Handles the hyperfine interaction parameters from fermi contact."""
+
+    KEY = "Hyperfine fermi"
+
+    @property
+    def HEADER(self) -> str:
+        """Set header string for hyperfine parameters."""
+        return "Fermi contact (isotropic) hyperfine coupling parameter (MHz)"
+
+    def parse(
+        self, line: str, f_iter: TextIO, data: Dict[str, Any], state: ParserState
+    ) -> None:
+        """Parse the hyperfine interaction parameters from fermi contact."""
+        self._log(data, "Parsing hyperfine interaction parameters from fermi contact.")
+        self._skip_lines(f_iter, 3)
+
+        A_pw = []
+        A_ps = []
+        A_ae = []
+        A_c = []
+        for _ in repeat(None, state.num_atoms):
+            line_str = next(f_iter).strip().split()
+            A_pw.append(float(line_str[1]))
+            A_ps.append(float(line_str[2]))
+            A_ae.append(float(line_str[3]))
+            A_c.append(float(line_str[4]))
+
+        data["hyperfine_fermi"] = {"A_pw": A_pw, "A_ps": A_ps, "A_ae": A_ae, "A_c": A_c}
+
+
+class HyperfineDipolarHandler(InfoHandler):
+    """Handles the hyperfine interaction parameters from dipolar interaction."""
+
+    KEY = "Hyperfine dipolar"
+
+    @property
+    def HEADER(self) -> str:
+        """Set header string for hyperfine parameters."""
+        return "Dipolar hyperfine coupling parameters (MHz)"
+
+    def parse(
+        self, line: str, f_iter: TextIO, data: Dict[str, Any], state: ParserState
+    ) -> None:
+        """Parse the hyperfine interaction parameters from dipolar interaction."""
+        self._log(
+            data, "Parsing hyperfine interaction parameters from dipolar interaction."
+        )
+        self._skip_lines(f_iter, 3)
+
+        hyper_dipolar = []
+        for _ in repeat(None, state.num_atoms):
+            line_str = next(f_iter).strip().split()
+            parts_sym = [float(x) for x in line_str[1:7]]
+            dioplar_tensor = SymTensor().from_sequence(parts_sym)
+
+            hyper_dipolar.append(dioplar_tensor.get_matrix_sym().tolist())
+
+        data["hyperfine_dipolar"] = hyper_dipolar
 
 
 class VaspOutcarParser:
