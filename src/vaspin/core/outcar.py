@@ -2,7 +2,7 @@
 
 from abc import ABC, abstractmethod
 from itertools import repeat
-from typing import Any, Dict, List, TextIO
+from typing import Any, Dict, List, TextIO, Type
 
 from vaspin.utils.datatype import SymTensor
 
@@ -18,6 +18,17 @@ class ParserState:
 
 class InfoHandler(ABC):
     """Abstract base class for OUTCAR information handlers."""
+
+    KEY: str
+
+    def __init_subclass__(cls):
+        """Register subclass in the HANDLERS dictionary."""
+        super().__init_subclass__()
+        if "KEY" not in cls.__dict__ or not isinstance(cls.KEY, str):
+            raise TypeError(
+                f"{cls.__name__} must define a class variable 'KEY' of type str."
+            )
+        HANDLERS[cls.KEY] = cls
 
     @property
     @abstractmethod
@@ -52,8 +63,13 @@ class InfoHandler(ABC):
             next(f_iter)
 
 
+HANDLERS: Dict[str, Type[InfoHandler]] = {}
+
+
 class NElectronHandler(InfoHandler):
     """Handles the number of electron in the OUTCAR file."""
+
+    KEY = "N electrons"
 
     @property
     def HEADER(self) -> str:
@@ -71,6 +87,8 @@ class NElectronHandler(InfoHandler):
 
 class DTensorHandler(InfoHandler):
     """Handles the ZFS D tensor block."""
+
+    KEY = "D tensor"
 
     @property
     def HEADER(self) -> str:
@@ -94,6 +112,8 @@ class DTensorHandler(InfoHandler):
 class NIonsHandler(InfoHandler):
     """Handles the number of ions in the OUTCAR file."""
 
+    KEY = "N ions"
+
     @property
     def HEADER(self) -> str:
         """Set header string for number of ions."""
@@ -111,6 +131,8 @@ class NIonsHandler(InfoHandler):
 
 class ForceHandler(InfoHandler):
     """Handles the forces on atoms"""
+
+    KEY = "Forces"
 
     @property
     def HEADER(self) -> str:
@@ -139,6 +161,8 @@ class ForceHandler(InfoHandler):
 class IonicEnergyHandler(InfoHandler):
     """Handles the ionic energy in the OUTCAR file."""
 
+    KEY = "Energy"
+
     @property
     def HEADER(self) -> str:
         """Set header string for ionic energy."""
@@ -158,6 +182,8 @@ class IonicEnergyHandler(InfoHandler):
 
 class PhononHandler(InfoHandler):
     """Handles the phonon frequencies and eigenvectors."""
+
+    KEY = "Phonon"
 
     @property
     def HEADER(self) -> str:
@@ -193,6 +219,8 @@ class PhononHandler(InfoHandler):
 class DielectricEleHandler(InfoHandler):
     """Handles the electron contribution to dielectric tensor."""
 
+    KEY = "Dielectric ele"
+
     @property
     def HEADER(self) -> str:
         """Set header string for dielectric tensor."""
@@ -223,6 +251,8 @@ class DielectricEleHandler(InfoHandler):
 
 class DielectricIonHandler(InfoHandler):
     """Handles the ionic contribution to dielectric tensor."""
+
+    KEY = "Dielectric ion"
 
     @property
     def HEADER(self) -> str:
@@ -272,8 +302,20 @@ class VaspOutcarParser:
             DTensorHandler(),
         ]
 
-    def set_handlers(self, handlers: List[InfoHandler]):
+    def set_handlers(self, handler_keys: List[str]):
         """Set custom handlers to be used for parsing."""
+        if len(handler_keys) == 0:
+            raise ValueError("At least one handler key must be provided.")
+        handlers = []
+
+        for handler_key in handler_keys:
+            if handler_key not in HANDLERS:
+                raise ValueError(
+                    f"Handler '{handler_key}' is not registered."
+                    f"Please choose from: {list(HANDLERS.keys())}"
+                )
+            handlers.append(HANDLERS[handler_key]())
+
         self._handlers = handlers
 
     def _process_line(self, line: str, f: TextIO):

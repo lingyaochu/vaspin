@@ -6,20 +6,9 @@ import numpy as np
 from uniplot import plot
 
 from vaspin import VaspOutcarParser
-from vaspin.core.outcar import (
-    ForceHandler,
-    IonicEnergyHandler,
-    NElectronHandler,
-    NIonsHandler,
-)
 from vaspin.types.array import FloatArray
 
-FORCE_HANDLER = [
-    NIonsHandler(),
-    NElectronHandler(),
-    IonicEnergyHandler(),
-    ForceHandler(),
-]
+FORCE_HANDLER = ["N ions", "N electrons", "Energy", "Forces"]
 
 
 def get_max_force(forces: FloatArray) -> FloatArray:
