@@ -190,6 +190,60 @@ class PhononHandler(InfoHandler):
             data["phonon"]["eigenmodes"].append(mode)
 
 
+class DielectricEleHandler(InfoHandler):
+    """Handles the electron contribution to dielectric tensor."""
+
+    @property
+    def HEADER(self) -> str:
+        """Set header string for dielectric tensor."""
+        return (
+            "MACROSCOPIC STATIC DIELECTRIC TENSOR "
+            "(including local field effects in DFT)"
+        )
+
+    def parse(
+        self, line: str, f_iter: TextIO, data: Dict[str, Any], state: ParserState
+    ) -> None:
+        """Parse the dielectric tensor."""
+        # the electronic part appears twice, skip the second
+        if "dielectric_ele" in data:
+            self._log(data, "The electronic part has been parsed, skip.")
+            return
+
+        self._log(data, "Parsing dielectric tensor, the electronic part.")
+        self._skip_lines(f_iter, 1)
+
+        for _i in range(3):
+            line_str = next(f_iter).strip().split()
+            row = [float(x) for x in line_str]
+            if "dielectric_ele" not in data:
+                data["dielectric_ele"] = []
+            data["dielectric_ele"].append(row)
+
+
+class DielectricIonHandler(InfoHandler):
+    """Handles the ionic contribution to dielectric tensor."""
+
+    @property
+    def HEADER(self) -> str:
+        """Set header string for dielectric tensor."""
+        return "MACROSCOPIC STATIC DIELECTRIC TENSOR IONIC CONTRIBUTION"
+
+    def parse(
+        self, line: str, f_iter: TextIO, data: Dict[str, Any], state: ParserState
+    ) -> None:
+        """Parse the ionic part of dielectric tensor."""
+        self._log(data, "Parsing dielectric tensor, the ionic part.")
+        self._skip_lines(f_iter, 1)
+
+        for _i in range(3):
+            line_str = next(f_iter).strip().split()
+            row = [float(x) for x in line_str]
+            if "dielectric_ion" not in data:
+                data["dielectric_ion"] = []
+            data["dielectric_ion"].append(row)
+
+
 class VaspOutcarParser:
     """Parses VASP OUTCAR files using a modular handler system."""
 
