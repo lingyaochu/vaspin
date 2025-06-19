@@ -671,7 +671,7 @@ class StruMapping:
     dtol: float = 0.5
 
     # Atom mapping from stru_from to stru_to
-    mapping_atom: List[Tuple[int, int, Tuple[str, str], float]] = field(init=False)
+    mapping: List[Tuple[int, int, Tuple[str, str], float]] = field(init=False)
 
     def __post_init__(self):
         """Get the mapping relation from one structure to another"""
@@ -710,7 +710,7 @@ class StruMapping:
         """Get the atoms that are mapped to the same target atom"""
         target_mapping = defaultdict(list)
 
-        for idfrom, idto, specie_relation, dist in self.mapping_atom:
+        for idfrom, idto, specie_relation, dist in self.mapping:
             target_mapping[idto].append((idfrom, idto, specie_relation, dist))
 
         multi_mapped = {
@@ -722,7 +722,7 @@ class StruMapping:
 
     def un_mapped(self):
         """Get the atoms that are not mapped in the target structure"""
-        mapped = {idto for _, idto, _, _ in self.mapping_atom}
+        mapped = {idto for _, idto, _, _ in self.mapping}
         all_idto = set(range(len(self.stru_to.atoms)))
         un_mapped = all_idto - mapped
 
@@ -732,18 +732,18 @@ class StruMapping:
         """Get the map relation whose species are different"""
         different = [
             (difrom, idto, specie_relation, dist)
-            for difrom, idto, specie_relation, dist in self.mapping_atom
+            for difrom, idto, specie_relation, dist in self.mapping
             if specie_relation[0] != specie_relation[1]
         ]
         return different
 
     @staticmethod
     def multi_cast(
-        mulitmap: dict[int, List[Tuple[int, int, Tuple[str, str], float]]],
+        multimap: dict[int, List[Tuple[int, int, Tuple[str, str], float]]],
     ) -> List[Tuple[int, int, Tuple[str, str], float]]:
         """Cast the multi_mapped result to get the redundant atoms based on distance"""
         redundant_atoms = []
-        for _idto, idfrom_list in mulitmap.items():
+        for _idto, idfrom_list in multimap.items():
             # Sort by distance
             idfrom_list.sort(key=lambda x: x[3])
             redundant_atoms.extend(idfrom_list[1:])
@@ -771,7 +771,7 @@ class Defect:
     def defect_identify(self):
         """Identify the defect type and the location in the supercell"""
         interstitial_candi = self.map.multi_mapped()
-        vancancy_candi = self.map.un_mapped()
+        vacancy_candi = self.map.un_mapped()
         sub_candi = self.map.different_species()
 
         defect_sites = []
@@ -785,8 +785,8 @@ class Defect:
                 defect_type.append("Interstitial")
                 defect_name.append(f"{self.poscar_de.atoms[idfrom]}_i")
 
-        if len(vancancy_candi) != 0:
-            for idto in vancancy_candi:
+        if len(vacancy_candi) != 0:
+            for idto in vacancy_candi:
                 defect_sites.append(self.poscar_sc.coor_frac[idto])
                 defect_type.append("Vacancy")
                 defect_name.append("Va_" + self.poscar_sc.atoms[idto])
