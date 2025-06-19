@@ -49,6 +49,13 @@ class Ewald:
 
         return np.sqrt(lg / lr / 2)
 
+    @property
+    def lattice_energy(self):
+        """The charge interaction energy in the periodic defect system"""
+        r_part = self.ewald_sum_r(np.array([0, 0, 0]))
+        g_part = self.ewald_sum_g(np.array([0, 0, 0]))
+        return (r_part + g_part + self.pot_diff + self.pot_cancel) / 2
+
     def site_potential(self, coor_frac: FloatArray):
         """Calculate the electrostatic potential at a given fractional coordinate.
 
@@ -88,11 +95,21 @@ class Ewald:
 
     @property
     def pot_diff(self):
-        """Calculate the potential difference for Ewald summation.
+        """The energy term caused by finite gaussian charge.
 
         The second term in Phys. Rev. B 89, 195205 (2014). Eq(14)
         """
         return -1 / 4 / self.volume / self.ewald_gamma**2
+
+    @property
+    def pot_cancel(self):
+        """The  the cancellation term to `ewald_sum_g`
+
+        The fourth term in Phys. Rev. B 89, 195205 (2014). Eq(8)
+        """
+        return -self.ewald_gamma / (
+            2 * np.pi * np.sqrt(np.pi * np.linalg.det(self.dielectric))
+        )
 
     def ewald_sum_g(self, coor_frac: FloatArray):
         """Calculate the reciprocal space Ewald summation.
