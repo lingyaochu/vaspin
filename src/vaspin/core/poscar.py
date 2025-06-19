@@ -737,6 +737,18 @@ class StruMapping:
         ]
         return different
 
+    @staticmethod
+    def multi_cast(
+        mulitmap: dict[int, List[Tuple[int, int, Tuple[str, str], float]]],
+    ) -> List[Tuple[int, int, Tuple[str, str], float]]:
+        """Cast the multi_mapped result to get the redundant atoms based on distance"""
+        redundant_atoms = []
+        for _idto, idfrom_list in mulitmap.items():
+            # Sort by distance
+            idfrom_list.sort(key=lambda x: x[3])
+            redundant_atoms.extend(idfrom_list[1:])
+        return redundant_atoms
+
 
 class Defect:
     """A class for handling point defects in POSCAR files"""
@@ -758,13 +770,20 @@ class Defect:
 
     def defect_identify(self):
         """Identify the defect type and the location in the supercell"""
-        # interstitial_candi = self.map.multi_mapped()
+        interstitial_candi = self.map.multi_mapped()
         vancancy_candi = self.map.un_mapped()
         sub_candi = self.map.different_species()
 
         defect_sites = []
         defect_type = []
         defect_name = []
+
+        if len(interstitial_candi) != 0:
+            redundant_atoms = StruMapping.multi_cast(interstitial_candi)
+            for idfrom, idto, _specie_relation, _dist in redundant_atoms:
+                defect_sites.append(self.poscar_sc.coor_frac[idto])
+                defect_type.append("Interstitial")
+                defect_name.append(f"{self.poscar_de.atoms[idfrom]}_i")
 
         if len(vancancy_candi) != 0:
             for idto in vancancy_candi:
@@ -773,7 +792,16 @@ class Defect:
                 defect_name.append("Va_" + self.poscar_sc.atoms[idto])
 
         if len(sub_candi) != 0:
-            for _, idto, specie_relation, _ in sub_candi:
+            for _idfrom, idto, specie_relation, _dist in sub_candi:
                 defect_sites.append(self.poscar_sc.coor_frac[idto])
                 defect_type.append("Substitution")
                 defect_name.append(f"{specie_relation[0]}_{specie_relation[1]}")
+
+        if len(defect_sites) == 0:
+            raise ValueError("No defects found in the structure")
+
+        return {
+            "defect_sites": np.array(defect_sites),
+            "defect_type": np.array(defect_type),
+            "defect_name": np.array(defect_name),
+        }
