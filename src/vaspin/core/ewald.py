@@ -5,7 +5,7 @@ This module is heavily inspired by the/adapted from the `pydefect` package.
 Original project: https://github.com/kumagai-group/pydefect
 Original copyright: Copyright (c) 2020 kumagai-group
 
-The LICENSE file can be found at: /LICENSES/pydefect.LICENSE
+The LICENSE file can be found at: /LICENSES/pydefect/LICENSE
 """
 
 import numpy as np
