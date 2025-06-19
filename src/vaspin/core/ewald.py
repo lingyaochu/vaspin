@@ -25,67 +25,92 @@ class Ewald:
     def ewald_param(self):
         """Calculate the Ewald parameter."""
         return (
-            self.ewald_param_modified
+            self.ewald_gamma
             * self.cube_length
             / np.sqrt(np.linalg.det(self.dielectric))
         )
 
     @property
-    def ewald_param_modified(self):
-        """Calculate the modified Ewald parameter."""
+    def ewald_gamma(self):
+        """Calculate the gamma parameter for Ewald summation by default value of CUTOFF
+
+        This is gamma value defined in Phys. Rev. B 89, 195205 (2014).
+        """
         lr = np.cbrt([np.linalg.norm(i) for i in self.lattice])
         lg = np.cbrt([np.linalg.norm(i) for i in self.rec_lattice])
 
         return np.sqrt(lg / lr / 2)
 
-    @property
-    def pot_diff(self):
-        """Calculate the potential difference for Ewald summation."""
-        return -1 / 4 / self.volume / self.ewald_param_modified**2
-
     def site_potential(self, coor_frac: FloatArray):
-        """Calculate the electrostatic potential at a given fractional coordinate."""
-        r_part = self.ewald_sum_r(include_origin=True, shift=coor_frac)
-        g_part = self.ewald_sum_g(coor_frac)
-        return self.pot_diff + r_part + g_part
+        """Calculate the electrostatic potential at a given fractional coordinate.
 
-    def ewald_sum_r(self, include_origin: bool, shift: FloatArray):
-        """Calculate the real space Ewald summation."""
+        The quantity is defined in Phys. Rev. B 89, 195205 (2014). Eq(14)
+        """
+        r_part = self.ewald_sum_r(coor_frac)
+        g_part = self.ewald_sum_g(coor_frac)
+        return r_part + g_part + self.pot_diff
+
+    def ewald_sum_r(self, coor_frac: FloatArray):
+        """Calculate the real space Ewald summation.
+
+        The first term in Phys. Rev. B 89, 195205 (2014). Eq(14)
+
+        Args:
+            coor_frac: Fractional coordinates of a lattice site.
+        """
         sum = 0
-        for r in self.rvectors(include_origin=include_origin, shift=shift):
+        coor_cate = np.dot(coor_frac, self.lattice)
+
+        rvectors = self.rvectors()
+        if coor_frac == np.array([0, 0, 0]):
+            rvectors = np.delete(rvectors, len(rvectors) // 2, axis=0)
+
+        for r in rvectors:
             root_r_inv_dielectri = np.sqrt(
-                np.einsum("i,ij,j->", r, np.linalg.inv(self.dielectric), r)
+                np.einsum(
+                    "i,ij,j->",
+                    r - coor_cate,
+                    np.linalg.inv(self.dielectric),
+                    r - coor_cate,
+                )
             )
-            sum += (
-                erfc(self.ewald_param_modified * root_r_inv_dielectri)
-                / root_r_inv_dielectri
-            )
+            sum += erfc(self.ewald_gamma * root_r_inv_dielectri) / root_r_inv_dielectri
 
         return sum / (4 * np.pi * self.die_effective)
 
+    @property
+    def pot_diff(self):
+        """Calculate the potential difference for Ewald summation.
+
+        The second term in Phys. Rev. B 89, 195205 (2014). Eq(14)
+        """
+        return -1 / 4 / self.volume / self.ewald_gamma**2
+
     def ewald_sum_g(self, coor_frac: FloatArray):
-        """Calculate the reciprocal space Ewald summation."""
+        """Calculate the reciprocal space Ewald summation.
+
+        The third term in Phys. Rev. B 89, 195205 (2014). Eq(14)
+
+        Args:
+            coor_frac: Fractional coordinates of a lattice site.
+        """
         coor_cate = np.dot(coor_frac, self.lattice)
         sum = 0
         for g in self.gvectors():
             g_dielectric_g = np.einsum("i,ij,j->", g, self.dielectric, g)
             sum += (
-                np.exp(-g_dielectric_g / 4 / self.ewald_param_modified**2)
+                np.exp(-g_dielectric_g / 4 / self.ewald_gamma**2)
                 / g_dielectric_g
+                # the distribution of G is symmetric, the i*sin() term vanish
                 * np.cos(np.dot(g, coor_cate))
             )
 
         return sum / self.volume
 
     @staticmethod
-    def grid_points(gridsize: IntArray, shift: FloatArray | None = None):
+    def grid_points(gridsize: IntArray):
         """Generate grid points for Ewald summation."""
-        if shift is None:
-            shift = np.array([0, 0, 0])
-
-        fx, fy, fz = [
-            np.arange(-gridsize[i], gridsize[i] + 1, 1) - shift[i] for i in range(3)
-        ]
+        fx, fy, fz = [np.arange(-gridsize[i], gridsize[i] + 1, 1) for i in range(3)]
 
         # this may accelerate the calculation
         gridz, gridy, gridx = np.array(np.meshgrid(fz, fy, fx, indexing="ij")).reshape(
@@ -93,12 +118,9 @@ class Ewald:
         )
         return np.array([gridx, gridy, gridz], dtype=float).T
 
-    def rvectors(self, include_origin: bool = True, shift: FloatArray | None = None):
+    def rvectors(self):
         """Calculate the real space vectors for Ewald summation."""
-        rpoints = self.grid_points(self.r_gridsize, shift)
-
-        if not include_origin:
-            rpoints = np.delete(rpoints, len(rpoints) // 2, axis=0)
+        rpoints = self.grid_points(self.r_gridsize)
 
         return np.dot(rpoints, self.lattice)
 
@@ -112,7 +134,7 @@ class Ewald:
     @property
     def r_gridsize(self) -> IntArray:
         """Calculate the grid size for real space Ewald summation."""
-        max_length = self.cutoff / self.ewald_param_modified
+        max_length = self.cutoff / self.ewald_gamma
         return np.array(
             [np.ceil(max_length / np.linalg.norm(self.lattice[i])) for i in range(3)],
             dtype=int,
@@ -121,7 +143,7 @@ class Ewald:
     @property
     def g_gridsize(self) -> IntArray:
         """Calculate the grid size for reciprocal space Ewald summation."""
-        max_length = 2 * self.ewald_param_modified * self.cutoff
+        max_length = 2 * self.ewald_gamma * self.cutoff
         return np.array(
             [
                 np.ceil(max_length / np.linalg.norm(self.rec_lattice[i]))
