@@ -10,6 +10,7 @@ authors = [
 ]
 dependencies = [
     "numpy>=1.24.0,<=2.1.0",
+    "scipy>=1.15.3",
     "uniplot>=0.20.1",
 ]
 
