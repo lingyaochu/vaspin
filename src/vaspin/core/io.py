@@ -73,7 +73,7 @@ def poscar_to_json(filepath: str) -> str:
             coordinates = []
             for _ in range(total_atoms):
                 coordinates.append(
-                    [float(x) for x in re.split(r"\s+", f.readline().strip())]
+                    [float(x) for x in re.split(r"\s+", f.readline().strip())[:3]]
                 )
 
             # Build data dictionary
