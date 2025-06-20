@@ -52,13 +52,13 @@ class Poscar:
         __data["species"] = np.array(__data["species"])
         __data["number"] = np.array(__data["number"])
 
-        if __data["coortype"] == "Direct":
-            __data["frac"] = np.array(__data["coordinate"])
-
-        else:
+        if __data["coortype"][0] in ["c", "C", "K", "k"]:
             __data["frac"] = np.dot(
                 np.array(__data["coordinate"]), np.linalg.inv(__data["lattice"])
             )
+
+        else:
+            __data["frac"] = np.array(__data["coordinate"])
 
         # delete the "coordinate" and "coortype" key-value pairs
         __data.pop("coordinate")
