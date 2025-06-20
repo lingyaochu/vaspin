@@ -4,8 +4,10 @@
 Contains functionality for handling VASP POSCAR files and structure manipulation.
 """
 
+from collections import defaultdict
+from dataclasses import dataclass, field
 from itertools import product
-from typing import Literal
+from typing import List, Literal, Tuple
 
 import numpy as np
 
@@ -658,3 +660,148 @@ class Poscar:
             plane_area = area if area > plane_area else plane_area
 
         return self.volume / plane_area / 2
+
+
+@dataclass
+class StruMapping:
+    """The mapping relation from one structure to another structure with same lattice"""
+
+    stru_from: Poscar
+    stru_to: Poscar
+    dtol: float = 0.5
+
+    # Atom mapping from stru_from to stru_to
+    mapping: List[Tuple[int, int, Tuple[str, str], float]] = field(init=False)
+
+    def __post_init__(self):
+        """Get the mapping relation from one structure to another"""
+        self.mapping = self.atom_relation()
+
+    def atom_relation(self) -> List[Tuple[int, int, Tuple[str, str], float]]:
+        """Project atoms from one structure to another
+
+        Args:
+            stru_from: the Poscar object of the structure to be projected
+            stru_to: the Poscar object of the target structure
+
+        Returns:
+            relation: the list of indices of the target structure corresponding to
+                each atom in the original structure, None if no corresponding atom found
+                within the distance tolerance
+
+            distance_site: the distance between the projected atom and the target atom
+        """
+        mapping = []
+        for idfrom, coor in enumerate(self.stru_from.coor_frac):
+            distance = self.stru_to.distance(coor)
+            idto = np.argmin(distance)
+            mapping.append(
+                (
+                    idfrom,
+                    idto,
+                    (self.stru_from.atoms[idfrom], self.stru_to.atoms[idto]),
+                    distance[idto],
+                )
+            )
+
+        return mapping
+
+    def multi_mapped(self):
+        """Get the atoms that are mapped to the same target atom"""
+        target_mapping = defaultdict(list)
+
+        for idfrom, idto, specie_relation, dist in self.mapping:
+            target_mapping[idto].append((idfrom, idto, specie_relation, dist))
+
+        multi_mapped = {
+            idto: idfrom_list
+            for idto, idfrom_list in target_mapping.items()
+            if len(idfrom_list) > 1
+        }
+        return multi_mapped
+
+    def un_mapped(self):
+        """Get the atoms that are not mapped in the target structure"""
+        mapped = {idto for _, idto, _, _ in self.mapping}
+        all_idto = set(range(len(self.stru_to.atoms)))
+        un_mapped = all_idto - mapped
+
+        return un_mapped
+
+    def different_species(self):
+        """Get the map relation whose species are different"""
+        different = [
+            (difrom, idto, specie_relation, dist)
+            for difrom, idto, specie_relation, dist in self.mapping
+            if specie_relation[0] != specie_relation[1]
+        ]
+        return different
+
+    @staticmethod
+    def multi_cast(
+        multimap: dict[int, List[Tuple[int, int, Tuple[str, str], float]]],
+    ) -> List[Tuple[int, int, Tuple[str, str], float]]:
+        """Cast the multi_mapped result to get the redundant atoms based on distance"""
+        redundant_atoms = []
+        for _idto, idfrom_list in multimap.items():
+            # Sort by distance
+            idfrom_list.sort(key=lambda x: x[3])
+            redundant_atoms.extend(idfrom_list[1:])
+        return redundant_atoms
+
+
+class Defect:
+    """A class for handling point defects in POSCAR files"""
+
+    def __init__(self, poscar_sc: Poscar, poscar_de: Poscar):
+        """Initialize a Defect object
+
+        Args:
+            poscar_sc: the Poscar object of the perfect cell
+            poscar_de: the Poscar object of the defect cell
+        """
+        if not isinstance(poscar_sc, Poscar) or not isinstance(poscar_de, Poscar):
+            raise ValueError("poscar_sc and poscar_de must be Poscar objects")
+
+        self.poscar_sc = poscar_sc
+        self.poscar_de = poscar_de
+
+        self.map = StruMapping(stru_from=poscar_de, stru_to=poscar_sc)
+
+    def defect_identify(self):
+        """Identify the defect type and the location in the supercell"""
+        interstitial_candi = self.map.multi_mapped()
+        vacancy_candi = self.map.un_mapped()
+        sub_candi = self.map.different_species()
+
+        defect_sites = []
+        defect_type = []
+        defect_name = []
+
+        if len(interstitial_candi) != 0:
+            redundant_atoms = StruMapping.multi_cast(interstitial_candi)
+            for idfrom, idto, _specie_relation, _dist in redundant_atoms:
+                defect_sites.append(self.poscar_sc.coor_frac[idto])
+                defect_type.append("Interstitial")
+                defect_name.append(f"{self.poscar_de.atoms[idfrom]}_i")
+
+        if len(vacancy_candi) != 0:
+            for idto in vacancy_candi:
+                defect_sites.append(self.poscar_sc.coor_frac[idto])
+                defect_type.append("Vacancy")
+                defect_name.append("Va_" + self.poscar_sc.atoms[idto])
+
+        if len(sub_candi) != 0:
+            for _idfrom, idto, specie_relation, _dist in sub_candi:
+                defect_sites.append(self.poscar_sc.coor_frac[idto])
+                defect_type.append("Substitution")
+                defect_name.append(f"{specie_relation[0]}_{specie_relation[1]}")
+
+        if len(defect_sites) == 0:
+            raise ValueError("No defects found in the structure")
+
+        return {
+            "defect_sites": np.array(defect_sites),
+            "defect_type": np.array(defect_type),
+            "defect_name": np.array(defect_name),
+        }
