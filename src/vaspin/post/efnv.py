@@ -11,9 +11,11 @@ The LICENSE file can be found at: /LICENSES/pydefect/LICENSE
 import numpy as np
 from scipy.special import erfc
 
+from vaspin.core.poscar import Poscar, StruMapping
 from vaspin.types.array import FloatArray, IntArray
 
 CUTOFF = 15
+UNIT_CONVERT = 180.95128169876497
 
 
 class Ewald:
@@ -175,4 +177,106 @@ class Ewald:
                 for i in range(3)
             ],
             dtype=int,
+        )
+
+
+class SitePot:
+    """class for electrostatic potential at the atom site"""
+
+    def __init__(self, pos: Poscar, pot: FloatArray):
+        """Initialize the SitePot class.
+
+        Args:
+            pos: The Poscar object containing the lattice and atomic positions.
+            pot: The electrostatic potential at each atom site, output by VASP
+        """
+        assert len(pos.atoms) == len(pot), "Length of atoms and potential must match."
+
+        self.pos = pos
+        self.pot = pot
+
+    def pot_pc(self, coor_frac: FloatArray, dielectric: FloatArray) -> FloatArray:
+        """The potential from a charge defect at a given fractional coordinate.
+
+        Args:
+            coor_frac: Fractional coordinates of the defect site.
+            dielectric: Dielectric constant of the system.
+
+        Returns:
+            potential: Electrostatic potential at the defect site.
+        """
+        ewald = Ewald(self.pos.lattice, dielectric)
+        potential = []
+        dist_relas = self.pos.coor_frac - coor_frac
+        for dist_rela in dist_relas:
+            potential.append(ewald.site_potential(dist_rela))
+
+        return np.array(potential)
+
+
+class Efnv:
+    """The eFNV charge correction class."""
+
+    def __init__(
+        self,
+        pos_sc: Poscar,
+        pos_de: Poscar,
+        pot_sc: FloatArray,
+        pot_de: FloatArray,
+        dielectric: FloatArray,
+        defect_center: FloatArray,
+        charge: int,
+    ):
+        """Initialize the eFNV charge correction class.
+
+        Args:
+            pos_sc: The perfect supercell
+            pos_de: The defect supercell
+            pot_sc: The site potential of the perfect supercell, origin output
+            pot_de: The site potential of the defect supercell, origin output
+            dielectric: The dielectric tensor of the system
+            defect_center: The fractional coordinates of the defect center
+            charge: The charge state of the defect
+        """
+        assert charge != 0, "The charge 0 state does not need correction."
+
+        self.pos_sc = pos_sc
+        self.pos_de = pos_de
+        self.pot_sc = -pot_sc
+        self.pot_de = -pot_de
+        self.dielectric = dielectric
+        self.distance_cutoff = self.pos_sc.max_sphere_radius()
+        self.defect_center = defect_center
+        self.charge = charge
+
+        self.map = StruMapping(pos_de, pos_sc).atom_relation()
+
+        self.pot_pc = (
+            SitePot(self.pos_de, self.pot_de).pot_pc(
+                self.defect_center, self.dielectric
+            )
+            * self.charge
+            * UNIT_CONVERT
+        )
+
+        self.ewald = Ewald(lattice=self.pos_de.lattice, dielectric=self.dielectric)
+
+        self.correction_point_charge = self.ewald.lattice_energy * UNIT_CONVERT
+
+    @property
+    def pot_diff(self) -> FloatArray:
+        """The site potential difference between the perfect and defect supercell."""
+        potential_diff = []
+        for atom_de, atom_sc, _, _ in self.map:
+            potential_diff.append(self.pot_de[atom_de] - self.pot_sc[atom_sc])
+        return np.array(potential_diff)
+
+    @property
+    def correction_potential_align(self) -> np.floating:
+        """The potential alignment term in defect calculation"""
+        distance = self.pos_de.distance(self.defect_center)
+        valid_sites = np.where(distance > self.distance_cutoff)[0]
+        return (
+            -np.mean(self.pot_diff[valid_sites] - self.pot_pc[valid_sites])
+            * self.charge
         )
