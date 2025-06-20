@@ -261,7 +261,9 @@ class Efnv:
 
         self.ewald = Ewald(lattice=self.pos_de.lattice, dielectric=self.dielectric)
 
-        self.correction_point_charge = self.ewald.lattice_energy * UNIT_CONVERT
+        self.correction_point_charge = (
+            self.ewald.lattice_energy * UNIT_CONVERT * self.charge**2
+        )
 
     @property
     def pot_diff(self) -> FloatArray:
