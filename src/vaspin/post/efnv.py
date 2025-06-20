@@ -46,8 +46,8 @@ class Ewald:
 
         This is gamma value defined in Phys. Rev. B 89, 195205 (2014).
         """
-        lr = np.cbrt([np.linalg.norm(i) for i in self.lattice])
-        lg = np.cbrt([np.linalg.norm(i) for i in self.rec_lattice])
+        lr = np.cbrt(np.prod([np.linalg.norm(i) for i in self.lattice]))
+        lg = np.cbrt(np.prod([np.linalg.norm(i) for i in self.rec_lattice]))
 
         return np.sqrt(lg / lr / 2)
 
