@@ -1,4 +1,4 @@
-"""The Ewald summation module
+"""The eFNV charge correction module.
 
 This module is heavily inspired by the/adapted from the `pydefect` package.
 
