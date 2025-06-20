@@ -79,7 +79,7 @@ class Ewald:
         coor_cate = np.dot(coor_frac, self.lattice)
 
         rvectors = self.rvectors()
-        if coor_frac == np.array([0, 0, 0]):
+        if np.allclose(coor_frac, np.array([0, 0, 0]), atol=1e-5):
             rvectors = np.delete(rvectors, len(rvectors) // 2, axis=0)
 
         for r in rvectors:
