@@ -11,7 +11,7 @@ The LICENSE file can be found at: /LICENSES/pydefect/LICENSE
 import numpy as np
 from scipy.special import erfc
 
-from vaspin.core.poscar import Poscar, StruMapping
+from vaspin.core.poscar import Defect, Poscar
 from vaspin.types.array import FloatArray, IntArray
 
 CUTOFF = 15
@@ -224,7 +224,6 @@ class Efnv:
         pot_sc: FloatArray,
         pot_de: FloatArray,
         dielectric: FloatArray,
-        defect_center: FloatArray,
         charge: int,
     ):
         """Initialize the eFNV charge correction class.
@@ -246,10 +245,11 @@ class Efnv:
         self.pot_de = -pot_de
         self.dielectric = dielectric
         self.distance_cutoff = self.pos_sc.max_sphere_radius()
-        self.defect_center = defect_center
         self.charge = charge
 
-        self.map = StruMapping(pos_de, pos_sc).atom_relation()
+        defect = Defect(poscar_sc=self.pos_sc, poscar_de=self.pos_de)
+        self.map = defect.map.atom_relation()
+        self.defect_center = defect.defect_center
 
         self.pot_pc = (
             SitePot(self.pos_de, self.pot_de).pot_pc(

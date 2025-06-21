@@ -768,7 +768,8 @@ class Defect:
 
         self.map = StruMapping(stru_from=poscar_de, stru_to=poscar_sc)
 
-    def defect_identify(self):
+    @property
+    def defect_info(self):
         """Identify the defect type and the location in the supercell"""
         interstitial_candi = self.map.multi_mapped()
         vacancy_candi = self.map.un_mapped()
@@ -805,3 +806,13 @@ class Defect:
             "defect_type": np.array(defect_type),
             "defect_name": np.array(defect_name),
         }
+
+    @property
+    def defect_center(self) -> FloatArray:
+        """Get the center of the defect."""
+        defect_sites = self.defect_info["defect_sites"]
+
+        if len(defect_sites) == 0:
+            raise ValueError("No defect sites found.")
+
+        return np.mean(defect_sites, axis=0)

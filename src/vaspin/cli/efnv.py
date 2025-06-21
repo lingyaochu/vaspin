@@ -55,13 +55,6 @@ def main():
         help="The directory of the OUTCAR file containing the dielectric constant",
     )
     parser.add_argument("-c", "--charge", type=int, help="The charge of the defect")
-    parser.add_argument(
-        "-p",
-        "--position",
-        type=float,
-        nargs=3,
-        help="The fractional coordinates of the defect position",
-    )
 
     args = parser.parse_args()
 
@@ -76,11 +69,8 @@ def main():
     dielectric = get_dielectric(outcar_diele_path.as_posix())
     pot_sc = get_site_potential(outcar_sc_path.as_posix())
     pot_de = get_site_potential(outcar_de_path.as_posix())
-    position = np.array(args.position)
 
-    efnv_corr = Efnv(
-        poscar_sc, poscar_de, pot_sc, pot_de, dielectric, position, args.charge
-    )
+    efnv_corr = Efnv(poscar_sc, poscar_de, pot_sc, pot_de, dielectric, args.charge)
 
     correction = {
         "pc term": efnv_corr.correction_point_charge,
