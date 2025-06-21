@@ -10,6 +10,7 @@ authors = [
 ]
 dependencies = [
     "numpy>=1.24.0,<=2.1.0",
+    "scipy>=1.15.3",
     "uniplot>=0.20.1",
 ]
 
@@ -19,6 +20,7 @@ Repository = "https://github.com/lingyaochu/vaspin.git"
 
 [dependency-groups]
 dev = [
+    "ipykernel>=6.29.5",
     "pre-commit>=4.0.0",
     "pytest>=8.3.5",
     "pytest-cov>=6.1.1",
@@ -29,6 +31,7 @@ dev = [
 pos = "vaspin.cli.pos:main"
 force = "vaspin.cli.force:main"
 loc = "vaspin.cli.loc:main"
+efnv = "vaspin.cli.efnv:main"
 
 [tool.uv.sources]
 vaspin = { workspace = true }
