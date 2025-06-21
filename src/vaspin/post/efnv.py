@@ -282,3 +282,8 @@ class Efnv:
             -np.mean(self.pot_diff[valid_sites] - self.pot_pc[valid_sites])
             * self.charge
         )
+
+    @property
+    def correction_total(self) -> np.floating:
+        """The total eFNV correction term."""
+        return self.correction_point_charge + self.correction_potential_align

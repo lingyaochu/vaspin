@@ -694,7 +694,7 @@ class StruMapping:
         mapping = []
         for idfrom, coor in enumerate(self.stru_from.coor_frac):
             distance = self.stru_to.distance(coor)
-            idto = np.argmin(distance)
+            idto = int(np.argmin(distance))
             mapping.append(
                 (
                     idfrom,

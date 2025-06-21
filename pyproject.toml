@@ -31,6 +31,7 @@ dev = [
 pos = "vaspin.cli.pos:main"
 force = "vaspin.cli.force:main"
 loc = "vaspin.cli.loc:main"
+efnv = "vaspin.cli.efnv:main"
 
 [tool.uv.sources]
 vaspin = { workspace = true }
