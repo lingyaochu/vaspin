@@ -79,5 +79,5 @@ def main():
     }
 
     pprint(correction)
-    with open("efnv.json", "w") as f:
+    with open(Path(args.defect) / "efnv.json", "w") as f:
         json.dump(correction, f, indent=4)
