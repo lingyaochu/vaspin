@@ -43,7 +43,7 @@ def main():
         description="Efnv correction for charged defects in VASP calculations."
     )
     parser.add_argument(
-        "-sc", "--supercell", type="str", help="The directory of the perfect cell"
+        "-sc", "--supercell", type=str, help="The directory of the perfect cell"
     )
     parser.add_argument(
         "-de", "--defect", type=str, help="The directory of the defect cell"
