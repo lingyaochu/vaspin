@@ -1,8 +1,7 @@
 """Module to parse VASP OUTCAR files."""
 
 from abc import ABC, abstractmethod
-from itertools import repeat
-from typing import Any, Dict, List, TextIO, Type
+from typing import Any, Dict, List, Type
 
 from vaspin.utils.datatype import SymTensor
 
@@ -42,12 +41,18 @@ class InfoHandler(ABC):
 
     @abstractmethod
     def parse(
-        self, line: str, f_iter: TextIO, data: Dict[str, Any], state: ParserState
-    ) -> None:
+        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+    ) -> int:
         """Parse the relevant information starting from the matched line.
 
-        Reads subsequent lines from f_iter if necessary.
-        Updates the data dictionary and potentially the state object.
+        Args:
+            lines: The full OUTCAR file content as list of lines
+            line_idx: Starting line index in the lines list
+            data: Dictionary to store parsed data
+            state: Parser state object
+
+        Returns:
+            The line index after parsing (for continuing the parse)
         """
         pass
 
@@ -57,10 +62,9 @@ class InfoHandler(ABC):
             data["_parse_log"] = []
         data["_parse_log"].append(f"{self.__class__.__name__}: {message}")
 
-    def _skip_lines(self, f_iter: TextIO, num_lines: int):
-        """Skip a number of lines in the file iterator."""
-        for _ in repeat(None, num_lines):
-            next(f_iter)
+    def _skip_lines(self, lines: List[str], line_idx: int, num_lines: int) -> int:
+        """Skip a number of lines and return the new line index."""
+        return min(line_idx + num_lines, len(lines))
 
 
 HANDLERS: Dict[str, Type[InfoHandler]] = {}
@@ -77,12 +81,14 @@ class NElectronHandler(InfoHandler):
         return "total number of electrons"
 
     def parse(
-        self, line: str, f_iter: TextIO, data: Dict[str, Any], state: ParserState
-    ) -> None:
+        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+    ) -> int:
         """Parse the number of electrons."""
         self._log(data, "Parsing number of electrons.")
+        line = lines[line_idx]
         electrons = float(line.strip().split()[2])
         data["N electrons"] = electrons
+        return line_idx + 1
 
 
 class DTensorHandler(InfoHandler):
@@ -96,17 +102,20 @@ class DTensorHandler(InfoHandler):
         return "Spin-spin contribution to zero-field splitting tensor (MHz)"
 
     def parse(
-        self, line: str, f_iter: TextIO, data: Dict[str, Any], state: ParserState
-    ) -> None:
+        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+    ) -> int:
         """Parse the D tensor block."""
         self._log(data, "Parsing D tensor block.")
-        self._skip_lines(f_iter, 4)
+        current_idx = self._skip_lines(lines, line_idx, 4)
 
-        dataline = next(f_iter).strip()
-        parts_sym = [float(x) for x in dataline.split()]
-        d_tensor = SymTensor().from_sequence(parts_sym)
+        if current_idx < len(lines):
+            dataline = lines[current_idx]
+            parts_sym = [float(x) for x in dataline.strip().split()]
+            d_tensor = SymTensor().from_sequence(parts_sym)
+            data["D tensor"] = d_tensor.get_matrix_sym().tolist()
+            current_idx += 1
 
-        data["D tensor"] = d_tensor.get_matrix_sym().tolist()
+        return current_idx
 
 
 class NIonsHandler(InfoHandler):
@@ -120,13 +129,15 @@ class NIonsHandler(InfoHandler):
         return "number of ions     NIONS"
 
     def parse(
-        self, line: str, f_iter: TextIO, data: Dict[str, Any], state: ParserState
-    ) -> None:
+        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+    ) -> int:
         """Parse the number of ions."""
         self._log(data, "Parsing number of ions.")
+        line = lines[line_idx]
         ions = int(line.strip().split()[-1])
         data["N ions"] = ions
         state.num_atoms = ions
+        return line_idx + 1
 
 
 class ForceHandler(InfoHandler):
@@ -140,22 +151,25 @@ class ForceHandler(InfoHandler):
         return "TOTAL-FORCE (eV/Angst)"
 
     def parse(
-        self, line: str, f_iter: TextIO, data: Dict[str, Any], state: ParserState
-    ) -> None:
+        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+    ) -> int:
         """Parse the forces on atoms."""
         self._log(data, "Parsing forces on atoms.")
         forces = []
-        next(f_iter)
+        current_idx = line_idx + 1  # Skip header line
 
-        for _ in repeat(None, state.num_atoms):
-            line_str = next(f_iter).strip().split()
-            # print(line_str)
-            force = [float(i) for i in line_str[3:6]]
-            forces.append(force)
+        for _ in range(state.num_atoms):
+            if current_idx < len(lines):
+                line = lines[current_idx]
+                line_parts = line.strip().split()
+                force = [float(i) for i in line_parts[3:6]]
+                forces.append(force)
+                current_idx += 1
 
         if "forces" not in data:
             data["forces"] = []
         data["forces"].append(forces)
+        return current_idx
 
 
 class IonicEnergyHandler(InfoHandler):
@@ -169,15 +183,21 @@ class IonicEnergyHandler(InfoHandler):
         return "FREE ENERGIE OF THE ION-ELECTRON SYSTEM (eV)"
 
     def parse(
-        self, line: str, f_iter: TextIO, data: Dict[str, Any], state: ParserState
-    ) -> None:
+        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+    ) -> int:
         """Parse the energy of each ionic step."""
         self._log(data, "Parsing ionic energy.")
-        self._skip_lines(f_iter, 3)
-        energy = float(next(f_iter).strip().split()[-1])
-        if "Ionic energy" not in data:
-            data["Ionic energy"] = []
-        data["Ionic energy"].append(energy)
+        current_idx = self._skip_lines(lines, line_idx, 3)
+
+        if current_idx < len(lines):
+            line = lines[current_idx]
+            energy = float(line.strip().split()[-1])
+            if "Ionic energy" not in data:
+                data["Ionic energy"] = []
+            data["Ionic energy"].append(energy)
+            current_idx += 1
+
+        return current_idx
 
 
 class PhononHandler(InfoHandler):
@@ -191,29 +211,45 @@ class PhononHandler(InfoHandler):
         return "Eigenvectors and eigenvalues of the dynamical matrix"
 
     def parse(
-        self, line: str, f_iter: TextIO, data: Dict[str, Any], state: ParserState
-    ) -> None:
+        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+    ) -> int:
         """Parse the phonon frequencies and eigenvectors."""
         self._log(data, "Parsing phonon frequencies.")
 
         data["phonon"] = {"frequencies": [], "eigenmodes": []}
 
-        self._skip_lines(f_iter, 3)
+        current_idx = self._skip_lines(lines, line_idx, 3)
 
-        for _ in repeat(None, 3 * state.num_atoms):
+        for _ in range(3 * state.num_atoms):
             # the frequency in THz
-            line_str = next(f_iter).strip().split()
-            freq = float(line_str[3]) if line_str[1] == "f" else -float(line_str[2])
-            data["phonon"]["frequencies"].append(freq)
+            if current_idx < len(lines):
+                line = lines[current_idx]
+                line_parts = line.strip().split()
+                freq = (
+                    float(line_parts[3])
+                    if line_parts[1] == "f"
+                    else -float(line_parts[2])
+                )
+                data["phonon"]["frequencies"].append(freq)
+                current_idx += 1
+
+            # skip one line
+            current_idx += 1
 
             # the eigenvectors
-            next(f_iter)
             mode = []
-            for _ in repeat(None, state.num_atoms):
-                line_str = next(f_iter).strip().split()
-                mode.append([float(i) for i in line_str[3:6]])
-            next(f_iter)
+            for _ in range(state.num_atoms):
+                if current_idx < len(lines):
+                    line = lines[current_idx]
+                    line_parts = line.strip().split()
+                    mode.append([float(i) for i in line_parts[3:6]])
+                    current_idx += 1
+
+            # skip one line
+            current_idx += 1
             data["phonon"]["eigenmodes"].append(mode)
+
+        return current_idx
 
 
 class DielectricEleHandler(InfoHandler):
@@ -230,23 +266,27 @@ class DielectricEleHandler(InfoHandler):
         )
 
     def parse(
-        self, line: str, f_iter: TextIO, data: Dict[str, Any], state: ParserState
-    ) -> None:
+        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+    ) -> int:
         """Parse the dielectric tensor."""
         # the electronic part appears twice, skip the second
         if "dielectric_ele" in data:
             self._log(data, "The electronic part has been parsed, skip.")
-            return
+            return line_idx + 1
 
         self._log(data, "Parsing dielectric tensor, the electronic part.")
-        self._skip_lines(f_iter, 1)
+        current_idx = self._skip_lines(lines, line_idx, 1)
 
-        for _i in repeat(None, 3):
-            line_str = next(f_iter).strip().split()
-            row = [float(x) for x in line_str]
-            if "dielectric_ele" not in data:
-                data["dielectric_ele"] = []
-            data["dielectric_ele"].append(row)
+        for _i in range(3):
+            if current_idx < len(lines):
+                line = lines[current_idx]
+                row = [float(x) for x in line.strip().split()]
+                if "dielectric_ele" not in data:
+                    data["dielectric_ele"] = []
+                data["dielectric_ele"].append(row)
+                current_idx += 1
+
+        return current_idx
 
 
 class DielectricIonHandler(InfoHandler):
@@ -260,18 +300,22 @@ class DielectricIonHandler(InfoHandler):
         return "MACROSCOPIC STATIC DIELECTRIC TENSOR IONIC CONTRIBUTION"
 
     def parse(
-        self, line: str, f_iter: TextIO, data: Dict[str, Any], state: ParserState
-    ) -> None:
+        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+    ) -> int:
         """Parse the ionic part of dielectric tensor."""
         self._log(data, "Parsing dielectric tensor, the ionic part.")
-        self._skip_lines(f_iter, 1)
+        current_idx = self._skip_lines(lines, line_idx, 1)
 
-        for _i in repeat(None, 3):
-            line_str = next(f_iter).strip().split()
-            row = [float(x) for x in line_str]
-            if "dielectric_ion" not in data:
-                data["dielectric_ion"] = []
-            data["dielectric_ion"].append(row)
+        for _i in range(3):
+            if current_idx < len(lines):
+                line = lines[current_idx]
+                row = [float(x) for x in line.strip().split()]
+                if "dielectric_ion" not in data:
+                    data["dielectric_ion"] = []
+                data["dielectric_ion"].append(row)
+                current_idx += 1
+
+        return current_idx
 
 
 class HyperfineFermiHandler(InfoHandler):
@@ -285,24 +329,28 @@ class HyperfineFermiHandler(InfoHandler):
         return "Fermi contact (isotropic) hyperfine coupling parameter (MHz)"
 
     def parse(
-        self, line: str, f_iter: TextIO, data: Dict[str, Any], state: ParserState
-    ) -> None:
+        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+    ) -> int:
         """Parse the hyperfine interaction parameters from fermi contact."""
         self._log(data, "Parsing hyperfine interaction parameters from fermi contact.")
-        self._skip_lines(f_iter, 3)
+        current_idx = self._skip_lines(lines, line_idx, 3)
 
         A_pw = []
         A_ps = []
         A_ae = []
         A_c = []
-        for _ in repeat(None, state.num_atoms):
-            line_str = next(f_iter).strip().split()
-            A_pw.append(float(line_str[1]))
-            A_ps.append(float(line_str[2]))
-            A_ae.append(float(line_str[3]))
-            A_c.append(float(line_str[4]))
+        for _ in range(state.num_atoms):
+            if current_idx < len(lines):
+                line = lines[current_idx]
+                line_parts = line.strip().split()
+                A_pw.append(float(line_parts[1]))
+                A_ps.append(float(line_parts[2]))
+                A_ae.append(float(line_parts[3]))
+                A_c.append(float(line_parts[4]))
+                current_idx += 1
 
         data["hyperfine_fermi"] = {"A_pw": A_pw, "A_ps": A_ps, "A_ae": A_ae, "A_c": A_c}
+        return current_idx
 
 
 class HyperfineDipolarHandler(InfoHandler):
@@ -316,23 +364,26 @@ class HyperfineDipolarHandler(InfoHandler):
         return "Dipolar hyperfine coupling parameters (MHz)"
 
     def parse(
-        self, line: str, f_iter: TextIO, data: Dict[str, Any], state: ParserState
-    ) -> None:
+        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+    ) -> int:
         """Parse the hyperfine interaction parameters from dipolar interaction."""
         self._log(
             data, "Parsing hyperfine interaction parameters from dipolar interaction."
         )
-        self._skip_lines(f_iter, 3)
+        current_idx = self._skip_lines(lines, line_idx, 3)
 
         hyper_dipolar = []
-        for _ in repeat(None, state.num_atoms):
-            line_str = next(f_iter).strip().split()
-            parts_sym = [float(x) for x in line_str[1:7]]
-            dioplar_tensor = SymTensor().from_sequence(parts_sym)
-
-            hyper_dipolar.append(dioplar_tensor.get_matrix_sym().tolist())
+        for _ in range(state.num_atoms):
+            if current_idx < len(lines):
+                line = lines[current_idx]
+                line_parts = line.strip().split()
+                parts_sym = [float(x) for x in line_parts[1:7]]
+                dipolar_tensor = SymTensor().from_sequence(parts_sym)
+                hyper_dipolar.append(dipolar_tensor.get_matrix_sym().tolist())
+                current_idx += 1
 
         data["hyperfine_dipolar"] = hyper_dipolar
+        return current_idx
 
 
 class SitePotHandler(InfoHandler):
@@ -346,22 +397,27 @@ class SitePotHandler(InfoHandler):
         return "the norm of the test charge is"
 
     def parse(
-        self, line: str, f_iter: TextIO, data: Dict[str, Any], state: ParserState
-    ):
+        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+    ) -> int:
         """Parse the site potentials for each atom in the last ionic step."""
         self._log(data, "Parsing site potentials for each atom.")
 
         site_pot = []
-        while True:
-            line_str = next(f_iter).strip()
-            if line_str == "":
+        current_idx = line_idx + 1  # Skip the header line
+
+        while current_idx < len(lines):
+            line = lines[current_idx]
+            line_stripped = line.strip()
+            if line_stripped == "":
                 break
 
-            parts = line_str.split()
+            parts = line_stripped.split()
             values = [float(parts[i]) for i in range(1, len(parts), 2)]
             site_pot.extend(values)
+            current_idx += 1
 
         data["site_potential"] = site_pot
+        return current_idx
 
 
 class VaspOutcarParser:
@@ -408,15 +464,20 @@ class VaspOutcarParser:
 
         self._handlers = handlers
 
-    def _process_line(self, line: str, f: TextIO):
-        """Process a single line from the OUTCAR file."""
-        if not line.strip():
-            return
-        first_match = next(
-            (handler for handler in self._handlers if handler.matches(line)), None
-        )
-        if first_match:
-            first_match.parse(line, f, self.data, self._state)
+    def _find_handler_matches(self, lines: List[str]) -> List[tuple[InfoHandler, int]]:
+        """Find all matches for registered handlers in the content."""
+        matches = []
+
+        for line_idx, line in enumerate(lines):
+            if not line.strip():
+                continue
+
+            for handler in self._handlers:
+                if handler.matches(line):
+                    matches.append((handler, line_idx))
+                    break  # Only match the first handler for each line
+
+        return matches
 
     def parse(self, verbose: bool = False):
         """Parses the OUTCAR file using the registered handlers."""
@@ -424,13 +485,30 @@ class VaspOutcarParser:
         self._state = ParserState()  # Reset state
 
         self._log(f"Starting parsing of '{self.outcar_path}'")
+
+        # Read the entire file content into memory as lines
         with open(self.outcar_path, "r") as f:
-            while True:
-                try:
-                    line = next(f)
-                    self._process_line(line, f)
-                except StopIteration:
-                    break
+            lines = f.readlines()
+
+        # Strip newlines from each line
+        lines = [line.rstrip("\n\r") for line in lines]
+
+        self._log(f"File content loaded, {len(lines)} lines")
+
+        # Find all handler matches
+        matches = self._find_handler_matches(lines)
+        self._log(f"Found {len(matches)} handler matches")
+
+        # Process each match
+        for handler, line_idx in matches:
+            try:
+                handler.parse(lines, line_idx, self.data, self._state)
+            except Exception as e:
+                self._log(f"Error in {handler.__class__.__name__}: {str(e)}")
+                if verbose:
+                    import traceback
+
+                    traceback.print_exc()
 
         self._log("Finished parsing file.")
         if verbose:
