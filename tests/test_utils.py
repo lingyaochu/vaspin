@@ -1,8 +1,5 @@
 """Test suite for utility functions in vaspin.utils.utils module"""
 
-import tempfile
-from pathlib import Path
-
 import numpy as np
 import pytest
 
@@ -12,47 +9,33 @@ from vaspin.utils.utils import clean, find_rotation, wrap_frac
 class TestClean:
     """Test class for the clean function"""
 
-    def test_create_new_directory(self):
+    def test_create_new_directory(self, tmp_path):
         """Test clean creates a new directory if it does not exist"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            new_dir = f"{tmpdir}/new_dir"
-            assert not Path(new_dir).exists(), (
-                "Directory should not exist before clean is called"
-            )
-            clean(new_dir)
+        new_dir = tmp_path / "new_dir"
+        # tmp_path is empty by default, so no need to assert not exists
+        clean(str(new_dir))
 
-            assert Path(new_dir).exists(), "clean do not create the directory"
-            assert Path(new_dir).is_dir(), "clean creates a file instead of a directory"
+        assert new_dir.exists(), "clean do not create the directory"
+        assert new_dir.is_dir(), "clean creates a file instead of a directory"
 
-    def test_existing_directory_empty(self):
+    def test_existing_directory_empty(self, tmp_path):
         """Test clean does nothing if the directory already exists"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            assert Path(tmpdir).exists(), "There should be a directory existing"
+        # tmp_path fixture provides an existing empty directory
+        clean(str(tmp_path))
 
-            clean(tmpdir)
+        assert tmp_path.exists(), "clean should not remove the existing directory"
+        assert tmp_path.is_dir(), "clean should not change the existing directory"
 
-            assert Path(tmpdir).exists(), (
-                "clean should not remove the existing directory"
-            )
-            assert Path(tmpdir).is_dir(), (
-                "clean should not change the existing directory"
-            )
-
-    def test_create_nested_directories(self):
+    def test_create_nested_directories(self, tmp_path):
         """Test clean creates nested directories"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            nested_dir = f"{tmpdir}/a/b/c/d"
-            assert next(Path(tmpdir).iterdir(), None) is None, (
-                "No subfiles or directory should exist"
-            )
+        nested_dir = tmp_path / "a" / "b" / "c" / "d"
+        assert next(tmp_path.iterdir(), None) is None, (
+            "No subfiles or directory should exist"
+        )
 
-            clean(nested_dir)
-            assert Path(nested_dir).exists(), (
-                "clean do not create the nested directories"
-            )
-            assert Path(nested_dir).is_dir(), (
-                "clean creates a file instead of a directory"
-            )
+        clean(str(nested_dir))
+        assert nested_dir.exists(), "clean do not create the nested directories"
+        assert nested_dir.is_dir(), "clean creates a file instead of a directory"
 
 
 class TestWrapFrac:
