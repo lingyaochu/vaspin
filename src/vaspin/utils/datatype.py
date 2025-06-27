@@ -1,7 +1,7 @@
 """some dataclass for vaspin"""
 
 from dataclasses import dataclass, field
-from typing import ClassVar, Sequence, Tuple
+from typing import ClassVar, Self, Sequence, Tuple
 
 import numpy as np
 
@@ -22,7 +22,7 @@ class SymTensor:
     _COMPONENTS: ClassVar[Tuple[str, ...]] = ("xx", "yy", "zz", "xy", "xz", "yz")
 
     @classmethod
-    def from_sequence(cls, values: Sequence[float]) -> "SymTensor":
+    def from_sequence(cls, values: Sequence[float]) -> Self:
         """Create a StrainTensor from a sequence of values.
 
         Args:

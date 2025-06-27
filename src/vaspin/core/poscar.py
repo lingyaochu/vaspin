@@ -7,7 +7,7 @@ Contains functionality for handling VASP POSCAR files and structure manipulation
 from collections import defaultdict
 from dataclasses import dataclass, field
 from itertools import product
-from typing import List, Literal, Tuple
+from typing import List, Literal, Self, Tuple
 
 import numpy as np
 
@@ -35,7 +35,7 @@ class Poscar:
         self.data = posdata
 
     @classmethod
-    def from_file(cls, filepath: str) -> "Poscar":
+    def from_file(cls, filepath: str) -> Self:
         """Create a Poscar object from a json or POSCAR file
 
         Args:
