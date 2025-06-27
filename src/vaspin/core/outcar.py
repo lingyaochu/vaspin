@@ -534,6 +534,46 @@ class VaspOutcarParser:
         return self.data.get("Ionic energy", [])
 
     @property
+    def electrons(self) -> float:
+        """Returns the number of electrons from the parsed data."""
+        return self.data.get("N electrons", 0.0)
+
+    @property
+    def ions(self) -> int:
+        """Returns the number of ions from the parsed data."""
+        return self.data.get("N ions", 0)
+
+    @property
+    def phonon(self) -> Dict[str, Any]:
+        """Returns the phonon data from the parsed data."""
+        return self.data.get("phonon", {})
+
+    @property
+    def dielectric_ele(self) -> List[List[float]]:
+        """Returns the electronic part of dielectric tensor from the parsed data."""
+        return self.data.get("dielectric_ele", [])
+
+    @property
+    def dielectric_ion(self) -> List[List[float]]:
+        """Returns the ionic part of dielectric tensor from the parsed data."""
+        return self.data.get("dielectric_ion", [])
+
+    @property
+    def hyperfine_fermi(self) -> Dict[str, List[float]]:
+        """Returns the fermi contact hyperfine parameters from the parsed data."""
+        return self.data.get("hyperfine_fermi", {})
+
+    @property
+    def hyperfine_dipolar(self) -> List[List[List[float]]]:
+        """Returns the dipolar hyperfine parameters from the parsed data."""
+        return self.data.get("hyperfine_dipolar", [])
+
+    @property
+    def site_potential(self) -> List[float]:
+        """Returns the site potentials for each atom from the parsed data."""
+        return self.data.get("site_potential", [])
+
+    @property
     def log(self) -> List[str]:
         """Returns the parse log."""
         return self.data.get("_parse_log", [])

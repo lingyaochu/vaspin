@@ -1,6 +1,6 @@
 """Test suite for OUTCAR parser."""
 
-from typing import Any, List
+from typing import List
 
 import pytest
 
@@ -10,12 +10,12 @@ from vaspin.utils.datatype import SymTensor
 FLOAT_TOL = 1e-7
 
 
-def set_parser(outcar_path: str, handlers: List[str]) -> dict[str, Any]:
+def set_parser(outcar_path: str, handlers: List[str]) -> VaspOutcarParser:
     """Set up the parser with the given path and handlers."""
     parser = VaspOutcarParser(outcar_path)
     parser.set_handlers(handlers)
     parser.parse()
-    return parser.data
+    return parser
 
 
 class TestOptOUTCAR:
@@ -37,10 +37,9 @@ class TestOptOUTCAR:
             -19.24974113,
             -19.24977097,
         ]
-        assert "Ionic energy" in parsed_data, "Energy are not parsed"
-        assert parsed_data["Ionic energy"] == pytest.approx(
-            sample_data_energy, abs=FLOAT_TOL
-        ), "Energy data mismatch"
+        assert parsed_data.energy == pytest.approx(sample_data_energy, abs=FLOAT_TOL), (
+            "Energy data mismatch"
+        )
 
     def test_forces(self, parsed_data):
         """Test forces extraction from OUTCAR."""
@@ -51,8 +50,7 @@ class TestOptOUTCAR:
             [[0.005776, -0.033844, -0.033844], [-0.005776, 0.033844, 0.033844]],
             [[-0.004093, -0.005553, -0.005553], [0.004093, 0.005553, 0.005553]],
         ]
-        assert "forces" in parsed_data, "Forces are not parsed"
-        forces = parsed_data["forces"]
+        forces = parsed_data.force
         assert len(forces) == len(sample_data_forces), "Number of ionic steps mismatch"
         for i, (actual_step, expected_step) in enumerate(
             zip(forces, sample_data_forces, strict=False)
@@ -67,8 +65,7 @@ class TestOptOUTCAR:
     def test_site_potential(self, parsed_data):
         """Test site potential extraction from OUTCAR."""
         sample_data_site_potential = [-45.4085, -45.4085]
-        assert "site_potential" in parsed_data, "Site potential are not parsed"
-        assert parsed_data["site_potential"] == pytest.approx(
+        assert parsed_data.site_potential == pytest.approx(
             sample_data_site_potential, abs=FLOAT_TOL
         ), "Site potential data mismatch"
 
@@ -91,9 +88,8 @@ class TestSpinOUTCAR:
             .get_matrix_sym()
             .tolist()
         )
-        assert "D tensor" in parsed_data, "ZFS tensor are not parsed"
         for actual_row, expected_row in zip(
-            parsed_data["D tensor"], sample_data_zfs, strict=False
+            parsed_data.dmat, sample_data_zfs, strict=False
         ):
             assert actual_row == pytest.approx(expected_row, abs=FLOAT_TOL), (
                 "ZFS tensor data mismatch"
@@ -107,8 +103,7 @@ class TestSpinOUTCAR:
             "A_ae": [-9.042, -9.042, -9.042, 165.189, 165.189, 165.189, 13.576],
             "A_c": [0.120, 0.120, 0.120, -34.766, -34.766, -34.766, -7.416],
         }
-        assert "hyperfine_fermi" in parsed_data, "Hyperfine fermi are not parsed"
-        assert parsed_data["hyperfine_fermi"] == pytest.approx(
+        assert parsed_data.hyperfine_fermi == pytest.approx(
             sample_data_hyperfine_fermi, abs=FLOAT_TOL
         ), "Hyperfine fermi data mismatch"
 
@@ -127,12 +122,11 @@ class TestSpinOUTCAR:
             SymTensor().from_sequence(row).get_matrix_sym().tolist()
             for row in origindata
         ]
-        assert "hyperfine_dipolar" in parsed_data, "Hyperfine dipolar are not parsed"
-        assert len(parsed_data["hyperfine_dipolar"]) == len(
+        assert len(parsed_data.hyperfine_dipolar) == len(
             sample_data_hyperfine_dipolar
         ), "Number of hyperfine dipolar tensors mismatch"
         for actual_tensor, expected_tensor in zip(
-            parsed_data["hyperfine_dipolar"],
+            parsed_data.hyperfine_dipolar,
             sample_data_hyperfine_dipolar,
             strict=False,
         ):
@@ -189,16 +183,13 @@ class TestPhononOUTCAR:
                 ],
             ],
         }
-        assert "phonon" in parsed_data, "Phonon data are not parsed"
-        assert "frequencies" in parsed_data["phonon"], (
-            "Phonon frequencies are not parsed"
-        )
-        assert "eigenmodes" in parsed_data["phonon"], "Phonon eigenmodes are not parsed"
-        assert parsed_data["phonon"]["frequencies"] == pytest.approx(
+        assert "frequencies" in parsed_data.phonon, "Phonon frequencies are not parsed"
+        assert "eigenmodes" in parsed_data.phonon, "Phonon eigenmodes are not parsed"
+        assert parsed_data.phonon["frequencies"] == pytest.approx(
             sample_data_phonon["frequencies"], abs=FLOAT_TOL
         ), "Phonon frequencies data mismatch"
         for actual_mode, expected_mode in zip(
-            parsed_data["phonon"]["eigenmodes"],
+            parsed_data.phonon["eigenmodes"],
             sample_data_phonon["eigenmodes"],
             strict=False,
         ):
@@ -223,14 +214,12 @@ class TestNormalOUTCAR:
     def test_ions(self, parsed_data):
         """Test number of ions extraction from OUTCAR."""
         sample_data_ions = 8
-        assert "N ions" in parsed_data, "Number of ions are not parsed"
-        assert parsed_data["N ions"] == sample_data_ions, "Number of ions data mismatch"
+        assert parsed_data.ions == sample_data_ions, "Number of ions data mismatch"
 
     def test_electrons(self, parsed_data):
         """Test number of electrons extraction from OUTCAR."""
         sample_data_electrons = 32.00
-        assert "N electrons" in parsed_data, "Number of electrons are not parsed"
-        assert parsed_data["N electrons"] == pytest.approx(
+        assert parsed_data.electrons == pytest.approx(
             sample_data_electrons, abs=FLOAT_TOL
         ), "Number of electrons data mismatch"
 
@@ -241,11 +230,8 @@ class TestNormalOUTCAR:
             [0.000000, 7.097446, -0.000000],
             [0.000000, 0.000000, 7.446904],
         ]
-        assert "dielectric_ele" in parsed_data, (
-            "Electron part of dielectric tensor are not parsed"
-        )
         for actual_row, expected_row in zip(
-            parsed_data["dielectric_ele"], sample_data_dielectric_ele, strict=False
+            parsed_data.dielectric_ele, sample_data_dielectric_ele, strict=False
         ):
             assert actual_row == pytest.approx(expected_row, abs=FLOAT_TOL), (
                 "Electron part of dielectric tensor data mismatch"
@@ -258,11 +244,8 @@ class TestNormalOUTCAR:
             [-0.000000, 3.256224, 0.000000],
             [0.000000, 0.000000, 3.654108],
         ]
-        assert "dielectric_ion" in parsed_data, (
-            "Ion part of dielectric tensor are not parsed"
-        )
         for actual_row, expected_row in zip(
-            parsed_data["dielectric_ion"], sample_data_dielectric_ion, strict=False
+            parsed_data.dielectric_ion, sample_data_dielectric_ion, strict=False
         ):
             assert actual_row == pytest.approx(expected_row, abs=FLOAT_TOL), (
                 "Ion part of dielectric tensor data mismatch"
