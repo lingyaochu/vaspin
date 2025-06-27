@@ -10,11 +10,13 @@ from vaspin.utils.datatype import SymTensor
 FLOAT_TOL = 1e-7
 
 
-def set_parser(outcar_path: str, handlers: List[str]) -> VaspOutcarParser:
+def set_parser(
+    outcar_path: str, handlers: List[str], verbose: bool = True
+) -> VaspOutcarParser:
     """Set up the parser with the given path and handlers."""
     parser = VaspOutcarParser(outcar_path)
     parser.set_handlers(handlers)
-    parser.parse()
+    parser.parse(verbose=verbose)
     return parser
 
 
@@ -78,7 +80,7 @@ class TestSpinOUTCAR:
         """Fixture for parsed data from OUTCAR-spin."""
         outcar_path = (data_path / "OUTCAR-spin").as_posix()
         handlers = ["N ions", "D tensor", "Hyperfine fermi", "Hyperfine dipolar"]
-        return set_parser(outcar_path, handlers)
+        return set_parser(outcar_path, handlers, verbose=False)
 
     def test_zfs(self, parsed_data):
         """Test ZFS tensor extraction from OUTCAR."""
@@ -250,3 +252,62 @@ class TestNormalOUTCAR:
             assert actual_row == pytest.approx(expected_row, abs=FLOAT_TOL), (
                 "Ion part of dielectric tensor data mismatch"
             )
+
+
+class TestOutcarErrorHandling:
+    """Test class for error handling in VaspOutcarParser."""
+
+    def test_parser_initialization_with_invalid_path(self):
+        """Test that VaspOutcarParser raises TypeError for non-string paths."""
+        with pytest.raises(TypeError, match="The OUTCAR path must be a string."):
+            VaspOutcarParser(123)  # type: ignore[arg-type]
+
+    def test_set_handlers_with_empty_list(self, tmp_path):
+        """Test that set_handlers raises ValueError for an empty list."""
+        outcar_file = tmp_path / "OUTCAR"
+        outcar_file.write_text("test content")
+        parser = VaspOutcarParser(str(outcar_file))
+        with pytest.raises(
+            ValueError, match="At least one handler key must be provided."
+        ):
+            parser.set_handlers([])
+
+    def test_set_handlers_with_unregistered_handler(self, tmp_path):
+        """Test that set_handlers raises ValueError for an unregistered handler."""
+        outcar_file = tmp_path / "OUTCAR"
+        outcar_file.write_text("test content")
+        parser = VaspOutcarParser(str(outcar_file))
+        with pytest.raises(
+            ValueError, match="Handler 'Invalid Handler' is not registered."
+        ):
+            parser.set_handlers(["Invalid Handler"])
+
+    @pytest.mark.parametrize("verbose", [True, False])
+    def test_parse_with_error_file(self, data_path, verbose):
+        """Test that parse raises RuntimeError for an OUTCAR with errors."""
+        outcar_path = (data_path / "OUTCAR-normal-error").as_posix()
+        handlers = ["N ions", "N electrons", "Dielectric ele", "Dielectric ion"]
+        parsed_data = set_parser(outcar_path, handlers, verbose=verbose)
+
+        error_message = [msg for msg in parsed_data.log if "Error in" in msg]
+
+        assert len(error_message) == 1, "Expected one error message in parse log"
+
+        error_msg = error_message[0]
+        assert "Error in DielectricIonHandler" in error_msg, (
+            "Error message does not indicate the correct handler"
+        )
+
+
+def test_handler_log_initialization():
+    """Test that handler _log method initializes log list when not present."""
+    from vaspin.core.outcar import NElectronHandler
+
+    handler = NElectronHandler()
+    data = {}
+
+    handler._log(data, "Test message")
+
+    assert "_parse_log" in data
+    assert len(data["_parse_log"]) == 1
+    assert "NElectronHandler: Test message" in data["_parse_log"]
