@@ -3,14 +3,43 @@
 Contains functionality for reading and writing VASP files.
 """
 
-import os
 import re
 from json import JSONDecodeError, dumps, load, loads
-from typing import Any
+from pathlib import Path
+from typing import Any, Callable, List
 
 import numpy as np
 
+from vaspin.core.outcar import VaspOutcarParser
 from vaspin.types.array import FloatArray, StrArray
+
+
+def read_file(filepath: str, fallback: Callable[[str], str]) -> dict[str, Any]:
+    """The general method to read a file
+
+    The file should be a json file
+    or a file can be converted to json format by fallback function.
+
+    Args:
+        filepath: Path to the file
+        fallback: Function to convert file content to JSON format
+
+    Returns:
+        Dictionary containing file data
+
+    Raises:
+        FileNotFoundError: If the file does not exist
+    """
+    if not Path(filepath).exists():
+        raise FileNotFoundError(f"File does not exist: {filepath}")
+
+    try:
+        with open(filepath, "r") as f:
+            data = load(f)
+    except JSONDecodeError:
+        data = loads(fallback(filepath))
+
+    return data
 
 
 def read_poscar(posfile: str) -> dict[str, Any]:
@@ -21,21 +50,8 @@ def read_poscar(posfile: str) -> dict[str, Any]:
 
     Returns:
         Dictionary containing POSCAR data
-
-    Raises:
-        FileNotFoundError: File does not exist
     """
-    if not os.path.exists(posfile):
-        raise FileNotFoundError(f"File does not exist: {posfile}")
-
-    try:
-        with open(posfile, "r") as f:
-            data: dict[str, Any] = load(f)
-    except JSONDecodeError:
-        posdata: dict[str, Any] = loads(poscar_to_json(posfile))
-        data = posdata
-
-    return data
+    return read_file(posfile, poscar_to_json)
 
 
 def poscar_to_json(filepath: str) -> str:
@@ -153,3 +169,34 @@ def write_poscar(
         f.write(number_str + "\n")
         f.write("Direct" + "\n")
         f.write(coor_str)
+
+
+def read_phonon(phononfile: str) -> dict[str, List[float]]:
+    """Read phonon data from files
+
+    Args:
+        phononfile: Path to the file, either a OUTCAR of a phonon.json
+
+    Returns:
+        the phonon data as a dictionary with keys:
+            - "frequencies": List of frequencies in THz
+            - "eigenmodes": List of eigenmodes as 2D List
+    """
+    return read_file(phononfile, phonon_to_json)
+
+
+def phonon_to_json(filepath: str) -> str:
+    """Convert phonon info to JSON string format
+
+    Args:
+        filepath: Path to OUTCAR file
+
+    Returns:
+        JSON formatted string
+    """
+    pho_parser = VaspOutcarParser(filepath)
+    pho_parser.set_handlers(["N ions", "Phonon"])
+    pho_parser.parse()
+    phonon_dict = pho_parser.phonon
+
+    return dumps(phonon_dict, indent=None)

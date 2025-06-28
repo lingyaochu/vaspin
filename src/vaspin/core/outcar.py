@@ -537,3 +537,8 @@ class VaspOutcarParser:
     def log(self) -> List[str]:
         """Returns the parse log."""
         return self.data.get("_parse_log", [])
+
+    @property
+    def phonon(self) -> Dict[str, Any]:
+        """Returns the phonon data from the parsed data."""
+        return self.data.get("phonon", {})
