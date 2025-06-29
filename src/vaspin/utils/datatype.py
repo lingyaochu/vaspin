@@ -106,3 +106,27 @@ class PosData:
             "c": float(np.linalg.norm(self.lattice[2])),
         }
         self.rec_lattice = np.linalg.inv(self.lattice).T * 2 * np.pi
+
+
+@dataclass
+class PhoData:
+    """the data structure of phonon data"""
+
+    freq: FloatArray
+    mode: FloatArray
+    mass: FloatArray
+
+    def __post_init__(self) -> None:
+        """Post-initialization hook to validate the data."""
+        if (
+            len(self.freq) != len(self.mode)
+            or len(self.freq) != len(self.mass) * 3
+            or len(self.mode) != len(self.mass) * 3
+        ):
+            raise ValueError("The length of freq and mode and mass must be the same.")
+
+        if len(self.freq) == 0:
+            raise ValueError("The length of freq and mode must be greater than 0.")
+
+        if len(self.freq) % 3 != 0:
+            raise ValueError("The length of freq must be a multiple of 3.")
