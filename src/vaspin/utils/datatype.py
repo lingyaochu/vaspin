@@ -7,6 +7,8 @@ import numpy as np
 
 from vaspin.types.array import FloatArray, IntArray, StrArray
 
+from .constants import MASS_DICT
+
 
 @dataclass
 class SymTensor:
@@ -83,6 +85,7 @@ class PosData:
     comment: str = " "
 
     atoms: StrArray = field(init=False)
+    mass: FloatArray = field(init=False)
     volume: float = field(init=False)
     cate: FloatArray = field(init=False)
     abc: dict[str, float] = field(init=False)
@@ -91,6 +94,10 @@ class PosData:
     def __post_init__(self) -> None:
         """Post-initialization hook"""
         self.atoms = np.repeat(self.species, self.number)
+        self.mass = np.array(
+            [MASS_DICT.get(atom, MASS_DICT["others"]) for atom in self.atoms],
+            dtype=float,
+        )
         self.volume = np.abs(np.linalg.det(self.lattice * self.coe))
         self.cate = np.dot(self.frac, self.lattice)
         self.abc = {
