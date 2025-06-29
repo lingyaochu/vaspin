@@ -5,10 +5,11 @@ from typing import Self, overload
 
 import numpy as np
 
-from vaspin.core.io import read_phonon, read_poscar
+from vaspin.core.io import read_phonon
+from vaspin.core.poscar import Poscar
 from vaspin.types.array import FloatArray, IntArray
 from vaspin.utils.constants import ENERGY_UNITS
-from vaspin.utils.datatype import PhoData, PosData
+from vaspin.utils.datatype import PhoData
 
 
 class Phonon:
@@ -22,39 +23,24 @@ class Phonon:
         self.mass = phodata.mass
 
     @classmethod
-    def from_file(cls, phononfile: str, posfile) -> Self:
+    def from_file(cls, phononfile: str, posfile: str) -> Self:
         """Create a Phonon object from an OUTCAR file
 
         Args:
-            phononfile: Path to file storing phonon data, OUTCAR or phonon.json
-            posfile: Path to POSCAR file or pos.json file
+            phononfile: Path to OUTCAR or phonon.json
+            posfile: path to POSCAR or poscar.json
 
         Returns:
             Phonon object
         """
         data = read_phonon(phononfile)
 
-        pos_data = read_poscar(posfile)
-        mass = PosData(**pos_data).mass
+        poscar = Poscar.from_file(posfile)
+        mass = poscar.mass
 
         freq = np.array(data["frequencies"])
         mode = np.array(data["eigenmodes"])
         return cls(PhoData(freq, mode, mass))
-
-    @cached_property
-    def disp(self) -> FloatArray:
-        """The displacement in Cartesian coordinates of all modes"""
-        return np.array([self.mode2disp(idx) for idx in range(len(self.freq))])
-
-    @cached_property
-    def translation(self) -> IntArray:
-        """Get the index of translation modes"""
-        translation_idx = []
-        for idx, disp in enumerate(self.disp):
-            if self.translation_judge(disp):
-                translation_idx.append(idx)
-
-        return np.array(translation_idx, dtype=int)
 
     def check_index(self, idx: int) -> None:
         """Check if the index is valid for the phonon data
@@ -68,10 +54,10 @@ class Phonon:
             )
 
     @overload
-    def to_meV(self, freq: float) -> float: ...
+    def to_meV(self, freq: float) -> float: ...  # pragma: no cover
 
     @overload
-    def to_meV(self, freq: FloatArray) -> FloatArray: ...
+    def to_meV(self, freq: FloatArray) -> FloatArray: ...  # pragma: no cover
 
     def to_meV(self, freq: float | FloatArray | None = None) -> float | FloatArray:
         """Convert frequency to meV
@@ -87,10 +73,12 @@ class Phonon:
         return freq * ENERGY_UNITS["THz"] * 1e3
 
     @overload
-    def phonon_number(self, T: float, freq: float) -> float: ...
+    def phonon_number(self, T: float, freq: float) -> float: ...  # pragma: no cover
 
     @overload
-    def phonon_number(self, T: float, freq: FloatArray) -> FloatArray: ...
+    def phonon_number(
+        self, T: float, freq: FloatArray
+    ) -> FloatArray: ...  # pragma: no cover
 
     def phonon_number(
         self, T: float, freq: float | FloatArray | None = None
@@ -112,13 +100,18 @@ class Phonon:
         assert T > 0, "The temperature must be greater than 0 K"
 
         return 1 / (
-            np.exp(freq * ENERGY_UNITS["THz"] / (T * ENERGY_UNITS["kelvin"])) - 1
+            np.exp(freq * ENERGY_UNITS["THz"] / (T * ENERGY_UNITS["Kelvin"])) - 1
         )
 
     def mode2disp(self, idx: int) -> FloatArray:
         """Convert the i-th eigenmode output by VASP to disp in Cartesian coord"""
         self.check_index(idx)
         return self.mode[idx] / np.sqrt(self.mass)[:, np.newaxis]
+
+    @cached_property
+    def disp(self) -> FloatArray:
+        """The displacement in Cartesian coordinates of all modes"""
+        return np.array([self.mode2disp(idx) for idx in range(len(self.freq))])
 
     def decompose(self, disp: FloatArray) -> FloatArray:
         """Decompose displacement into eigenmodes
@@ -132,13 +125,14 @@ class Phonon:
         assert len(disp.shape) == 2 and disp.shape[1] == 3, (
             "The input displacement must be a 2D array with shape (n, 3)"
         )
-        assert len(disp) == len(self.freq), (
-            "The length of displacement must match the normal modes"
+        assert disp.shape[0] == len(self.freq) / 3, (
+            "The length of displacement must match the atoms"
         )
 
         disp_normal = disp * np.sqrt(self.mass)[:, np.newaxis]
 
         projection = self.mode * disp_normal
+
         return np.sum(projection, axis=(1, 2))
 
     def free_energy(self, T: np.floating) -> np.floating:
@@ -151,21 +145,19 @@ class Phonon:
             T: Temperature in Kelvin
         """
         assert T >= 0, "The temperature must be greater than or equal to 0 K"
-        mode_notrans = np.setdiff1d(
-            np.arange(len(self.freq), dtype=int), self.translation
-        )
+        mode_notrans = np.setdiff1d(np.arange(len(self.freq)), self.translation)
 
-        energy_part = 0.5 * ENERGY_UNITS["THz"] * self.freq[mode_notrans]
+        energy_part = 1 / 2 * self.freq[mode_notrans] * ENERGY_UNITS["THz"]
 
         entropy_part = (
-            ENERGY_UNITS["kelvin"]
-            * T
+            T
+            * ENERGY_UNITS["Kelvin"]
             * np.log(
                 1
                 - np.exp(
-                    -ENERGY_UNITS["THz"]
-                    * self.freq[mode_notrans]
-                    / (T * ENERGY_UNITS["kelvin"])
+                    -self.freq[mode_notrans]
+                    * ENERGY_UNITS["THz"]
+                    / (T * ENERGY_UNITS["Kelvin"])
                 )
             )
         )
@@ -190,3 +182,13 @@ class Phonon:
         disp_std = np.std(disp, axis=0)
 
         return bool(np.all(disp_std < 1e-3))
+
+    @cached_property
+    def translation(self) -> IntArray:
+        """Get the index of translation modes"""
+        translation_idx = []
+        for idx, disp in enumerate(self.disp):
+            if self.translation_judge(disp):
+                translation_idx.append(idx)
+
+        return np.array(translation_idx, dtype=int)
