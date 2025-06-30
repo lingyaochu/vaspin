@@ -69,16 +69,16 @@ class TestWrapFrac:
     )
     def test_wrap_frac_single(self, input_coords, expected_coords):
         """Test wrap_frac with various input coordinates"""
-        input = np.array(input_coords)
-        result = wrap_frac(input)
+        input_coords = np.array(input_coords)
+        result = wrap_frac(input_coords)
         expected = np.array(expected_coords)
         assert result == pytest.approx(expected, abs=1e-7), (
-            f"wrap_frac({input}) = {result}, expected {expected}"
+            f"wrap_frac({input_coords}) = {result}, expected {expected}"
         )
 
     def test_wrap_frac_multi(self):
         """Test wrap_frac with multiple coordinates"""
-        input = np.array(
+        inputs = np.array(
             [
                 [0.22, 0.88, 0.33],
                 [-0.22, -0.33, -0.44],
@@ -99,12 +99,12 @@ class TestWrapFrac:
                 [0.0, 0.0, 0.0],
             ]
         )
-        result = wrap_frac(input)
+        result = wrap_frac(inputs)
         for i, (result_coord, expected_coord) in enumerate(
             zip(result, expected, strict=False)
         ):
             assert result_coord == pytest.approx(expected_coord, abs=1e-7), (
-                f"wrap_frac({input[i]}) = {result_coord}, expected {expected_coord}"
+                f"wrap_frac({inputs[i]}) = {result_coord}, expected {expected_coord}"
             )
 
 

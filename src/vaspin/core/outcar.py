@@ -492,7 +492,7 @@ class VaspOutcarParser:
             try:
                 handler.parse(lines, line_idx, self.data, self._state)
             except Exception as e:
-                self._log(f"Error in {handler.__class__.__name__}: {str(e)}")
+                self._log(f"Error in {handler.__class__.__name__}: {e!s}")
                 if verbose:
                     import traceback
 

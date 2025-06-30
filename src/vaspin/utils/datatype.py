@@ -37,7 +37,7 @@ class SymTensor:
         if not all(isinstance(v, (int, float)) for v in values):
             raise TypeError("All values must be numeric (int or float).")
 
-        kwargs = {comp: val for comp, val in zip(cls._COMPONENTS, values, strict=True)}
+        kwargs = dict(zip(cls._COMPONENTS, values, strict=True))
         return cls(**kwargs)
 
     def get_matrix_sym(self) -> FloatArray:
