@@ -92,10 +92,10 @@ class PosData:
         """Post-initialization hook"""
         self.atoms = np.repeat(self.species, self.number)
         self.volume = np.abs(np.linalg.det(self.lattice * self.coe))
-        self.cate = np.dot(self.frac, self.lattice)
+        self.cate = np.dot(self.frac, self.lattice) * self.coe
         self.abc = {
-            "a": float(np.linalg.norm(self.lattice[0])),
-            "b": float(np.linalg.norm(self.lattice[1])),
-            "c": float(np.linalg.norm(self.lattice[2])),
+            "a": float(np.linalg.norm(self.lattice[0] * self.coe)),
+            "b": float(np.linalg.norm(self.lattice[1] * self.coe)),
+            "c": float(np.linalg.norm(self.lattice[2] * self.coe)),
         }
         self.rec_lattice = np.linalg.inv(self.lattice).T * 2 * np.pi

@@ -54,7 +54,8 @@ class Poscar:
 
         if __data["coortype"][0] in ["c", "C", "K", "k"]:
             __data["frac"] = np.dot(
-                np.array(__data["coordinate"]), np.linalg.inv(__data["lattice"])
+                np.array(__data["coordinate"]),
+                np.linalg.inv(__data["lattice"] * __data["coe"]),
             )
 
         else:
@@ -79,7 +80,7 @@ class Poscar:
     @property
     def lattice(self) -> FloatArray:
         """Get the lattice"""
-        return self.data.lattice.copy()
+        return self.calculate_lattice(self.data.coe, self.data.lattice)
 
     @property
     def coor_frac(self) -> FloatArray:
@@ -107,7 +108,7 @@ class Poscar:
         return self.calculate_volume(self.lattice)
 
     @staticmethod
-    def calculate_lattice(coe: float, lat: list[list[float]]) -> FloatArray:
+    def calculate_lattice(coe: float, lat: FloatArray) -> FloatArray:
         """Calculate lattice vectors based on input coefficient and lattice
 
         Args:
@@ -117,7 +118,7 @@ class Poscar:
         Returns:
             Lattice vectors
         """
-        return np.array(lat) * coe
+        return lat * coe
 
     @staticmethod
     def calculate_volume(lattice: FloatArray) -> np.float64:
