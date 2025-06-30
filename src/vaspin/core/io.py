@@ -52,44 +52,38 @@ def poscar_to_json(filepath: str) -> str:
     """
     try:
         with open(filepath, "r") as f:
-            # read comment
-            comment = f.readline().strip()
-
-            # Read lattice constant and lattice vectors
-            coe = float(f.readline().strip())
-            lattice = []
-            for _ in range(3):
-                lattice.append(
-                    [float(x) for x in re.split(r"\s+", f.readline().strip())]
-                )
-
-            # Read atom types and quantities
-            species = [x.split("/")[0] for x in re.split(r"\s+", f.readline().strip())]
-            atom_numbers = [int(x) for x in re.split(r"\s+", f.readline().strip())]
-
-            # Read coordinate type and coordinates
-            coor_type = f.readline().strip()
-            total_atoms = sum(atom_numbers)
-            coordinates = []
-            for _ in range(total_atoms):
-                coordinates.append(
-                    [float(x) for x in re.split(r"\s+", f.readline().strip())[:3]]
-                )
-
-            # Build data dictionary
-            data = {
-                "comment": comment,
-                "coe": coe,
-                "lattice": lattice,
-                "species": species,
-                "number": atom_numbers,
-                "coortype": coor_type,
-                "coordinate": coordinates,
-            }
-
-            return dumps(data, indent=None)
+            poscar_lines = f.readlines()
     except (IOError, ValueError) as e:
         raise ValueError(f"Cannot parse POSCAR file {filepath}: {e}") from e
+
+    comment = poscar_lines[0].strip()
+    lattice_coe = float(poscar_lines[1].strip())
+
+    lattice = []
+    for i in range(2, 5):
+        lattice.append([float(x) for x in re.split(r"\s+", poscar_lines[i].strip())])
+
+    species = [x.split("/")[0] for x in re.split(r"\s+", poscar_lines[5].strip())]
+    atom_numbers = [int(x) for x in re.split(r"\s+", poscar_lines[6].strip())]
+    coor_type = poscar_lines[7].strip()
+    total_atoms = sum(atom_numbers)
+
+    coordinates = []
+    for i in range(8, 8 + total_atoms):
+        coordinates.append(
+            [float(x) for x in re.split(r"\s+", poscar_lines[i].strip())[:3]]
+        )
+
+    data = {
+        "comment": comment,
+        "coe": lattice_coe,
+        "lattice": lattice,
+        "species": species,
+        "number": atom_numbers,
+        "coortype": coor_type,
+        "coordinate": coordinates,
+    }
+    return dumps(data, indent=None)
 
 
 def write_poscar(
