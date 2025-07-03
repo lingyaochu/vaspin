@@ -70,7 +70,18 @@ class Poscar:
         """Compare two Poscar objects for equality"""
         if not isinstance(other, Poscar):
             return NotImplemented
-        return self.data == other.data
+        if len(self.atoms) != len(other.atoms):
+            return False
+        if not np.allclose(self.lattice, other.lattice, atol=1e-3):
+            return False
+
+        stru_relation = StruMapping(self, other).atom_relation()
+        for _idfrom, _idto, species_relation, distance in stru_relation:
+            if not np.isclose(distance, 0.0, atol=5e-3):
+                return False
+            if not species_relation[0] == species_relation[1]:
+                return False
+        return True
 
     @property
     def comment(self) -> str:
