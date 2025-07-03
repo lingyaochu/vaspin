@@ -30,7 +30,7 @@ class Poscar:
             ValueError: Invalid file format
         """
         if not isinstance(posdata, PosData):
-            raise ValueError("posdata must be a PosData object")
+            raise TypeError("posdata must be a PosData object")
 
         self.data = posdata
 
@@ -45,7 +45,7 @@ class Poscar:
             Poscar object
         """
         if not isinstance(filepath, str):
-            raise ValueError("filepath must be a string")
+            raise TypeError("filepath must be a string")
 
         __data = read_poscar(filepath)
         __data["lattice"] = np.array(__data["lattice"])
@@ -201,9 +201,7 @@ class Poscar:
         assert magnitude >= 0, "Displacement magnitude must be non-negative"
 
         if method not in ["cate", "sphere"]:
-            raise ValueError(
-                f"Unsupported method: {method}. Use either 'cate' or 'sphere'."
-            )
+            raise ValueError(f"Unsupported method '{method}'. Use 'cate' or 'sphere'.")
 
         if method == "cate":
             # Generate uniform random displacement in Cartesian coordinates
@@ -322,7 +320,7 @@ class Poscar:
         """
         if isinstance(target, int):
             if target < 0 or target >= len(self.coor_frac):
-                raise ValueError(
+                raise IndexError(
                     f"Atom index {target} out of range (0-{len(self.coor_frac) - 1})"
                 )
             center_coor = self.coor_frac[target]
