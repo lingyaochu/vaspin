@@ -109,6 +109,11 @@ class Poscar:
         return self.data.atoms.copy()
 
     @property
+    def mass(self) -> FloatArray:
+        """Get the atomic masses"""
+        return self.data.mass.copy()
+
+    @property
     def abc(self) -> dict[str, float]:
         """Get the lattice length"""
         return self.data.abc.copy()
