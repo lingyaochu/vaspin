@@ -26,14 +26,14 @@ class InfoHandler(ABC):
         if "KEY" not in cls.__dict__ or not isinstance(cls.KEY, str):
             raise TypeError(
                 f"{cls.__name__} must define a class variable 'KEY' of type str."
-            )
+            )  # pragma: no cover
         HANDLERS[cls.KEY] = cls
 
     @property
     @abstractmethod
     def HEADER(self) -> str:
         """Header string to identify relevant lines in the OUTCAR file."""
-        pass
+        pass  # pragma: no cover
 
     def matches(self, line: str) -> bool:
         """Check if the handler should process this line (based on header)."""
@@ -54,7 +54,7 @@ class InfoHandler(ABC):
         Returns:
             The line index after parsing (for continuing the parse)
         """
-        pass
+        pass  # pragma: no cover
 
     def _log(self, data: Dict[str, Any], message: str):
         """Helper to add logs to a common log list in the data dict."""
@@ -130,11 +130,10 @@ class DTensorHandler(InfoHandler):
         self._log(data, "Parsing D tensor block.")
         current_idx = self._skip_lines(lines, line_idx, 4)
 
-        if current_idx < len(lines):
-            dataline = lines[current_idx]
-            parts_sym = [float(x) for x in dataline.strip().split()]
-            d_tensor = SymTensor().from_sequence(parts_sym)
-            data["D tensor"] = d_tensor.get_matrix_sym().tolist()
+        dataline = lines[current_idx]
+        parts_sym = [float(x) for x in dataline.strip().split()]
+        d_tensor = SymTensor().from_sequence(parts_sym)
+        data["D tensor"] = d_tensor.get_matrix_sym().tolist()
 
         return current_idx + 1
 
@@ -158,12 +157,11 @@ class ForceHandler(InfoHandler):
         current_idx = self._skip_lines(lines, line_idx, 1)  # Skip header line
 
         for _ in range(state.num_atoms):
-            if current_idx < len(lines):
-                current_idx += 1
-                line = lines[current_idx]
-                line_parts = line.strip().split()
-                force = [float(i) for i in line_parts[3:6]]
-                forces.append(force)
+            current_idx += 1
+            line = lines[current_idx]
+            line_parts = line.strip().split()
+            force = [float(i) for i in line_parts[3:6]]
+            forces.append(force)
 
         if "forces" not in data:
             data["forces"] = []
@@ -188,13 +186,12 @@ class IonicEnergyHandler(InfoHandler):
         self._log(data, "Parsing ionic energy.")
         current_idx = self._skip_lines(lines, line_idx, 3)
 
-        if current_idx < len(lines):
-            current_idx += 1
-            line = lines[current_idx]
-            energy = float(line.strip().split()[-1])
-            if "Ionic energy" not in data:
-                data["Ionic energy"] = []
-            data["Ionic energy"].append(energy)
+        current_idx += 1
+        line = lines[current_idx]
+        energy = float(line.strip().split()[-1])
+        if "Ionic energy" not in data:
+            data["Ionic energy"] = []
+        data["Ionic energy"].append(energy)
 
         return current_idx + 1
 
@@ -221,16 +218,13 @@ class PhononHandler(InfoHandler):
 
         for _ in range(3 * state.num_atoms):
             # the frequency in THz
-            if current_idx < len(lines):
-                current_idx += 1
-                line = lines[current_idx]
-                line_parts = line.strip().split()
-                freq = (
-                    float(line_parts[3])
-                    if line_parts[1] == "f"
-                    else -float(line_parts[2])
-                )
-                data["phonon"]["frequencies"].append(freq)
+            current_idx += 1
+            line = lines[current_idx]
+            line_parts = line.strip().split()
+            freq = (
+                float(line_parts[3]) if line_parts[1] == "f" else -float(line_parts[2])
+            )
+            data["phonon"]["frequencies"].append(freq)
 
             # skip one line
             current_idx += 1
@@ -238,11 +232,10 @@ class PhononHandler(InfoHandler):
             # the eigenvectors
             mode = []
             for _ in range(state.num_atoms):
-                if current_idx < len(lines):
-                    current_idx += 1
-                    line = lines[current_idx]
-                    line_parts = line.strip().split()
-                    mode.append([float(i) for i in line_parts[3:6]])
+                current_idx += 1
+                line = lines[current_idx]
+                line_parts = line.strip().split()
+                mode.append([float(i) for i in line_parts[3:6]])
 
             # skip one line
             current_idx += 1
@@ -277,13 +270,12 @@ class DielectricEleHandler(InfoHandler):
         current_idx = self._skip_lines(lines, line_idx, 1)
 
         for _i in range(3):
-            if current_idx < len(lines):
-                current_idx += 1
-                line = lines[current_idx]
-                row = [float(x) for x in line.strip().split()]
-                if "dielectric_ele" not in data:
-                    data["dielectric_ele"] = []
-                data["dielectric_ele"].append(row)
+            current_idx += 1
+            line = lines[current_idx]
+            row = [float(x) for x in line.strip().split()]
+            if "dielectric_ele" not in data:
+                data["dielectric_ele"] = []
+            data["dielectric_ele"].append(row)
 
         return current_idx + 1
 
@@ -306,13 +298,12 @@ class DielectricIonHandler(InfoHandler):
         current_idx = self._skip_lines(lines, line_idx, 1)
 
         for _i in range(3):
-            if current_idx < len(lines):
-                current_idx += 1
-                line = lines[current_idx]
-                row = [float(x) for x in line.strip().split()]
-                if "dielectric_ion" not in data:
-                    data["dielectric_ion"] = []
-                data["dielectric_ion"].append(row)
+            current_idx += 1
+            line = lines[current_idx]
+            row = [float(x) for x in line.strip().split()]
+            if "dielectric_ion" not in data:
+                data["dielectric_ion"] = []
+            data["dielectric_ion"].append(row)
 
         return current_idx + 1
 
@@ -339,14 +330,13 @@ class HyperfineFermiHandler(InfoHandler):
         A_ae = []
         A_c = []
         for _ in range(state.num_atoms):
-            if current_idx < len(lines):
-                current_idx += 1
-                line = lines[current_idx]
-                line_parts = line.strip().split()
-                A_pw.append(float(line_parts[1]))
-                A_ps.append(float(line_parts[2]))
-                A_ae.append(float(line_parts[3]))
-                A_c.append(float(line_parts[4]))
+            current_idx += 1
+            line = lines[current_idx]
+            line_parts = line.strip().split()
+            A_pw.append(float(line_parts[1]))
+            A_ps.append(float(line_parts[2]))
+            A_ae.append(float(line_parts[3]))
+            A_c.append(float(line_parts[4]))
 
         data["hyperfine_fermi"] = {"A_pw": A_pw, "A_ps": A_ps, "A_ae": A_ae, "A_c": A_c}
         return current_idx + 1
@@ -373,13 +363,12 @@ class HyperfineDipolarHandler(InfoHandler):
 
         hyper_dipolar = []
         for _ in range(state.num_atoms):
-            if current_idx < len(lines):
-                current_idx += 1
-                line = lines[current_idx]
-                line_parts = line.strip().split()
-                parts_sym = [float(x) for x in line_parts[1:7]]
-                dipolar_tensor = SymTensor().from_sequence(parts_sym)
-                hyper_dipolar.append(dipolar_tensor.get_matrix_sym().tolist())
+            current_idx += 1
+            line = lines[current_idx]
+            line_parts = line.strip().split()
+            parts_sym = [float(x) for x in line_parts[1:7]]
+            dipolar_tensor = SymTensor().from_sequence(parts_sym)
+            hyper_dipolar.append(dipolar_tensor.get_matrix_sym().tolist())
 
         data["hyperfine_dipolar"] = hyper_dipolar
         return current_idx + 1
@@ -404,7 +393,7 @@ class SitePotHandler(InfoHandler):
         site_pot = []
         current_idx = self._skip_lines(lines, line_idx, 1)  # Skip the header line
 
-        while current_idx < len(lines):
+        while True:
             line = lines[current_idx]
             line_stripped = line.strip()
             if line_stripped == "":
@@ -480,8 +469,8 @@ class VaspOutcarParser:
 
     def parse(self, verbose: bool = False):
         """Parses the OUTCAR file using the registered handlers."""
-        self.data = {"_parse_log": []}  # Reset data, initialize log
-        self._state = ParserState()  # Reset state
+        self.data = {"_parse_log": []}
+        self._state = ParserState()
 
         self._log(f"Starting parsing of '{self.outcar_path}'")
 
@@ -503,7 +492,7 @@ class VaspOutcarParser:
             try:
                 handler.parse(lines, line_idx, self.data, self._state)
             except Exception as e:
-                self._log(f"Error in {handler.__class__.__name__}: {str(e)}")
+                self._log(f"Error in {handler.__class__.__name__}: {e!s}")
                 if verbose:
                     import traceback
 
@@ -532,6 +521,46 @@ class VaspOutcarParser:
     def energy(self) -> List[float]:
         """Returns the ionic energy from the parsed data."""
         return self.data.get("Ionic energy", [])
+
+    @property
+    def electrons(self) -> float:
+        """Returns the number of electrons from the parsed data."""
+        return self.data.get("N electrons", 0.0)
+
+    @property
+    def ions(self) -> int:
+        """Returns the number of ions from the parsed data."""
+        return self.data.get("N ions", 0)
+
+    @property
+    def phonon(self) -> Dict[str, Any]:
+        """Returns the phonon data from the parsed data."""
+        return self.data.get("phonon", {})
+
+    @property
+    def dielectric_ele(self) -> List[List[float]]:
+        """Returns the electronic part of dielectric tensor from the parsed data."""
+        return self.data.get("dielectric_ele", [])
+
+    @property
+    def dielectric_ion(self) -> List[List[float]]:
+        """Returns the ionic part of dielectric tensor from the parsed data."""
+        return self.data.get("dielectric_ion", [])
+
+    @property
+    def hyperfine_fermi(self) -> Dict[str, List[float]]:
+        """Returns the fermi contact hyperfine parameters from the parsed data."""
+        return self.data.get("hyperfine_fermi", {})
+
+    @property
+    def hyperfine_dipolar(self) -> List[List[List[float]]]:
+        """Returns the dipolar hyperfine parameters from the parsed data."""
+        return self.data.get("hyperfine_dipolar", [])
+
+    @property
+    def site_potential(self) -> List[float]:
+        """Returns the site potentials for each atom from the parsed data."""
+        return self.data.get("site_potential", [])
 
     @property
     def log(self) -> List[str]:

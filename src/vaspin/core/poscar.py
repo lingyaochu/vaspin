@@ -7,7 +7,7 @@ Contains functionality for handling VASP POSCAR files and structure manipulation
 from collections import defaultdict
 from dataclasses import dataclass, field
 from itertools import product
-from typing import List, Literal, Tuple
+from typing import List, Literal, Self, Tuple
 
 import numpy as np
 
@@ -30,12 +30,12 @@ class Poscar:
             ValueError: Invalid file format
         """
         if not isinstance(posdata, PosData):
-            raise ValueError("posdata must be a PosData object")
+            raise TypeError("posdata must be a PosData object")
 
         self.data = posdata
 
     @classmethod
-    def from_file(cls, filepath: str) -> "Poscar":
+    def from_file(cls, filepath: str) -> Self:
         """Create a Poscar object from a json or POSCAR file
 
         Args:
@@ -45,7 +45,7 @@ class Poscar:
             Poscar object
         """
         if not isinstance(filepath, str):
-            raise ValueError("filepath must be a string")
+            raise TypeError("filepath must be a string")
 
         __data = read_poscar(filepath)
         __data["lattice"] = np.array(__data["lattice"])
@@ -54,7 +54,8 @@ class Poscar:
 
         if __data["coortype"][0] in ["c", "C", "K", "k"]:
             __data["frac"] = np.dot(
-                np.array(__data["coordinate"]), np.linalg.inv(__data["lattice"])
+                np.array(__data["coordinate"]),
+                np.linalg.inv(__data["lattice"] * __data["coe"]),
             )
 
         else:
@@ -69,7 +70,18 @@ class Poscar:
         """Compare two Poscar objects for equality"""
         if not isinstance(other, Poscar):
             return NotImplemented
-        return self.data == other.data
+        if len(self.atoms) != len(other.atoms):
+            return False
+        if not np.allclose(self.lattice, other.lattice, atol=1e-3):
+            return False
+
+        stru_relation = StruMapping(self, other).atom_relation()
+        for _idfrom, _idto, species_relation, distance in stru_relation:
+            if not np.isclose(distance, 0.0, atol=5e-3):
+                return False
+            if not species_relation[0] == species_relation[1]:
+                return False
+        return True
 
     @property
     def comment(self) -> str:
@@ -79,7 +91,7 @@ class Poscar:
     @property
     def lattice(self) -> FloatArray:
         """Get the lattice"""
-        return self.data.lattice.copy()
+        return self.calculate_lattice(self.data.coe, self.data.lattice)
 
     @property
     def coor_frac(self) -> FloatArray:
@@ -106,8 +118,13 @@ class Poscar:
         """Get the unit cell volume"""
         return self.calculate_volume(self.lattice)
 
+    @property
+    def edit(self) -> "PoscarEditAccessor":
+        """Provides access to change Poscar methods through a namespaced accessor."""
+        return PoscarEditAccessor(self)
+
     @staticmethod
-    def calculate_lattice(coe: float, lat: list[list[float]]) -> FloatArray:
+    def calculate_lattice(coe: float, lat: FloatArray) -> FloatArray:
         """Calculate lattice vectors based on input coefficient and lattice
 
         Args:
@@ -117,7 +134,7 @@ class Poscar:
         Returns:
             Lattice vectors
         """
-        return np.array(lat) * coe
+        return lat * coe
 
     @staticmethod
     def calculate_volume(lattice: FloatArray) -> np.float64:
@@ -184,9 +201,7 @@ class Poscar:
         assert magnitude >= 0, "Displacement magnitude must be non-negative"
 
         if method not in ["cate", "sphere"]:
-            raise ValueError(
-                f"Unsupported method: {method}. Use either 'cate' or 'sphere'."
-            )
+            raise ValueError(f"Unsupported method '{method}'. Use 'cate' or 'sphere'.")
 
         if method == "cate":
             # Generate uniform random displacement in Cartesian coordinates
@@ -305,7 +320,7 @@ class Poscar:
         """
         if isinstance(target, int):
             if target < 0 or target >= len(self.coor_frac):
-                raise ValueError(
+                raise IndexError(
                     f"Atom index {target} out of range (0-{len(self.coor_frac) - 1})"
                 )
             center_coor = self.coor_frac[target]
@@ -335,48 +350,6 @@ class Poscar:
 
         return distance_list
 
-    def lattice_rotation(self, matrix_rot: FloatArray) -> FloatArray:
-        """Rotate lattice vectors
-
-        Args:
-            matrix_rot: Standard rotation matrix in 3D space
-
-        Returns:
-            New rotated lattice vector matrix
-        """
-        lattice = self.lattice
-        if matrix_rot.size != 9:
-            raise ValueError("Rotation matrix must be 3x3")
-        matrix_rot = matrix_rot.reshape(3, 3)
-
-        det = np.linalg.det(matrix_rot)
-        if not np.isclose(abs(det), 1.0):
-            raise ValueError(
-                f"Invalid rotation matrix, determinant should be ±1, but got {det}"
-            )
-
-        lattice_rotated = lattice @ matrix_rot.T
-
-        return lattice_rotated
-
-    def apply_strain(self, strain: StrainTensor) -> FloatArray:
-        """Apply strain to lattice vectors
-
-        Args:
-            strain: Strain tensor object
-
-        Returns:
-            New strained lattice vector matrix
-        """
-        strain_matrix = strain.get_matrix_unsym()
-
-        identity = np.eye(3)
-        deform_matrix = identity + strain_matrix
-
-        lattice_strained = self.lattice @ deform_matrix.T
-
-        return lattice_strained
-
     def get_corner(self, lattice: FloatArray | None = None) -> FloatArray:
         """Get the cartesian coordinates of eight corners of the cell
 
@@ -392,157 +365,6 @@ class Poscar:
         ranges = [range(2) for _ in range(3)]
         corners = np.array(list(product(*ranges)))
         return corners @ lattice
-
-    def _prepare_transformation_matrix(self, transmat: IntArray) -> IntArray:
-        """Prepare the transformation matrix for supercell generation
-
-        Args:
-            transmat: the Transformation matrix
-
-        Returns:
-            transmat: the identified transformation matrix
-        """
-        assert transmat.size == 9 or transmat.size == 3, (
-            "transmat should have either 3 or 9 values"
-        )
-        if transmat.size == 9 and transmat.shape != (3, 3):
-            print("the transmat is not a 3*3 matrix, reshape it.")
-            transmat = transmat.reshape(3, 3)
-        if transmat.size == 3:
-            transmat = np.diag(transmat)
-        return transmat
-
-    def _generate_candidate_atoms_and_coor(
-        self, lattice_sc: FloatArray
-    ) -> tuple[StrArray, FloatArray]:
-        """Generate candidate atoms and coordinates for the supercell
-
-        firstly, we find the corners of the supercell,
-        and then we find the range that primitive cell need to expand to add atoms,
-        the returned atoms and coordinates is larger than the supercell size for sure.
-
-        Args:
-            lattice_sc: the supercell lattice vectors
-
-        Returns:
-            candidates_atoms: the candidate atoms
-            candidates_coor_frac_sc: the candidate fractional coordinates in supercell
-        """
-        sc_corners = self.get_corner(lattice_sc)
-        sc_corners_frac = self.cate2frac(sc_corners)
-
-        min_multiplier = np.floor(np.min(sc_corners_frac, axis=0)).astype(int)
-        max_multiplier = np.ceil(np.max(sc_corners_frac, axis=0)).astype(int)
-        multiply_range = [range(min_multiplier[i], max_multiplier[i]) for i in range(3)]
-
-        prim_coor_frac = self.coor_frac
-        prim_atoms = self.atoms
-
-        candidates_coor_frac_prim = []
-        candidates_atoms = []
-
-        for i, j, k in product(*multiply_range):
-            translation_vec = np.array([i, j, k])
-            translated_coor = prim_coor_frac + translation_vec
-            candidates_coor_frac_prim.extend(translated_coor)
-            candidates_atoms.extend(prim_atoms)
-
-        candidates_coor_frac_prim = np.array(candidates_coor_frac_prim)
-        candidates_atoms = np.array(candidates_atoms)
-
-        candidates_coor_cate = self.frac2cate(candidates_coor_frac_prim)
-
-        candidates_coor_frac_sc = self.cate2frac(candidates_coor_cate, lattice_sc)
-        return candidates_atoms, candidates_coor_frac_sc
-
-    def _filter_outbound_atoms(
-        self,
-        candidates_atoms: StrArray,
-        candidates_coor_frac_sc: FloatArray,
-        ncells: int,
-        position_tolerence: float = 1e-5,
-    ) -> tuple[StrArray, FloatArray]:
-        """Filter out the atoms that are out of the supercell range
-
-        Args:
-            candidates_atoms: the candidate species to be filtered
-            candidates_coor_frac_sc: the candidate fractional coordinates to be filtered
-            ncells: the number of primitive cells in the supercell
-            position_tolerence: the tolerance for the position, default is 1e-5
-
-        Returns:
-            species_final: the filtered species
-            coor_frac_final: the filtered fractional coordinates
-        """
-        # dealing with boundary condition
-        decimal = round(-np.log10(position_tolerence)) + 1
-        rounded_coor = np.round(candidates_coor_frac_sc, decimals=decimal)
-        wraped_coor = wrap_frac(rounded_coor)
-        wraped_coor[np.abs(wraped_coor - 1.0) < position_tolerence] = 0.0
-        wraped_coor[np.abs(wraped_coor) < position_tolerence] = 0.0
-
-        # we should sort the int values to make sure the order is correct
-        # no matter how we round the floats, they are still floats in the memory.
-        # the lexsort will *exactly* sort the floats, and the order is not guaranteed.
-        coor_tosort = np.trunc(wraped_coor * 1 / position_tolerence).astype(int)
-        sort_indices = np.lexsort(
-            (coor_tosort[:, 2], coor_tosort[:, 1], coor_tosort[:, 0])
-        )
-
-        sorted_coor = wraped_coor[sort_indices]
-        coor_diff = np.diff(sorted_coor, axis=0)
-        is_different = np.any(np.abs(coor_diff) >= position_tolerence, axis=1)
-        unique_mask_sorted = np.concatenate(([True], is_different))
-        unique_indices = sort_indices[unique_mask_sorted]
-
-        expected_atoms = len(self.atoms) * abs(ncells)
-        if len(unique_indices) != expected_atoms:
-            raise ValueError(
-                f"the number of atoms is wrong, expect {expected_atoms},"
-                f" but get {len(unique_indices)}"
-            )
-
-        return candidates_atoms[unique_indices], wraped_coor[unique_indices]
-
-    def build_sc(self, transmat: IntArray) -> PosData:
-        """Build supercell according to the transformation matrix
-
-        mat:
-            [[t11, t12, t13],
-            [t21, t22, t23],
-            [t31, t32, t33]]
-
-        transform:
-        a' = t11 * a + t12 * b + t13 * c
-        b' = t21 * a + t22 * b + t23 * c
-        c' = t31 * a + t32 * b + t33 * c
-
-        Args:
-            transmat: the transformation matrix,
-                which is the transpose of the VESTA convention
-        """
-        transmat = self._prepare_transformation_matrix(transmat)
-        ncells = round(np.linalg.det(transmat))
-        if ncells < 0:
-            print("It is recommended to keep the chirality unchanged.")
-
-        lattice_sc = transmat @ self.lattice
-
-        candidates_atoms, candidates_coor_frac_sc = (
-            self._generate_candidate_atoms_and_coor(lattice_sc)
-        )
-        atoms_final, coor_frac_final = self._filter_outbound_atoms(
-            candidates_atoms, candidates_coor_frac_sc, ncells
-        )
-
-        # build new PosData
-        species, numbers, coor_frac_sc = self._species_numbers_coor(
-            atoms_final, coor_frac_final
-        )
-        posdata_sc = PosData(
-            lattice=lattice_sc, species=species, number=numbers, frac=coor_frac_sc
-        )
-        return posdata_sc
 
     def check_coor(
         self, coor_frac: FloatArray, tol: float = 1e-3
@@ -660,6 +482,241 @@ class Poscar:
             plane_area = area if area > plane_area else plane_area
 
         return self.volume / plane_area / 2
+
+
+class PoscarEditAccessor:
+    """Provides access to transformation methods for a Poscar object.
+
+    This class is not meant to be instantiated directly by users, but
+    accessed through the `poscar.transform` property.
+    """
+
+    def __init__(self, poscar: Poscar):
+        """Initialize the accessor with a Poscar object."""
+        self._poscar = poscar
+        self.cell = LatticeEditAccessor(self._poscar)
+        self.supercell = SuperCellAccessor(self._poscar)
+
+
+class LatticeEditAccessor:
+    """Provides access to strain transformation methods for a Poscar object."""
+
+    def __init__(self, poscar: Poscar):
+        """Initialize the accessor with a Poscar object."""
+        self._poscar = poscar
+
+    def apply_strain(self, strain: StrainTensor) -> Poscar:
+        """Apply strain to the lattice and return a new Poscar object.
+
+        Args:
+            strain: Strain tensor object.
+
+        Returns:
+            A new, strained Poscar object.
+        """
+        strain_matrix = strain.get_matrix_unsym()
+        deform_matrix = np.eye(3) + strain_matrix
+        new_lattice = self._poscar.lattice @ deform_matrix.T
+        new_posdata = PosData(
+            comment=self._poscar.comment,
+            coe=1.0,
+            lattice=new_lattice,
+            species=self._poscar.data.species,
+            number=self._poscar.data.number,
+            frac=self._poscar.coor_frac,
+        )
+        return Poscar(new_posdata)
+
+    def rotate(self, matrix_rot: FloatArray) -> Poscar:
+        """Rotate the lattice vector of the Poscar object.
+
+        Args:
+            matrix_rot: Rotation matrix in 3D space.
+
+        Returns:
+            A new Poscar object with the rotated lattice.
+        """
+        if matrix_rot.size != 9:
+            raise ValueError("Rotation matrix must be 3x3")
+        matrix_rot = matrix_rot.reshape(3, 3)
+
+        det = np.linalg.det(matrix_rot)
+        if not np.isclose(abs(det), 1.0):
+            raise ValueError(
+                f"Invalid rotation matrix, determinant should be ±1, but got {det}"
+            )
+
+        new_lattice = self._poscar.lattice @ matrix_rot.T
+        new_posdata = PosData(
+            comment=self._poscar.comment,
+            coe=1.0,
+            lattice=new_lattice,
+            species=self._poscar.data.species,
+            number=self._poscar.data.number,
+            frac=self._poscar.coor_frac,
+        )
+        return Poscar(new_posdata)
+
+
+class SuperCellAccessor:
+    """Provides access to supercell generation methods for a Poscar object."""
+
+    def __init__(self, poscar: Poscar):
+        """Initialize the accessor with a Poscar object."""
+        self._poscar = poscar
+
+    def build_sc(self, transmat: IntArray) -> Poscar:
+        """Build supercell according to the transformation matrix
+
+        mat:
+            [[t11, t12, t13],
+            [t21, t22, t23],
+            [t31, t32, t33]]
+
+        transform:
+        a' = t11 * a + t12 * b + t13 * c
+        b' = t21 * a + t22 * b + t23 * c
+        c' = t31 * a + t32 * b + t33 * c
+
+        Args:
+            transmat: the transformation matrix,
+                which is the transpose of the VESTA convention
+        """
+        transmat = self._prepare_transformation_matrix(transmat)
+        ncells = round(np.linalg.det(transmat))
+        if ncells < 0:
+            print("It is recommended to keep the chirality unchanged.")
+
+        lattice_sc = transmat @ self._poscar.lattice
+
+        candidates_atoms, candidates_coor_frac_sc = (
+            self._generate_candidate_atoms_and_coor(lattice_sc)
+        )
+        atoms_final, coor_frac_final = self._filter_outbound_atoms(
+            candidates_atoms, candidates_coor_frac_sc, ncells
+        )
+
+        # build new PosData
+        species, numbers, coor_frac_sc = self._poscar._species_numbers_coor(
+            atoms_final, coor_frac_final
+        )
+        posdata_sc = PosData(
+            lattice=lattice_sc, species=species, number=numbers, frac=coor_frac_sc
+        )
+        return Poscar(posdata_sc)
+
+    def _prepare_transformation_matrix(self, transmat: IntArray) -> IntArray:
+        """Prepare the transformation matrix for supercell generation
+
+        Args:
+            transmat: the Transformation matrix
+
+        Returns:
+            transmat: the identified transformation matrix
+        """
+        assert transmat.size == 9 or transmat.size == 3, (
+            "transmat should have either 3 or 9 values"
+        )
+        if transmat.size == 9 and transmat.shape != (3, 3):
+            print("the transmat is not a 3*3 matrix, reshape it.")
+            transmat = transmat.reshape(3, 3)
+        if transmat.size == 3:
+            transmat = np.diag(transmat)
+        return transmat
+
+    def _generate_candidate_atoms_and_coor(
+        self, lattice_sc: FloatArray
+    ) -> tuple[StrArray, FloatArray]:
+        """Generate candidate atoms and coordinates for the supercell
+
+        firstly, we find the corners of the supercell,
+        and then we find the range that primitive cell need to expand to add atoms,
+        the returned atoms and coordinates is larger than the supercell size for sure.
+
+        Args:
+            lattice_sc: the supercell lattice vectors
+
+        Returns:
+            candidates_atoms: the candidate atoms
+            candidates_coor_frac_sc: the candidate fractional coordinates in supercell
+        """
+        sc_corners = self._poscar.get_corner(lattice_sc)
+        sc_corners_frac = self._poscar.cate2frac(sc_corners)
+
+        min_multiplier = np.floor(np.min(sc_corners_frac, axis=0)).astype(int)
+        max_multiplier = np.ceil(np.max(sc_corners_frac, axis=0)).astype(int)
+        multiply_range = [range(min_multiplier[i], max_multiplier[i]) for i in range(3)]
+
+        prim_coor_frac = self._poscar.coor_frac
+        prim_atoms = self._poscar.atoms
+
+        candidates_coor_frac_prim = []
+        candidates_atoms = []
+
+        for i, j, k in product(*multiply_range):
+            translation_vec = np.array([i, j, k])
+            translated_coor = prim_coor_frac + translation_vec
+            candidates_coor_frac_prim.extend(translated_coor)
+            candidates_atoms.extend(prim_atoms)
+
+        candidates_coor_frac_prim = np.array(candidates_coor_frac_prim)
+        candidates_atoms = np.array(candidates_atoms)
+
+        candidates_coor_cate = self._poscar.frac2cate(candidates_coor_frac_prim)
+
+        candidates_coor_frac_sc = self._poscar.cate2frac(
+            candidates_coor_cate, lattice_sc
+        )
+        return candidates_atoms, candidates_coor_frac_sc
+
+    def _filter_outbound_atoms(
+        self,
+        candidates_atoms: StrArray,
+        candidates_coor_frac_sc: FloatArray,
+        ncells: int,
+        position_tolerence: float = 1e-5,
+    ) -> tuple[StrArray, FloatArray]:
+        """Filter out the atoms that are out of the supercell range
+
+        Args:
+            candidates_atoms: the candidate species to be filtered
+            candidates_coor_frac_sc: the candidate fractional coordinates to be filtered
+            ncells: the number of primitive cells in the supercell
+            position_tolerence: the tolerance for the position, default is 1e-5
+
+        Returns:
+            species_final: the filtered species
+            coor_frac_final: the filtered fractional coordinates
+        """
+        # dealing with boundary condition
+        decimal = round(-np.log10(position_tolerence)) + 1
+        rounded_coor = np.round(candidates_coor_frac_sc, decimals=decimal)
+        wraped_coor = wrap_frac(rounded_coor)
+        wraped_coor[np.abs(wraped_coor - 1.0) < position_tolerence] = 0.0
+        wraped_coor[np.abs(wraped_coor) < position_tolerence] = 0.0
+
+        # we should sort the int values to make sure the order is correct
+        # no matter how we round the floats, they are still floats in the memory.
+        # the lexsort will *exactly* sort the floats, and the order is not guaranteed.
+        coor_tosort = np.trunc(wraped_coor * 1 / position_tolerence).astype(int)
+        sort_indices = np.lexsort(
+            (coor_tosort[:, 2], coor_tosort[:, 1], coor_tosort[:, 0])
+        )
+
+        sorted_coor = wraped_coor[sort_indices]
+        coor_diff = np.diff(sorted_coor, axis=0)
+        is_different = np.any(np.abs(coor_diff) >= position_tolerence, axis=1)
+        unique_mask_sorted = np.concatenate(([True], is_different))
+        unique_indices = sort_indices[unique_mask_sorted]
+
+        expected_atoms = len(self._poscar.atoms) * abs(ncells)
+        if len(unique_indices) != expected_atoms:
+            raise ValueError(
+                f"the number of atoms is wrong, expect {expected_atoms},"
+                f" but get {len(unique_indices)}"
+            )
+
+        return candidates_atoms[unique_indices], wraped_coor[unique_indices]
 
 
 @dataclass

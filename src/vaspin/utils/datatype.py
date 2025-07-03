@@ -1,7 +1,7 @@
 """some dataclass for vaspin"""
 
 from dataclasses import dataclass, field
-from typing import ClassVar, Sequence, Tuple
+from typing import ClassVar, Self, Sequence, Tuple
 
 import numpy as np
 
@@ -22,7 +22,7 @@ class SymTensor:
     _COMPONENTS: ClassVar[Tuple[str, ...]] = ("xx", "yy", "zz", "xy", "xz", "yz")
 
     @classmethod
-    def from_sequence(cls, values: Sequence[float]) -> "SymTensor":
+    def from_sequence(cls, values: Sequence[float]) -> Self:
         """Create a StrainTensor from a sequence of values.
 
         Args:
@@ -37,7 +37,7 @@ class SymTensor:
         if not all(isinstance(v, (int, float)) for v in values):
             raise TypeError("All values must be numeric (int or float).")
 
-        kwargs = {comp: val for comp, val in zip(cls._COMPONENTS, values, strict=True)}
+        kwargs = dict(zip(cls._COMPONENTS, values, strict=True))
         return cls(**kwargs)
 
     def get_matrix_sym(self) -> FloatArray:
@@ -92,10 +92,10 @@ class PosData:
         """Post-initialization hook"""
         self.atoms = np.repeat(self.species, self.number)
         self.volume = np.abs(np.linalg.det(self.lattice * self.coe))
-        self.cate = np.dot(self.frac, self.lattice)
+        self.cate = np.dot(self.frac, self.lattice) * self.coe
         self.abc = {
-            "a": float(np.linalg.norm(self.lattice[0])),
-            "b": float(np.linalg.norm(self.lattice[1])),
-            "c": float(np.linalg.norm(self.lattice[2])),
+            "a": float(np.linalg.norm(self.lattice[0] * self.coe)),
+            "b": float(np.linalg.norm(self.lattice[1] * self.coe)),
+            "c": float(np.linalg.norm(self.lattice[2] * self.coe)),
         }
         self.rec_lattice = np.linalg.inv(self.lattice).T * 2 * np.pi

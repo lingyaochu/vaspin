@@ -75,7 +75,7 @@ class Ewald:
         Args:
             coor_frac: Fractional coordinates of a lattice site.
         """
-        sum = 0
+        summation = 0
         coor_cate = np.dot(coor_frac, self.lattice)
 
         rvectors = self.rvectors()
@@ -91,9 +91,11 @@ class Ewald:
                     r - coor_cate,
                 )
             )
-            sum += erfc(self.ewald_gamma * root_r_inv_dielectri) / root_r_inv_dielectri
+            summation += (
+                erfc(self.ewald_gamma * root_r_inv_dielectri) / root_r_inv_dielectri
+            )
 
-        return sum / (4 * np.pi * self.die_effective)
+        return summation / (4 * np.pi * self.die_effective)
 
     @property
     def pot_diff(self):
@@ -122,17 +124,17 @@ class Ewald:
             coor_frac: Fractional coordinates of a lattice site.
         """
         coor_cate = np.dot(coor_frac, self.lattice)
-        sum = 0
+        summation = 0
         for g in self.gvectors():
             g_dielectric_g = np.einsum("i,ij,j->", g, self.dielectric, g)
-            sum += (
+            summation += (
                 np.exp(-g_dielectric_g / 4 / self.ewald_gamma**2)
                 / g_dielectric_g
                 # the distribution of G is symmetric, the i*sin() term vanish
                 * np.cos(np.dot(g, coor_cate))
             )
 
-        return sum / self.volume
+        return summation / self.volume
 
     @staticmethod
     def grid_points(gridsize: IntArray):
