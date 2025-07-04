@@ -4,6 +4,8 @@
 Contains functionality for handling VASP POSCAR files and structure manipulation.
 """
 
+from __future__ import annotations
+
 from collections import defaultdict
 from dataclasses import dataclass, field
 from itertools import product
@@ -124,7 +126,7 @@ class Poscar:
         return self.calculate_volume(self.lattice)
 
     @property
-    def edit(self) -> "PoscarEditAccessor":
+    def edit(self) -> PoscarEditAccessor:
         """Provides access to change Poscar methods through a namespaced accessor."""
         return PoscarEditAccessor(self)
 
