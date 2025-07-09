@@ -1,0 +1,16 @@
+{{DISPLAYTITLE:ML_WTIFOR}}
+{{TAGDEF|ML_WTIFOR|[real]}}
+{{DEF|ML_WTIFOR|0.05|if {{TAG|ML_IWEIGHT}}{{=}}1|1.0|otherwise}}
+
+Description: This tag sets the weight for the scaling of the forces in the training data within the machine learning force field method.
+----
+
+{{TAG|ML_IWEIGHT}}, {{TAG|ML_WTOTEN}}, {{TAG|ML_WTIFOR}}, {{TAG|ML_WTSIF}} form a group of tags which set the normalization and weighting of ab initio training data, i.e.  energies, forces and stresses of the training structures. The main control tag is {{TAG|ML_IWEIGHT}}, please also have a look at its detailed description. If {{TAG|ML_IWEIGHT}}=1 the weight has unit eV/Angstrom and is used to divide the data by it. For {{TAG|ML_IWEIGHT}}=2 and 3 the weights are unitless and multiplicative.
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_IWEIGHT}}, {{TAG|ML_WTOTEN}}, {{TAG|ML_WTSIF}}, {{TAG|ML_IALGO_LINREG}}
+
+{{sc|ML_WTIFOR|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

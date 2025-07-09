@@ -1,0 +1,15 @@
+{{DISPLAYTITLE:LPOSNICS}}
+{{TAGDEF|LPOSNICS|.TRUE.{{!}} .FALSE.}}
+{{DEF|LPOSNICS|.TRUE.|if {{FILE|POSNICS}} file is present.}}
+
+Description: {{TAG|LPOSNICS}} controls if VASP reads the {{FILE|POSNICS}} file.
+----
+{{not released}}
+To avoid reading the {{FILE|POSNICS}} file without removing it from the working directory, the {{TAG|LPOSNICS}} tag can be set to <code>.FALSE.</code> in the {{FILE|INCAR}} file.
+
+== Related tags and articles ==
+{{FILE|LCHIMAG}},
+{{TAG|NUCIND}},
+{{TAG|POSNICS}}
+
+[[Category:INCAR tag]][[Category:NMR]]

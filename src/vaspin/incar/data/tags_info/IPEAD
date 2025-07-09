@@ -1,0 +1,16 @@
+{{TAGDEF|IPEAD|1 {{!}} 2 {{!}} 3 {{!}} 4|4}}
+
+Description: {{TAG|IPEAD}} specifies the order of the finite difference stencil used to compute the derivative of the cell-periodic part of the orbitals w.r.t. '''k''', |&nabla;<sub>'''k'''</sub>u<sub>n'''k'''</sub>&rang; ({{TAG|LPEAD}}=.TRUE.), and the derivative of the polarization w.r.t. the orbitals, &delta;'''P'''/&delta;&lang;&psi;<sub>n'''k'''</sub>| for ({{TAG|LCALCEPS}}=.TRUE., or {{TAG|EFIELD_PEAD}}&ne;'''0''').
+----
+A central finite differences formula or order {{TAG|IPEAD}} is used to compute the first-order derivative of the cell-periodic part of the orbitals w.r.t. '''k'''.
+The coefficients for the different orders can be found [https://en.wikipedia.org/wiki/Finite_difference_coefficient#Central_finite_difference here].
+== Related tags and articles ==
+{{TAG|LPEAD}},
+{{TAG|LCALCEPS}},
+{{TAG|EFIELD_PEAD}},
+[[Berry_phases_and_finite_electric_fields|Berry phases and finite electric fields]]
+
+{{sc|IPEAD|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Linear response]][[Category:Dielectric properties]][[Category:Berry phases]]

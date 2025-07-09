@@ -1,0 +1,26 @@
+{{DISPLAYTITLE:IFC_LR}}
+{{TAGDEF|IFC_LR|[integer]|1}}
+
+Description: Controls the treatment of the long-range part of the interatomic force constants during electron-phonon calculations.
+{{Available|6.5.0}}
+
+----
+
+This tag controls the treatment of the [[Phonons:_Theory#Long-range_interatomic_force_constants_.28LO-TO_splitting.29|long-range electrostatic contributions to the interatomic force constants (IFC)]] arising in polar dielectric materials.
+{{TAGO|IFC_LR|1}} has the same effect as {{TAGO|LPHON_POLAR|True}} but is used in the context of electron-phonon interactions.
+{{NB|mind|In this case, the required Born effective charges and dielectric tensor are read from the {{FILE|phelel_params.hdf5}} file.}}
+
+== Modes ==
+
+;{{TAGO|IFC_LR|0|op=≤}}
+:No long-range correction scheme is applied to the IFC matrix. This is most likely very inaccurate for semiconductors and insulators with non-vanishing Born effective charge.
+;{{TAGO|IFC_LR|1}}
+:Dipole corrections are applied to the IFC matrix.
+
+==Related tags and articles==
+* [[Bandgap renormalization due to electron-phonon coupling|Bandstructure renormalization]]
+* [[Transport coefficients including electron-phonon scattering|Transport calculations]]
+* {{TAG|ELPH_RUN}}
+* {{TAG|ELPH_LR}}
+
+[[Category:INCAR tag]][[Category:Electron-phonon_interactions]]

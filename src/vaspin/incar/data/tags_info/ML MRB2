@@ -1,0 +1,28 @@
+{{DISPLAYTITLE:ML_MRB2}}
+{{TAGDEF|ML_MRB2|[integer]|8}}
+
+Description: This tag sets the number <math>N_\text{R}^l</math> (for all <math>l</math>) of radial basis functions used to expand the angular descriptor within the machine learning force field method.
+----
+The angular descriptor is constructed from
+
+<math>
+\rho_{i}^{(3)}\left(r,s,\theta\right) = \iint d\hat{\mathbf{r}} d\hat{\mathbf{s}}  \delta\left(\hat{\mathbf{r}}\cdot\hat{\mathbf{s}} - \mathrm{cos}\theta\right) \sum\limits_{j=1}^{N_{a}} \sum\limits_{k \ne j}^{N_{a}} \rho_{ik} \left(r\hat{\mathbf{r}}\right) \rho_{ij} \left(s\hat{\mathbf{s}}\right), \quad \text{where} \quad
+\rho_{ij}\left(\mathbf{r}\right) = f_{\mathrm{cut}}\left(r_{ij}\right) g\left(\mathbf{r}-\mathbf{r}_{ij}\right)
+</math>
+
+and <math>g\left(\mathbf{r}\right)</math> is an approximation of the delta function. In practice, the continuous function above is transformed into a discrete set of numbers <math>p_{n\nu l}^{i}</math> by expanding it into a set of radial basis functions <math>\chi_{nl}(r)</math> and Legendre polynomials <math>P_{l}\left(\mathrm{cos}\theta\right)</math> (see [[Machine learning force field: Theory#Basis set expansion|this section]] for more details):
+
+<math>
+\rho_{i}^{(3)}\left(r,s,\theta\right) = \sum\limits_{l=1}^{L_{\mathrm{max}}} \sum\limits_{n=1}^{N^{l}_{\mathrm{R}}}\sum\limits_{\nu=1}^{N^{l}_{\mathrm{R}}} \sqrt{\frac{2l+1}{2}} p_{n\nu l}^{i}\chi_{nl}\left(r\right)\chi_{\nu l}\left(s\right)P_{l}\left(\mathrm{cos}\theta\right).
+</math>
+
+The tag {{TAG|ML_MRB2}} sets the number <math>N_\text{R}^l</math> of radial basis functions to use in this expansion. The same number is used for all <math>l</math>.
+{{NB|mind|The number of angular descriptor expansion coefficients <math>p_{n\nu l}^{i}</math> scales '''quadratically''' with <math>N_\text{R}^l</math> set by this tag. It also depends on {{TAG|ML_LMAX2}} and the number of elements.}}
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_LMAX2}}, {{TAG|ML_MRB1}}, {{TAG|ML_W1}}, {{TAG|ML_RCUT2}}, {{TAG|ML_SION2}}
+
+{{sc|ML_MRB2|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

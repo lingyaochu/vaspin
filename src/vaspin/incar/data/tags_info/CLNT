@@ -1,0 +1,15 @@
+{{TAGDEF|CLNT|[integer]}}
+{{DEF|CLNT| 1 | }}
+
+Description: {{TAG|CLNT}} selects the type of the excited atoms in XAS calculations with {{TAG|ICORELEVEL}}>0.
+----
+All atoms of the selected type are excited in the XAS calculation with {{TAG|ICORELEVEL}}=2. Hence, it is recommended that the  excited atom is separated into a dedicated type with a single atom. Exciting multiple atoms in the supercell core-hole approach causes the interaction between core holes in neighboring atoms and should be avoided. Exciting multiple atoms in BSE proportionately increases the number of core states included in the BSE Hamiltonian and, hence, increases the computational cost of the calculation.
+
+See a detailed description on how to set this tag in the [[Supercell core-hole calculations|SCH]] and [[Bethe-Salpeter equation for core excitations|BSE]] calculations.
+== Related tags and articles ==
+{{TAG|ICORELEVEL}}, {{TAG|CLN}}, {{TAG|CLL}}, {{TAG|CLZ}}
+
+{{sc|CLNT|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Linear response]][[Category:Dielectric properties]][[Category:XAS]]

@@ -1,0 +1,17 @@
+{{TAGDEF|APACO|[real]|10}}
+
+Description: {{TAG|APACO}} sets the maximum distance in the evaluation of the pair-correlation function (in &Aring;).
+
+----
+VASP evaluates the pair-correlation function each {{TAG|NBLOCK}} steps and writes it after {{TAG|NBLOCK}}&times;{{TAG|KBLOCK}} steps to the {{FILE|PCDAT}} file.
+
+== Related tags and articles ==
+{{TAG|NPACO}},
+{{TAG|NBLOCK}},
+{{TAG|KBLOCK}},
+{{FILE|PCDAT}}
+
+{{sc|APACO|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Molecular dynamics]]

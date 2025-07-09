@@ -1,0 +1,26 @@
+{{TAGDEF|KPUSE|[integer array]|not set}}
+
+Description: {{TAG|KPUSE}} sets a list of '''k''' points that contribute to calculating the [[Band-decomposed charge densities|partial charge density]].
+----
+{{TAG|IBAND}} selects a subset of ''k''' points for which the partial charge density is calculated when {{TAG|LPARD}} = .TRUE..
+Partial charge densities are written to the {{FILE|PARCHG}} file, or one of its variants, depending on the setting of {{TAG|LSEPB}} and {{TAG|LSEPK}}.
+{{NB|mind|All '''k''' point weights will be internally reset to 1 if {{TAG|KPUSE}} is specified. Thus results are usually only correct if the groundstate calculation and the partial charge post-processing is performed with {{TAG|ISYM}} {{=}} -1.}}
+E.g. if <code>KPUSE = 1 4 7</code>
+the charge density will be calculated for the three '''k''' points 1, 4, and 7.
+
+== Related tags and articles ==
+{{TAG|LPARD}},
+{{TAG|NBMOD}},
+{{TAG|EINT}},
+{{TAG|IBAND}},
+{{TAG|LSEPB}},
+{{TAG|LSEPK}},
+{{TAG|LPARDH5}},
+{{FILE|PARCHG}},
+{{FILE|vaspout.h5}},
+[[Band-decomposed charge densities]]
+
+{{sc|KPUSE|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Charge density]]

@@ -1,0 +1,22 @@
+{{TAGDEF|PSTRESS|[real]|0}}
+
+Description: Sets the external pressure in kB or adds corrections to the stress tensor.
+
+----
+
+The unit of {{TAG|PSTRESS}} is kB.
+
+During [[Ionic minimization|ionic minimization]], an energy term <math> E= V \times \mathrm{PSTRESS} </math> is added to the total energy and the value of  {{TAG|PSTRESS}} is subtracted from  the diagonals of the stress tensor. This allows to perform structure optimization at a specific external pressure.
+
+In [[Molecular dynamics|molecular-dynamics calculations]] within the {{TAG|NpT ensemble}}, {{TAG|PSTRESS}} controls the target pressure for the Parinello-Rahman{{cite|parrinello:prl:1980}}{{cite|parrinello:jap:1981}} barostat.
+
+Generally, if a negative value is supplied, the system is under effective tensile strain and during relaxations (or molecular dynamics simulations) the volume
+will increase. If a positive value is supplied, the system is under compressive strain; this will decrease the volume during relaxations and molecular dynamics simulations.
+
+{{TAG|PSTRESS}} can also be used to correct errors caused by the Pulay stress, i.e., errors in the calculated stress tensor caused by the incomplete plane wave basis set. To correct for Pulay-stress errors, set {{TAG|PSTRESS}} to the negative value of the Pulay stress. The Pulay stress is computed by taking the difference between the external pressure at the desired cutoff and a very large energy cutoff (check the  lines 'external pressure' in the {{TAG|OUTCAR}} file and calculate
+pressure at cutoff you want to use <math> -  </math> pressure at large cutoff; this must be a negative value). Before using this tag in this manner, please read the following section carefully: {{TAG | Volume relaxation}}.
+
+{{sc|PSTRESS|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category: Molecular dynamics]][[Category:Ensembles]][[Category:Ionic minimization]][[Category:Forces]]

@@ -1,0 +1,18 @@
+{{DISPLAYTITLE:IRC_DELTA0}}
+{{TAGDEF|IRC_DELTA0|real | 0.0015}}
+
+Description: Defines the tolerance factor <math>\Delta_0</math> in  &Aring; used in the {{TAG|IRC calculations}}.
+
+----
+
+The smaller the value of {{TAG|IRC_DELTA0}}, the closer the computed IRC trajectory follows the true IRC pathway. However, a small tolerance factor <math>\Delta_0</math> necessitates more time steps and, thus, computational effort.
+
+== Related tags and articles ==
+[[IRC calculations]],
+{{TAG|IRC_DIRECTION }},
+{{TAG|IRC_STOP}},
+{{TAG|IRC_MINSTEP}},
+{{TAG|IRC_MAXSTEP}},
+{{TAG|IRC_VNORM0}}
+
+[[Category:INCAR tag]][[Category: Transition states]]

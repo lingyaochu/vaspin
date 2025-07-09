@@ -1,0 +1,30 @@
+{{TAGDEF|WC|[real]|1000.}}
+
+Description: {{TAG|WC}} specifies the weight factor for each step in Broyden mixing scheme ({{TAG|IMIX}}=4).
+----
+*{{TAG|WC}}>0
+:Set all weights identical to {{TAG|WC}} (resulting in Pulay's mixing method), up to now Pulay's scheme was always superior to Broyden's 2<sup>nd</sup> method.
+
+*{{TAG|WC}}=0
+:Switch to Broyden's 2<sup>nd</sup> method, i.e., set the weight for the last step equal to 1000 and all other weights equal to 0.
+
+*{{TAG|WC}}<0 (implemented for test purposes: '''not''' recommended)
+:Try some automatic setting of the weights according to:
+::<math>W_{\rm iter}=0.01 |{\rm WC}|/||\rho_{\rm out}-\rho_{\rm in}||_{\rm precond.}\,</math>
+
+:in order to set small weights for the first steps and increase weights for the last steps.
+
+== Related tags and sections ==
+{{TAG|IMIX}},
+{{TAG|INIMIX}},
+{{TAG|MAXMIX}},
+{{TAG|AMIX}},
+{{TAG|BMIX}},
+{{TAG|AMIX_MAG}},
+{{TAG|BMIX_MAG}},
+{{TAG|AMIN}},
+{{TAG|MIXPRE}}
+
+{{sc|WC|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Density mixing]]

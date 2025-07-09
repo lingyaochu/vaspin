@@ -1,0 +1,14 @@
+{{TAGDEF|NOMEGAR|[integer]}}
+{{DEF|NOMEGAR|{{TAG|NOMEGA}}|for [[GW_calculations|GW calculations]]|0|for [[ACFDT_calculations|ACFDT calculations]]}}
+
+Description: {{TAG|NOMEGAR}} specifies the number of frequency grid points along the real axis.
+----
+Usually {{TAG|NOMEGAR}} equals {{TAG|NOMEGA}}. If {{TAG|NOMEGAR}} is smaller than  {{TAG|NOMEGA}} (for instance 0), frequencies along the imaginary time axis are included (this feature is currently not fully supported).
+
+== Related tags and articles ==
+{{TAG|NOMEGA}}
+
+{{sc|NOMEGAR|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]] [[Category:GW]][[Category:ACFDT]]

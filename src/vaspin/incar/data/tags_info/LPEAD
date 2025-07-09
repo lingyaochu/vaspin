@@ -1,0 +1,71 @@
+{{TAGDEF|LPEAD|.TRUE. {{!}} .FALSE|.FALSE.}}
+
+Description: for {{TAG|LPEAD}}=.TRUE., the derivative of the cell-periodic part of the orbitals w.r.t. '''k''', |&nabla;<sub>'''k'''</sub>u<sub>n'''k'''</sub>&rang;, is calculated using finite differences ("perturbation expansion after discretization" (PEAD)<ref name="nunes:prb:01"/><ref name="souza:prl:02"/>).
+----
+The derivative of the cell-periodic part of the orbitals w.r.t. '''k''', '''k''', |&nabla;<sub>'''k'''</sub>u<sub>n'''k'''</sub>&rang;, may be written as:
+
+:<math>
+|\mathbf{\nabla_{k}} \tilde{u}_{n\mathbf{k}} \rangle =
+\sum_{n\neq n'}
+\frac{| \tilde{u}_{n'\mathbf{k}} \rangle \langle \tilde{u}_{n'\mathbf{k}} |
+\frac{\partial\left[H(\mathbf{k})-\epsilon_{n\mathbf{k}}S(\mathbf{k})\right]}{\partial \mathbf{k}}
+| \tilde{u}_{n\mathbf{k}} \rangle}{\epsilon_{n\mathbf{k}}-\epsilon_{n'\mathbf{k}}}
+</math>
+
+where H('''k''') and S('''k''') are the Hamiltonian and overlap operator for the cell-periodic part of the orbitals, and the sum over ''n''&acute; must include a sufficiently large number of unoccupied states.
+
+It may also be found as the solution to the following linear Sternheimer equation (see {{TAG|LEPSILON}}):
+
+:<math>
+\left[H(\mathbf{k})-\epsilon_{n\mathbf{k}}S(\mathbf{k})\right]
+|\mathbf{\nabla_{k}} \tilde{u}_{n\mathbf{k}} \rangle
+=-\frac{\partial\left[H(\mathbf{k})-\epsilon_{n\mathbf{k}}S(\mathbf{k})\right]}
+{\partial \mathbf{k}}|\tilde{u}_{n\mathbf{k}} \rangle
+</math>
+
+Alternatively one may compute <math>\nabla_{\mathbf{k}} \tilde{u}_{n\mathbf{k}}</math> from finite differences ({{TAG|LPEAD}}=.TRUE.):
+
+:<math>
+\frac{\partial | \tilde{u}_{n\mathbf{k}_j} \rangle}{\partial k}=
+\frac{ie}{2\Delta k} \sum^N_{m=1}
+\left[ | \tilde{u}_{m\mathbf{k}_{j+1}} \rangle
+S^{-1}_{mn}(\mathbf{k}_j,\mathbf{k}_{j+1})\rangle -
+| \tilde{u}_{m\mathbf{k}_{j-1}} \rangle
+S^{-1}_{mn}(\mathbf{k}_j,\mathbf{k}_{j-1})\rangle\right]
+</math>
+
+where ''m'' runs over the ''N'' occupied bands of the system, &Delta;''k''='''k'''<sub>j+1</sub>-'''k'''<sub>j</sub>, and
+
+:<math>
+S_{nm}(\mathbf{k}_j,\mathbf{k}_{j+1})=
+\langle \tilde{u}_{n\mathbf{k}_{j}}| \tilde{u}_{m\mathbf{k}_{j+1}}\rangle
+</math>.
+
+As mentioned in the context of [[Berry_phases_and_finite_electric_fields#Self-consistent_response_to_finite_electric_fields|the self-consistent response to finite electric fields]] one may derive analoguous expressions for |&nabla;<sub>'''k'''</sub>u<sub>n'''k'''</sub>&rang; using higher-order finite difference approximations.
+
+When {{TAG|LPEAD}}=.TRUE., VASP will compute |&nabla;<sub>'''k'''</sub>u<sub>n'''k'''</sub>&rang; using the aforementioned finite difference scheme. The order of the finite difference approximation can be specified by means of the {{TAG|IPEAD}}-tag (default: {{TAG|IPEAD}}=4).
+
+These tags may be used in combination with {{TAG|LOPTICS}}=.TRUE. and {{TAG|LEPSILON}}=.TRUE..
+----
+*N.B. Please note that {{TAG|LPEAD}} = .TRUE. '''is not supported for metallic systems'''.
+
+
+== Related tags and articles ==
+{{TAG|IPEAD}},
+{{TAG|LEPSILON}},
+{{TAG|LOPTICS}},
+{{TAG|LCALCEPS}},
+{{TAG|EFIELD_PEAD}},
+[[Berry_phases_and_finite_electric_fields|Berry phases and finite electric fields]]
+
+{{sc|LPEAD|Examples|Examples that use this tag}}
+
+== References ==
+<references>
+<ref name="nunes:prb:01">[http://link.aps.org/doi/10.1103/PhysRevB.63.155107 R. W. Nunes and X. Gonze, Phys. Rev. B 63, 155107 (2001).]</ref>
+<ref name="souza:prl:02">[http://link.aps.org/doi/10.1103/PhysRevLett.89.117602 I. Souza, J. Íñiguez, and D. Vanderbilt, Phys. Rev. Lett. 89, 117602 (2002).]</ref>
+</references>
+----
+----
+
+[[Category:INCAR tag]][[Category:Linear response]][[Category:Dielectric properties]][[Category:Berry phases]]

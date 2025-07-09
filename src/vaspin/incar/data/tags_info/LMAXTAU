@@ -1,0 +1,23 @@
+{{TAGDEF|LMAXTAU|[integer]}}
+{{DEF|LMAXTAU|6|if {{TAG|LASPH}}{{=}}.TRUE.|0|else}}
+
+Description: {{TAG|LMAXTAU}} is the maximum ''l''-quantum number included in the PAW one-center expansion of the kinetic energy density.
+----
+The PAW one-center expansion of the density has component up to and including ''L''=2*''l''<sub>max</sub>, where ''l''<sub>max</sub> is the ''l''-quantum number of the partial waves on the {{FILE|POTCAR}} file, with the highest angular moment.
+If the PAW one-center expansion of the density has component up to ''L'', then the one-center expansion of the kinetic energy density has components up to ''L''+2.
+
+This means that as a rule of thumb, for ''s''-elements: {{TAG|LMAXTAU}}=2, for ''p'': {{TAG|LMAXTAU}}=4, and for ''d'': {{TAG|LMAXTAU}}=6.
+If you are willing to live with the computational costs, the default for {{TAG|LMAXTAU}} should be safe in all cases, except those involving ''f''-elements.
+
+== Related tags and articles ==
+{{TAG|METAGGA}},
+{{TAG|CMBJ}},
+{{TAG|CMBJA}},
+{{TAG|CMBJB}},
+{{TAG|LASPH}},
+{{TAG|LMIXTAU}}
+
+{{sc|LMAXTAU|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]]

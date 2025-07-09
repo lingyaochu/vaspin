@@ -1,0 +1,17 @@
+{{DISPLAYTITLE:ML_NMDINT}}
+{{TAGDEF|ML_NMDINT|[integer]}}
+{{DEF|ML_NMDINT|1|for {{TAG|ML_MODE}} {{=}} SELECT|10|else}}
+
+Description: Tag to control the minimum interval to get training samples in the machine learning force field method.
+----
+The usage of this tag in combination with the learning algorithms is described here: [[Machine_learning_force_field:_Theory#Sampling_of_training_data_and_local_reference_configurations|here]]
+
+This tag defines a lower threshold for taking new configurations from the MD, so that as long as the upper threshold for the Bayesian error (e.g. {{TAG|ML_CDOUB}} times {{TAG|ML_CTIFOR}}) is not exceeded,  at least {{TAG|ML_NMDINT}} MD steps are preformed using the MLFF (i.e. no first principles calculation is performed). This avoids that many nearly identical structures are added.
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_MCONF_NEW}}, {{TAG|ML_CDOUB}}, {{TAG|ML_CTIFOR}}, {{TAG|ML_MHIS}}
+
+{{sc|ML_NMDINT|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

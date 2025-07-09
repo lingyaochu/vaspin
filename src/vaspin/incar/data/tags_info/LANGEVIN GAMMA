@@ -1,0 +1,35 @@
+{{DISPLAYTITLE:LANGEVIN_GAMMA}}{{TAGDEF|LANGEVIN_GAMMA|[Real array]|NTYP&times;0}}
+
+Description: {{TAG|LANGEVIN_GAMMA}} specifies the friction coefficients (in ps<sup>-1</sup>) for atomic degrees-of-freedom when using a Langevin thermostat (in case VASP was compiled with [[Precompiler_flags|-Dtbdyn]]).
+----
+When using a [[Langevin thermostat]]<ref name="Allen91"/> ({{TAG|MDALGO}}=3), the friction coefficients &gamma; for the atomic degrees-of-freedom are specified (in ps<sup>-1</sup>) using the {{TAG|LANGEVIN_GAMMA}}-tag.
+
+One has to specify a separate friction coefficient for each of the NTYP atomic species found on the {{FILE|POTCAR}}-file.
+
+==== Practical example ====
+
+Consider a system consisting of 16 hydrogen and 48 silicon atoms. Suppose that eight silicon atoms are considered to be Langevin atoms and the remaining 32 Si atoms are either fixed or Newtonian atoms. The Langevin and Newtonian (or fixed) atoms should be considered as different species, ''i.e.'', the {{FILE|POSCAR}}-file should contain the line like this:
+
+ Si H Si
+ 40 16 8
+
+As only the final eight Si atoms are considered to be Langevin atoms, the {{FILE|INCAR}}-file should contain the following line defining the friction coefficients:
+
+ LANGEVIN_GAMMA = 0.0   0.0   10.0
+
+''i.e.'', for all non-Langevin atoms, &gamma; should be set to zero.
+
+== Related tags and articles ==
+{{TAG|LANGEVIN_GAMMA_L}},
+{{TAG|MDALGO}}
+
+{{sc|LANGEVIN_GAMMA|Examples|Examples that use this tag}}
+
+== References ==
+<references>
+<ref name="Allen91">M. P. Allen and D. J. Tildesley, ''Computer simulation of liquids'', Oxford university press: New York, 1991.</ref>
+</references>
+
+----
+
+[[Category:INCAR tag]][[Category:Molecular dynamics]][[Category:Thermostats]]

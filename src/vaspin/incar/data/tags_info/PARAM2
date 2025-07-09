@@ -1,0 +1,20 @@
+{{TAGDEF|PARAM2|[real]|1.0}}
+
+Description: <math>\kappa</math> for {{TAG|GGA}}=MK, or <math>\mu</math> for {{TAG|GGA}}=BO.
+----
+
+The {{TAG|PARAM2}} tag determines the value corresponding to different parameters depending on the {{TAG|GGA}} functional that is chosen:
+*<math>\kappa</math> in the optB86b{{cite|klimes:prb:2011}} (<math>\kappa</math> is not shown in this work since implicitly set to 1.0), B86R{{cite|hamada:prb:2014}}, and DF3-opt2{{cite|chakraborty:jctc:2020}} exchange functionals, which have the same analytical form and correspond to {{TAG|GGA}}=MK. {{TAG|PARAM2}} should in principle be set to 1.0 for the nonlocal optB86b-vdW functional{{cite|klimes:prb:2011}}, to 0.711357 for the nonlocal rev-vdW-DF2{{cite|hamada:prb:2014}} functional, or to <math>0.58</math> for the vdW-DF3-opt2 nonlocal functional{{cite|chakraborty:jctc:2020}}.
+*<math>\mu</math> in the optB88{{cite|klimes:jpcm:2010}} and DF3-opt1{{cite|chakraborty:jctc:2020}} exchange functionals, which have the same analytical form and correspond to {{TAG|GGA}}=BO. {{TAG|PARAM2}} should in principle be set to 0.22 for the nonlocal optB88-vdW functional{{cite|klimes:jpcm:2010}} or to <math>10/81\approx0.1234568</math> for the vdW-DF3-opt1{{cite|chakraborty:jctc:2020}} nonlocal functional.
+
+The complete {{TAG|INCAR}} file for the nonlocal van der Waals functionals mentioned above can be found at {{TAG|Nonlocal vdW-DF functionals}}.
+
+== Related tags and articles ==
+{{TAG|PARAM1}}, {{TAG|GGA}}, {{TAG|Nonlocal vdW-DF functionals}}
+
+{{sc|PARAM2|Examples|Examples that use this tag}}
+
+== References ==
+<references/>
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:van der Waals functionals]]

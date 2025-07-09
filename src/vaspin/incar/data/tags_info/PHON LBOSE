@@ -1,0 +1,21 @@
+{{DISPLAYTITLE:PHON_LBOSE}}
+{{TAGDEF|PHON_LBOSE|[logical]|.TRUE.}}
+
+Description: Determines whether structures in the sampling are created according to Bose-Einstein or Maxwell-Boltzmann statistics.
+----
+For {{TAG|PHON_LBOSE}}=''.TRUE.'' Bose-Einstein statistics is used.
+
+For {{TAG|PHON_LBOSE}}=''.FALSE.'' Maxwell-Boltzmann statistics is used.
+
+For further usage of this tag see: {{TAG|Electron-phonon interactions from Monte-Carlo sampling}}.
+
+'''Important''': This tag does not work together with {{TAG|PHON_NSTRUCT}}=0.
+{{NB|mind|This feature is available for VASP >{{=}} 6.0.}}
+== Related tags and articles ==
+[[Electron-phonon interactions from Monte-Carlo sampling]], {{TAG|PHON_LMC}}, {{TAG|PHON_NSTRUCT}}, {{TAG|PHON_TLIST}}, {{TAG|PHON_NTLIST}}, {{TAG|TEBEG}}
+
+{{sc|PHON_LBOES|Examples|Examples that use this tag}}
+
+----
+
+[[Category:INCAR tag]][[Category:Electron-phonon interactions]][[Category:Phonons]]

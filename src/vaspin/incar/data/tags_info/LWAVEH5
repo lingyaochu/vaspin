@@ -1,0 +1,15 @@
+{{TAGDEF|LWAVEH5|[logical]|{{TAG|LH5}}}}
+
+Description: Determines whether the wavefunctions are written to {{FILE|vaspwave.h5}} file at the end of a run.
+----
+
+If {{TAGO|LWAVEH5|True}}, the Kohn-Sham orbitals, i.e., wavefunctions, are written to the {{FILE|vaspwave.h5}} file at the end of the calculation. This can be used to restart VASP.
+
+== Related tags and articles ==
+{{TAG|LCHARG}}, {{TAG|LCHARGH5}}, {{TAG|LWAVE}}, {{TAG|LH5}}
+
+
+{{sc|LWAVEH5|Examples|Examples that use this tag}}
+
+
+[[Category:INCAR tag]]

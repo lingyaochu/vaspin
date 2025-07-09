@@ -1,0 +1,23 @@
+{{DISPLAYTITLE:PHON_DIELECTRIC}}
+{{TAGDEF|PHON_DIELECTRIC| [3x3 real] }}
+{{DEF|PHON_DIELECTRIC|None|}}
+
+Description: {{TAG|PHON_DIELECTRIC}} sets the static dielectric tensor to be used for the dipole-dipole corrections in the computation of the phonon dispersion. This is only used when {{TAG|LPHON_POLAR}}=.TRUE.
+----
+
+If the material is non-metallic and polar (i.e. two or more atoms in the unit cell carry nonzero Born effective charge tensors), a special treatment of the long-range dipole-dipole interaction is required to obtain a smooth phonon dispersion.
+This is activated by setting {{TAG|LPHON_POLAR}}=.TRUE. and supplying the static dielectric tensor ({{TAG|PHON_DIELECTRIC}}) and the Born-effective charges ({{TAG|PHON_BORN_CHARGES}}) which can be obtained in a separate VASP calculation using the {{TAG|LEPSILON}} or {{TAG|LCALCEPS}} tag.
+The dipole-dipole part of the interatomic force-constants is evaluated using an Ewald summation with the number of <math>\mathbf{G}</math> vectors determined by the cutoff length ({{TAG|PHON_G_CUTOFF}}).
+{{NB|mind| Only available as of VASP 6.3.2.}}
+
+==Related tags and articles==
+{{FILE| QPOINTS}},
+{{TAG | LPHON_DISPERSION}},
+{{TAG | PHON_NWRITE}},
+{{TAG | LPHON_POLAR}},
+{{TAG | PHON_BORN_CHARGES}},
+{{TAG | PHON_G_CUTOFF}}
+
+{{sc|PHON_DIELECTRIC|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Phonons]]

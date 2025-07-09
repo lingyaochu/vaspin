@@ -1,0 +1,20 @@
+{{DISPLAYTITLE:ML_AFILT2}}
+{{TAGDEF|ML_AFILT2|[real]|0.002}}
+
+Description: This tag sets the filtering parameter for the angular filtering for {{TAG|ML_IAFILT2}} in the machine learning force field method.
+----
+This tag is only used if {{TAG|ML_LAFILT2}}=''.TRUE.'' and {{TAG|ML_IAFILT2}}=2 are used.
+
+The angular filtering function{{cite|boyd:book:2000}} for {{TAG|ML_IAFILT2}}=2 is described as <math>\eta_{l,a_{\mathrm{FILT}}}=\frac{1}{1+a_{\mathrm{FILT}} [l (l+1)]^{2}} </math>. The tag {{TAG|ML_AFILT2}} sets the parameter <math>a_{\mathrm{FILT}}</math>.
+
+== References ==
+<references/>
+<noinclude>
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_LAFILT2}}, {{TAG|ML_IAFILT2}}
+
+{{sc|ML_AFILT2|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

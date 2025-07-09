@@ -1,0 +1,22 @@
+{{DISPLAYTITLE:SPRING_R0}}
+{{TAGDEF|SPRING_R0|[real (array)]}}
+
+Description: Position of the minimum for a harmonic bias potential.
+----
+The parameter {{TAG|SPRING_R0}} defines the position of the minimum (<math>\xi_{0\mu}</math>) for the harmonic bias potential of the following form:
+
+::<math>
+\tilde{V}(\xi_1,\dots,\xi_{M_8}) = \sum_{\mu=1}^{M}\frac{1}{2}\kappa_{\mu} (\xi_{\mu}(q)-\xi_{0\mu})^2, \;
+</math>
+
+where the sum runs over all (<math>M_8</math>) coordinates  the potential acts upon (<math>\xi_{\mu}(q)</math>), which are defined in the {{FILE|ICONST}} file by setting the <code>status=8</code>.
+The units of <math>\xi_{0\mu}</math> correspond to units of the coordinate the potential acts upon (e.g., <math>{\AA}</math> for coordinates with <code>flag</code> R, <math>rad.</math> for coordinates with <code>flag</code> A, dimensionless for coordinates with <code>flag</code> W, etc...).
+The number of items defined via {{TAG|SPRING_R0}} must be equal to <math>M_8</math>, otherwise the calculation terminates with an error message.
+
+== Related tags and articles ==
+{{TAG|SPRING_K}},
+{{TAG|SPRING_V0}},
+{{FILE|ICONST}},
+{{TAG|Biased molecular dynamics}}
+----
+[[Category:INCAR tag]][[Category:Advanced molecular-dynamics sampling]]

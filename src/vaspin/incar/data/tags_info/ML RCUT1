@@ -1,0 +1,24 @@
+{{DISPLAYTITLE:ML_RCUT1}}
+{{TAGDEF|ML_RCUT1|[real]|8.0}}
+
+Description: Sets the cutoff radius <math>R_\text{cut}</math> for the radial descriptor <math>\rho^{(2)}_i(r)</math> in <math>\AA</math>.
+----
+The radial descriptor for machine-learned force fields is constructed from
+
+<math>
+\rho_{i}^{(2)}\left(r\right) = \frac{1}{4\pi} \int \rho_{i}\left(r\hat{\mathbf{r}}\right) d\hat{\mathbf{r}}, \quad \text{where} \quad
+\rho_{i}\left(\mathbf{r}\right) = \sum\limits_{j=1}^{N_{\mathrm{a}}} f_{\mathrm{cut}}\left(r_{ij}\right) g\left(\mathbf{r}-\mathbf{r}_{ij}\right)
+</math>
+
+and <math>g\left(\mathbf{r}\right)</math> is an approximation of the delta function. A basis set expansion of <math>\rho^{(2)}_i(r)</math> yields the expansion coefficients <math>c_{n00}^{i}</math>, which are used in practice to describe the atomic environment; refer to the [[Machine learning force field: Theory#Descriptors|theory of machine-learned force fields]] for details. The tag {{TAG|ML_RCUT1}} sets the cutoff radius <math>R_\text{cut}</math> at which the cutoff function <math>f_{\mathrm{cut}}\left(r_{ij}\right)</math> decays to zero.
+{{NB|mind|The cutoff radius determines how many neighbor atoms <math>N_\mathrm{a}</math> are considered to describe each central atom's environment. Hence, important features may be missed if the cutoff radius is too small. On the other hand, a large cutoff radius increases the computational cost of the descriptor as the cutoff sphere contains more neighbor atoms. A good compromise is always system-dependent. Therefore, different values should be tested to achieve satisfying accuracy '''and''' speed.}}
+
+The unit of the cut-off radius is <math>\AA</math>.
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_RCUT2}}, {{TAG|ML_W1}}, {{TAG|ML_SION1}}, {{TAG|ML_SION2}}, {{TAG|ML_MRB1}}, {{TAG|ML_MRB2}}
+
+{{sc|ML_RCUT1|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

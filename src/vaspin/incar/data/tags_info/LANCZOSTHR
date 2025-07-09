@@ -1,0 +1,18 @@
+{{TAGDEF|LANCZOSTHR|[real]|<math>10^{-3}</math>}}
+
+Description: {{TAG|LANCZOSTHR}} is used by the BSE Lanczos algorithm to stop the iterative procedure, once the dielectric function has reached numerical convergence.
+
+The difference between the dielectric function at two consecutive iterations, <math>i</math> and <math>i+1</math>, is computed as root-mean-square over the frequency grid
+
+::<math>
+\mathrm{RMS}[\epsilon] = \sqrt{\sum_{j=1}^N\frac{1}{N}\left[\epsilon_{i}(\omega_j)-\epsilon_{i+1}(\omega_j)\right]^2}
+</math>
+
+and once <math>\mathrm{RMS}[\epsilon]<=</math>LANCZOSTHR the iterative algorithm stops.
+
+== Related tag and articles ==
+{{TAG|BSE}},
+[[BSE calculations]],
+[[Bethe-Salpeter equations]]
+----
+[[Category:INCAR tag]][[Category:Bethe-Salpeter equations]][[Category:Many-body perturbation theory]]

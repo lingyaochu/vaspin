@@ -1,0 +1,18 @@
+{{DISPLAYTITLE:ML_LBASIS_DISCARD}}
+{{TAGDEF|ML_LBASIS_DISCARD|[logical]|.TRUE.}}
+
+Description: Controls whether calculation is continued or stopped after the maximum number of local reference configurations {{TAG|ML_MB}} for a given species is reached.
+----
+For {{TAG|ML_LBASIS_DISCARD}}=.FALSE., whenever the number of local reference configurations for a given species would exceed the maximum number of allowed configurations {{TAG|ML_MB}}, the code will terminate (soft exit) and request the user to continue with and increased number for {{TAG|ML_MB}}.
+
+For {{TAG|ML_LBASIS_DISCARD}}=.TRUE. (default) the code will not stop, when the number of local reference configurations for a given species would exceed the maximum, but old configurations may be replaced by new ones.
+
+In multi-component systems it can happen that, although {{TAG|ML_MB}} is set to the maximum that is computationally affordable, one species exceeds {{TAG|ML_MB}} while the other species are not sufficiently sampled and still far below {{TAG|ML_MB}}. For that {{TAG|ML_LBASIS_DISCARD}}=.TRUE. should be set. In that case the fast sampled species would retain the same number of local reference configurations and the new local reference configurations would replace old ones. At the same time new local reference configurations could be added for the slowly-sampled species further improving their accuracy for fitting.
+
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_MB}}, {{TAG|ML_MCONF}}, {{TAG|ML_EPS_LOW}}
+
+{{sc|ML_LBASIS_DISCARD|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

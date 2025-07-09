@@ -1,0 +1,38 @@
+{{TAGDEF|LDIAG|[logical]|.TRUE.}}
+
+Description: Determines whether a subspace diagonalization is performed within the algorithm selected by {{TAG|ALGO}} or {{TAG|IALGO}}.
+----
+For {{TAG|ALGO}} = <tt>Normal</tt>, <tt>Fast</tt>, and <tt>VeryFast</tt>, VASP performs a diagonalization in the subspace spanned by all orbitals. This is often referred to as the [https://en.wikipedia.org/wiki/Rayleigh%E2%80%93Ritz_method Rayleigh–Ritz method].
+This step increases the convergence rate and thus is expedient in most cases.
+Furthermore, the subspace diagonalization sorts the orbital/eigenvalues in ascending order.
+
+For the direct optimization algorithms (for instance {{TAG|ALGO}} = <tt>All</tt> or <tt>Damped</tt>),
+a subspace diagonalization is usually not performed, but in order to improve the accuracy of the calculated forces,
+after convergence has been reached one single diagonalization in the subspace spanned by all orbitals is performed.
+
+For {{TAG|ALGO}} = <tt>VeryFast</tt> and <tt>Damped</tt> it is possible to switch off the subspace diagonalization by specifying {{TAG|LDIAG}} = <tt>.FALSE.</tt> in the {{FILE|INCAR}} file.
+Specifically, for {{TAG|ALGO}} = <tt>VeryFast</tt>, {{TAG|LDIAG}} = <tt>.FALSE.</tt> changes from an exact Rayleigh–Ritz diagonalization to Loewdin perturbation theory.
+
+Note, Loewdin perturbation theory strictly conserves the orbital order, ''i.e.'', the ''n''-th orbital will remain stored in the ''n''-th storage slot and only small rotations into that orbital can occur.
+For {{TAG|ALGO}} = <tt>Damped</tt> and <tt>All</tt>, the final subspace diagonalization is simply skipped if {{TAG|LDIAG}} = <tt>.FALSE.</tt> is set.
+Generally using {{TAG|LDIAG}} = <tt>.FALSE.</tt> is only advised, if one wants to maintain a certain orbital order, for instance, when reading the orbitals from an existing {{FILE|WAVECAR}} file.
+
+For the algorithms {{TAG|ALGO}} = <tt>Normal</tt> or <tt>Fast</tt>, by construction it is not possible to switch off subspace diagonalization, as these algorithms require subspace diagonalizations during the iterative refinement of the orbitals.
+Furthermore, algorithms that minimize the total energy ({{TAG|ALGO}} = <tt>All</tt>) are often too "greedy" and tend to alternate the orbital order in the course of the SCF cycle and energy optimization.
+
+In summary, the following combinations are potentially useful:
+
+ ALGO = VeryFast ; LDIAG = .FALSE.
+
+ ALGO = Damped ; LDIAG = .FALSE.
+
+Other combinations using {{TAG|LDIAG}} = <tt>.FALSE.</tt> are likely to yield undesirable results.
+{{NB|warning| {{TAG|ALGO}} {{=}} <tt>VeryFast</tt> is not supported for hybrid functionals. }}
+
+== Related tags and articles ==
+{{TAG|IALGO}},
+{{TAG|ALGO}}
+
+{{sc|LDIAG|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Electronic minimization]]

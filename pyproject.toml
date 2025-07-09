@@ -37,8 +37,8 @@ efnv = "vaspin.cli.efnv:main"
 vaspin = { workspace = true }
 
 [tool.codespell]
-write-change = true
-skip = "src/vaspin/utils/constants.py"
+write-changes = true
+skip = "src/vaspin/incar/data/tags_info/*,src/vaspin/utils/constants.py"
 
 [tool.ruff]
 line-length = 88

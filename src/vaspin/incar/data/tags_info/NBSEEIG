@@ -1,0 +1,9 @@
+{{TAGDEF|NBSEEIG|[integer]|0}}
+
+Description: {{TAG|NBSEEIG}} sets the number of BSE eigenvectors written to the {{FILE|BSEFATBAND}} file. If {{TAG|BSEHOLE}} or {{TAG|BSEELECTRON}} is set, {{TAG|NBSEEIG}} exciton wavefunctions are written to the {{FILE|CHG}}.XX files.
+== Related tags and sections ==
+{{TAG|BSE}}, {{TAG|BSEFATBAND}}, [[BSE calculations]]
+
+{{sc|NBSEEIG|Examples|Examples that use this tag}}
+----
+[[Category:INCAR tag]][[Category:Many-body perturbation theory]][[Category:Bethe-Salpeter equations]]

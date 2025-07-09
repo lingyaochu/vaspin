@@ -1,0 +1,22 @@
+{{TAGDEF|LSCK|[logical]| .FALSE.}}
+{{NB|important|Up to vasp.6.2, the default was {{TAG|LSCK}}{{=}} .TRUE.}}
+----Description: {{TAG|LSCK}}=.True. switches on the squeezed Coulomb kernel.
+If {{TAG|LSCK}} is set to .TRUE., the squeezed Coulomb kernel is used instead of the [[ENCUTGWSOFT|cosine window]] {{cite|riemelmoser:jcp:2020}}:
+
+<math>v_{G} = 4 \pi e^2 \frac{
+(G_{max}-G_{min})(G_{max}-G)
+}{
+(G_{min}^2 - G(2G_{min}-G_{max}))^2
+}
+\qquad \mbox{for} \quad  \mathrm{ENCUTGWSOFT}=\frac{\hbar^2G_{min}^2}{2m_e}<\frac{\hbar^2 G^2}{2m_e}<\frac{\hbar^2G_{max}^2}{2m_e}=\mathrm{ENCUTGW}</math>
+
+This kernel 'squeezes' the contributions from large wave vectors <math>G>G_{max}</math> into the window given by {{TAG|ENCUTGWSOFT}}. Effectively, this extrapolates the random-phase-approximation&ndash;correlation energy to the {{TAG|ENCUTGW}} <math>\to \infty</math> limit, assuming that the basis-set-incompleteness error falls off as <math>1/</math>{{TAG|ENCUTGW}}<math>^{3/2}</math>.
+== Related tags and articles ==
+{{TAG|ENCUTGW}},
+{{TAG|GW calculations}}
+{{TAG|ACFDT/RPA calculations}}
+
+{{sc|LSCK|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Many-body perturbation theory]][[Category:GW]][[Category:ACFDT]]

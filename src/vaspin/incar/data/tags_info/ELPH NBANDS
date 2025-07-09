@@ -1,0 +1,21 @@
+{{DISPLAYTITLE:ELPH_NBANDS}}
+{{TAGDEF|ELPH_NBANDS|[integer]| max({{TAG|NELECT}}/2+NIONS/2,{{TAG|NELECT}}*0.6)}}
+
+Description: Number of bands to compute on the dense <b>k</b> point grid for the electron-phonon driver
+{{Available|6.5.0}}
+
+----
+For [[Transport coefficients including electron-phonon scattering|transport calculations]], this value should be as little as possible while including all the states potentially participating in the transport calculation.
+
+If {{TAG|ELPH_NBANDS}}=-2 then the number of bands is set to the maximum number of plane waves. This setting is particularly useful for calculating the [[Bandgap renormalization due to electron-phonon coupling| bandgap renormalization]].
+In this case, the final result converges slowly with the number of bands in the calculation, similar to [[RPA/ACFDT: Correlation energy in the Random Phase Approximation|RPA]], and [[BSE calculations|BSE]] calculations.
+
+==Related tags and articles==
+* [[Bandgap renormalization due to electron-phonon coupling|Bandstructure renormalization]]
+* [[Transport coefficients including electron-phonon scattering|Transport calculations]]
+* {{TAG|ELPH_RUN}}
+* {{TAG|ELPH_NBANDS_SUM}}
+* {{TAG|ELPH_SELFEN_FAN}}
+* {{TAG|ELPH_SELFEN_DW}}
+
+[[Category:INCAR tag]][[Category:Electron-phonon_interactions]]

@@ -1,0 +1,48 @@
+{{TAGDEF|PLUGINS/OCCUPANCIES| .True. {{!}} .False.|.False.}}
+
+Description: {{TAG|PLUGINS/OCCUPANCIES}} calls the Python plugin for the occupancies interface for each ionic relaxation step
+----
+
+When {{TAG|PLUGINS/OCCUPANCIES}}=.TRUE., VASP calls the <code>occupancies</code> Python function at the end of each ionic relaxation step.
+The primary use-case of this tag to recompute the occupancies after performing modifications through other plugins such as {{TAG|PLUGINS/LOCAL_POTENTIAL}}. It also allows changing {{TAG|NELECT}}, {{TAG|EFERMI}}, {{TAG|NUPDOWN}}, {{TAG|ISMEAR}}, {{TAG|SIGMA}}, {{TAG|EMIN}} and {{TAG|EMAX}} at the end of each SCF step, to be reflected in the next step.
+
+==Expected inputs==
+
+The <code>occupancies</code> Python function expects the following inputs,
+<syntaxhighlight lang="python" line>
+def occupancies(constants, additions):
+</syntaxhighlight>
+where <code>constants</code> and <code>additions</code> and [https://docs.python.org/3/library/dataclasses.html Python dataclasses].
+The <code>constants</code> dataclass consists of the following inputs, listed here with their associated [https://numpy.org/doc/stable/user/basics.types.html datatypes]
+<syntaxhighlight lang="python" line>
+@dataclass(frozen=True)
+class ConstantsOccupancies:
+    NELECT: float
+    EFERMI: float
+    NUPDOWN: float
+    ISMEAR: int
+    SIGMA: float
+    EMIN: float
+    EMAX: float
+</syntaxhighlight>
+The <code>additions</code> dataclass consists of the same quantities as the <code>constants</code> tag.
+{{NB| mind | Calling this interface implicitly triggers a recalculation of the occupancies}}
+
+==Modifying quantities==
+Modify the quantities listed in additions by adding to them.
+<syntaxhighlight lang="python" line>
+import numpy as np
+def structure(constants, additions)
+    additions.NELECT += 1
+</syntaxhighlight>
+{{WARN_PLUGINS_CONSTANTS}}
+
+== Related tags and articles ==
+[[Plugins]],
+{{TAG|PLUGINS/FORCE_AND_STRESS}},
+{{TAG|PLUGINS/LOCAL_POTENTIAL}},
+{{TAG|PLUGINS/STRUCTURE}}
+
+{{sc|PLUGINS/OCCUPANCIES|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Electronic occupancy]]

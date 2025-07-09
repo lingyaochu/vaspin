@@ -1,0 +1,13 @@
+{{TAGDEF|TEEND|[real]|{{TAG|TEBEG}}}}
+
+Description: {{TAG|TEEND}} sets the final temperature (in K) for an ab-initio molecular-dynamics run.
+----
+== Related tags and articles ==
+{{TAG|TEBEG}},
+{{TAG|IBRION}},
+{{TAG|SMASS}}
+
+{{sc|TEEND|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Molecular dynamics]]

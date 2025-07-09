@@ -1,0 +1,23 @@
+{{DISPLAYTITLE:LIBMBD_MBD_A}}
+{{TAGDEF|LIBMBD_MBD_A|[real]|6.0}}
+
+Description: {{TAG|LIBMBD_MBD_A}} sets the value of the damping parameter <math>a</math> in the many-body methods as implemented in the library libMBD of many-body dispersion methods{{cite|libmbd_1}}{{cite|libmbd_2}}{{cite|hermann:jcp:2023}}.
+----
+{{TAG|LIBMBD_MBD_A}} allows to choose the value of the damping parameter <math>a</math> in the many-body methods as implemented in the library libMBD of many-body dispersion methods{{cite|libmbd_1}}{{cite|libmbd_2}}{{cite|hermann:jcp:2023}}. The value is internally passed to the libMBD input '''mbd_a''' described at the page {{cite|libmbd_input}}.
+{{NB|mind| {{TAG|LIBMBD_MBD_A}} can be set only if {{TAG|LIBMBD_XC}}{{=}}none.}}
+{{NB|important| This feature is available from VASP.6.4.3 onwards that needs to be compiled with [[Precompiler_options#-DLIBMBD|-DLIBMBD]].}}
+libMBD is a separate library package that has to be downloaded{{cite|libmbd_2}} and compiled before VASP is compiled with the corresponding [[Precompiler_options#-DLIBMBD|precompiler options]] and [[Makefile.include#LIBMBD_.28optional.29|links to the libraries]].
+
+== Related tags and articles ==
+{{TAG|LIBMBD_METHOD}},
+{{TAG|LIBMBD_XC}},
+{{TAG|LIBMBD_MBD_BETA}},
+[[Many-body dispersion energy|Many-body dispersion energy]]
+
+{{sc|LIBMBD_MBD_A|Examples|Examples that use this tag}}
+
+== References ==
+<references/>
+
+----
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:van der Waals functionals]]

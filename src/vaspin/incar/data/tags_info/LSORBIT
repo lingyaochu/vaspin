@@ -1,0 +1,100 @@
+{{TAGDEF|LSORBIT|.TRUE. {{!}} .FALSE.|.FALSE.}}
+
+Description: Switch on spin-orbit coupling.
+----
+
+{{TAG|LSORBIT}} = True switches on spin-orbit coupling (SOC){{cite|Steiner:2016}} and automatically sets {{TAG|LNONCOLLINEAR}} = True.  It requires using <code>vasp_ncl</code>. SOC couples the spin degrees of freedom with the lattice degrees of freedom. We recommend carefully checking the symmetry and convergence of your results when using SOC; see below.
+
+{{TAG|LSORBIT}} only works for PAW potentials and is not supported by ultrasoft pseudopotentials. It is supported as of VASP.4.5.
+
+== Assumptions and output ==
+* Switching on spin-orbit coupling (SOC) adds an additional term <math>H^{\alpha\beta}_{soc}\propto\mathbf{\sigma}\cdot\mathbf{L}</math> to the Hamiltonian that couples the Pauli-spin operator <math>\mathbf{\sigma}</math> with the angular momentum operator <math>\mathbf{L}</math>.{{cite|Steiner:2016}} As a relativistic correction, SOC acts predominantly in the immediate vicinity of the nuclei. Therefore, it is assumed that contributions of <math>H_{soc}</math> outside the PAW spheres are negligible. Hence, VASP calculates the matrix elements of <math>H_{soc}</math> only for the all-electron one-center contributions
+
+::<math>
+E_{soc}^{ij} = \delta_{{\bf R}_i{\bf R}_j}\delta_{l_il_j} \sum_{n \bf k} w_{\bf k} f_{n\bf k} \sum_{\alpha\beta} \langle \tilde{\psi}^\alpha_{n\bf k} |\tilde{p}_i \rangle \langle \phi_i | H^{\alpha\beta}_{soc} | \phi_j \rangle \langle \tilde{p}_j | \tilde{\psi}^\beta_{n\bf k} \rangle
+</math>
+
+:where <math> \phi_i({\bf r}) = R_i(|{\bf r}-{\bf R}_i|) Y_{l_im_i}(\theta,\varphi) </math> are the partial waves of an atom centered at <math>{\bf R}_i</math>, <math>\tilde{\psi}^\alpha_{n\bf k}</math> is the spinor-component <math>\alpha=\uparrow,\downarrow</math> of the pseudo-orbital with band-index ''n'' and Bloch vector '''k''', and <math>f_{n\bf k}</math> and <math>w_{\bf k}</math> are the Fermi- and '''k'''-point weights, respectively.{{cite|Steiner:2016}}
+
+* It is possible to write the partial magnetization by setting {{TAG|LORBIT}}, i.e., the site- and orbital-resolved expectation value of the Pauli-spin operator <math>\mathbf{\sigma}</math>. And the partial orbital angular momentum by setting {{TAG|LORBMOM}}, i.e., the site- and orbital-resolved expectation value of the orbital angular momentum operator <math>\mathbf{L}</math>.
+{{NB|mind|The orbital angular momentum (vector-like quantity) is written to the {{FILE|OUTCAR}} file in Cartesian coordinates, while the magnetic moments (spinor-like quantity) are read and written in the basis specified by {{TAG|SAXIS}} (spinor space).|:}}
+:The default orientation of spinor space is <math>\sigma_1=\hat x</math>, <math>\sigma_2 =\hat y</math>, <math>\sigma_3 = \hat z</math>. Hence, the bases agree by default, and no transformation is required.
+
+* After a successful calculation including SOC, VASP writes the following results to the {{TAG|OUTCAR}} file:
+
+ Spin-Orbit-Coupling matrix elements
+
+ Ion:    1  E_soc:     -0.0984080
+ l=   1
+     0.0000000    -0.0134381    -0.0134381
+    -0.0134381     0.0000000    -0.0134381
+    -0.0134381    -0.0134381     0.0000000
+ l=   2
+     0.0000000    -0.0005072     0.0000000    -0.0005072    -0.0024560
+    -0.0005072     0.0000000    -0.0018420    -0.0005072    -0.0006140
+     0.0000000    -0.0018420     0.0000000    -0.0018420     0.0000000
+    -0.0005072    -0.0005072    -0.0018420     0.0000000    -0.0006140
+    -0.0024560    -0.0006140     0.0000000    -0.0006140     0.0000000
+ l=   3
+     0.0000000    -0.0000000     0.0000000     0.0000000     0.0000000    -0.0000000    -0.0000000
+    -0.0000000     0.0000000    -0.0000000     0.0000000    -0.0000000    -0.0000000    -0.0000000
+     0.0000000    -0.0000000     0.0000000    -0.0000000    -0.0000000    -0.0000000     0.0000000
+     0.0000000     0.0000000    -0.0000000     0.0000000    -0.0000000     0.0000000     0.0000000
+     0.0000000    -0.0000000    -0.0000000    -0.0000000     0.0000000    -0.0000000     0.0000000
+    -0.0000000    -0.0000000    -0.0000000     0.0000000    -0.0000000     0.0000000    -0.0000000
+    -0.0000000    -0.0000000     0.0000000     0.0000000     0.0000000    -0.0000000     0.0000000
+:Here, <code>1  E_soc</code> represents the accumulated energy contribution <math>E_{soc}=\sum_{ij} E_{soc}^{ij}</math> inside the augmentation sphere that is centered at <math>{\bf R}_1</math> (position of ion 1), while the following entries correspond to the matrix elements <math>E_{soc}^{ij}</math> for the angular momentum <math>l</math>. Rows and columns correspond to <math>m</math> and <math>m'</math> of the real spherical harmonics <math>Y_{lm}</math>(see [[Angular functions]] for naming and ordering conventions).
+
+== Symmetry and convergence ==
+
+In any spin-polarized ({{TAG|ISPIN}}=2) or noncollinear ({{TAG|LNONCOLLINEAR}}=T) calculation, even without SOC, the total energy depends on the relative orientation of magnetic moments. For instance, two magnetic sites may couple ferromagnetically or antiferromagnetically. On the other hand, the total energy is independent of the orientation of the magnetic moments with respect to the lattice without SOC. For instance, in-plane and out-of-plane moments on a surface would yield the same energy in the absence of SOC.
+
+Switching on SOC couples the spin degrees of freedom that live in spinor space and the lattice degrees of freedom that live in real space, see {{TAG|SAXIS}}. Therefore, the in-plane and out-of-plane magnetic moments on a surface would yield different energies, when including SOC. Similarly, the ferromagnetically or antiferromagnetically ordered magnetic moments may additionally align with, e.g., the third lattice vector by setting {{TAG|LSORBIT}} = True.
+
+Generally, be extremely diligent when using SOC: The energy differences can be of the order of few <math>\mu</math>eV/atom, k-point convergence is tedious and slow, and the required compute time might be huge, even for small cells.
+{{NB|warning| When SOC is included, we recommend testing whether switching off symmetry ({{TAG|ISYM}}{{=}}-1) changes the results.|}} Often, the k-point set changes from one to the other spin orientation, thus worsening the transferability of the results. Note that the {{FILE|WAVECAR}} file cannot be reread properly if the number of k-points changes. Hence, restart the calculation without symmetry from a converged charge density by setting {{TAG|ICHARG}}=1! Also, consider the setting of {{TAG|LMAXMIX}}.
+
+We recommend setting {{TAG|GGA_COMPAT}} = False for noncollinear calculations since this improves the numerical precision of GGA calculations.
+
+Please check the sections on {{TAG|LNONCOLLINEAR}}, {{TAG|SAXIS}}, {{TAG|LMAXMIX}}, and {{TAG|GGA_COMPAT}}.
+<!---
+
+Known issue: Additionally, VASP.4.6 (and all older versions) had a bug in symmetrizing magnetic fields (fixed only VASP.4.6.23). Although we are confident that the present code base is free of errors in the symmetrization, it is recommended to double-check the results without symmetry.
+
+It is recommended to set {{TAG|GGA_COMPAT}} = False for noncollinear calculations since this improves the numerical precision of GGA calculations.
+
+The recommended procedure for the calculation of magnetic anisotropies is therefore (please check the section on {{TAG|LMAXMIX}}):
+
+*Start with a collinear calculation and calculate a {{FILE|WAVECAR}} and {{FILE|CHGCAR}} file.
+*Add the tags
+
+   {{TAG|LSORBIT}} = .TRUE.
+   {{TAG|ICHARG}} = 11      ! non selfconsistent run, read {{FILE|CHGCAR}}
+   {{TAG|LMAXMIX}} = 4      ! for d-elements increase {{TAG|LMAXMIX}} to 4, f-elements: {{TAG|LMAXMIX}} = 6
+                            ! you need to set {{TAG|LMAXMIX}} already in the collinear calculation
+   {{TAG|SAXIS}} =  x y z   ! direction of the magnetic field
+   {{TAG|NBANDS}} = 2 * number of bands of collinear run
+
+VASP reads in the {{FILE|WAVECAR}} and {{FILE|CHGCAR}} files, aligns the spin quantization axis parallel to {{TAG|SAXIS}}, which implies that the magnetic field is now parallel to {{TAG|SAXIS}}, and performs a non selfconsistent calculation. By comparing the energies for different orientations the magnetic anisotropy can be determined. Please mind, that a completely selfconsistent calculation ({{TAG|ICHARG}} = 1) is in principle also possible with VASP, but this would allow the spinor wavefunctions to rotate from their initial orientation parallel to {{TAG|SAXIS}} until the correct groundstate is obtained, i.e. until the magnetic moment is parallel to the easy axis. In practice this rotation will be slow, however, since reorientation of the spin gains little energy. Therefore if the convergence criterion is not too tight, sensible results might be obtained even for fully selfconsistent calculations (in the few cases we have tried this worked beautifully).
+
+*Be very careful with symmetry. When spin-orbit coupling is selected, we recommend to test whether switching off symmetry altogether ({{TAG|ISYM}}=-1) changes the results. Often the k-point set changes from one to the other spin orientation, worsening the transferability of the results (also the {{FILE|WAVECAR}} file can not be reread properly if the number of k-points changes). Additionally, VASP.4.6 (and all older versions) had a bug in the symmetrization of magnetic fields (fixed only VASP.4.6.23). Although we are confident that the present code base is free of errors in the symmetrization, it is recommended to double check the results without symmetry.
+
+*Generally, be extremely careful when using spin-orbit coupling: energy differences are tiny, k-point convergence is tedious and slow, and the computer time you require might be huge even for small cells.
+
+*It is recommended to set {{TAG|GGA_COMPAT}} = .FALSE. for non-collinear calculations, since this improves the numerical precision of GGA calculations.-->
+== Related tags and articles ==
+{{TAG|LNONCOLLINEAR}},
+{{TAG|MAGMOM}},
+{{TAG|SAXIS}},
+{{TAG|LORBMOM}},
+{{TAG|LORBIT}},
+{{TAG|LMAXMIX}},
+{{TAG|GGA_COMPAT}}
+
+{{sc|LSORBIT|Examples|Examples that use this tag}}
+
+== References ==
+<references/>
+----
+
+[[Category:INCAR tag]][[Category:Magnetism]][[Category:Spin-orbit coupling]][[Category:Noncollinear magnetism]]

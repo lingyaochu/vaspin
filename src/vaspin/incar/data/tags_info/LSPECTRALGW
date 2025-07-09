@@ -1,0 +1,24 @@
+{{TAGDEF|LSPECTRALGW|.FALSE. {{!}} .TRUE.|.FALSE.}}
+
+Description: {{TAG|LSPECTRALGW}} specifies to use the spectral method for calculating the self-energy.
+----
+
+If {{TAG|LSPECTRALGW}} = .TRUE. is set, the imaginary part of the self-energy <math>\Sigma(\omega)= G W</math> is calculated from the imaginary part of screened potential <math>W(\omega)</math> by shifting the poles of
+<math>W </math> by <math> \pm \epsilon </math>, where <math> \epsilon </math> are the poles of the Green's function <math> G</math>.
+Generally, {{TAG|LSPECTRALGW}} affects the compute time very little. QP energies also hardly
+change when {{TAG|LSPECTRALGW}}  is modified.
+However, {{TAG|LSPECTRALGW}} = .TRUE. is usually slightly more robust,
+and should be selected for molecules and other systems with flat dispersion-less bands.
+One the other hand, {{TAG|LSPECTRALGW}} = .TRUE. seems to converge slightly slower,
+as the complex shift {{TAG|CSHIFT}} is decreased. Set this flag, if the QP energies
+show erratic behavior, for instance, if QP energies or Z-factors are not in the expected
+range of values (0.5<Z<0.9).
+
+
+== Related tags and articles ==
+{{TAG|LSPECTRAL}}
+
+{{sc|LSPECTRALGW|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Many-body perturbation theory]][[Category:GW]]

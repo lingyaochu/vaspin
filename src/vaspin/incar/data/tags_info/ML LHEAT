@@ -1,0 +1,53 @@
+{{DISPLAYTITLE:ML_LHEAT}}
+{{TAGDEF|ML_LHEAT|[logical]|.FALSE.}}
+
+Description: This tag specifies whether the heat flux is calculated or not in the machine learning force field method.
+----
+The heat flux within machine learning force fields is decomposed into atomic contributions written as
+
+<math>
+\mathbf{q}(t) = \sum\limits_{i=1}^{N_{a}} \frac{d}{dt} \left( \mathbf{r}_{i} E_{i} \right),
+</math>
+
+<math>
+E_{i}=\frac{m_{i} \left|\mathbf{v}_{i} \right|^{2}}{2} + U_{i}
+</math>
+
+where <math>\mathbf{r}_{i}</math>, <math>\mathbf{v}_{i}</math> and <math>E_{i}</math> denote the position vector, velocity and energy of atom <math>i</math>, respectively. The number of atoms in the system is denoted by <math>N_{a}</math>. The heat flux can be further rewritten as
+
+<math>
+\mathbf{q}(t) = \sum\limits_{i=1}^{N_{a}} \mathbf{v}_{i} E_{i} + \sum\limits_{i=1}^{N_{a}} \mathbf{r}_{i} \left( m_{i} \mathbf{v}_{i} \cdot \frac{d\mathbf{v}_{i}}{dt} + \sum\limits_{j=1}^{N_{a}} \mathbf{v}_{j} \cdot \nabla_{j} U_{i} \right).
+</math>
+
+Using the equation of motions
+
+<math>
+m_{i} \frac{d \mathbf{v}_{i}}{dt} = - \sum\limits_{j=1}^{N_{a}} \nabla_{i} U_{j}
+</math>
+
+the heat flux can be simplified to
+
+<math>
+\mathbf{q}(t) = \sum\limits_{i=1}^{N_{a}} \mathbf{v}_{i} E_{i} - \sum\limits_{i=1}^{N_{a}} \sum\limits_{j=1}^{N_{a}} \mathbf{r}_{i} \left( \mathbf{v}_{i} \cdot \nabla_{i} U_{j} \right) + \sum\limits_{i=1}^{N_{a}} \sum\limits_{j=1}^{N_{a}} \mathbf{r}_{i} \left( \mathbf{v}_{j} \cdot \nabla_{j} U_{i} \right) = \sum\limits_{i=1}^{N_{a}} \mathbf{v}_{i} E_{i} + \sum\limits_{i=1}^{N_{a}} \sum\limits_{j=1}^{N_{a}} \left( \mathbf{r}_{i} - \mathbf{r}_{j} \right) \left( \mathbf{v}_{j} \cdot \nabla_{j} U_{i} \right).
+</math>
+
+Finally (in a post-processing step), the thermal conductivity at temperature <math>T</math> in the Green-Kubo formalism can be calculated from the correlation of the heat flux <math>\mathbf{q}</math> as
+
+<math>
+\kappa = \frac{1}{3Vk_{b}T^{2}} \int\limits_{0}^{\infty} \langle \mathbf{q}(t) \cdot \mathbf{q}(0) \rangle dt,
+</math>
+
+
+where <math>V</math> and <math>k_{b}</math> denotes the volume of the system and the Boltzmann constant, respectively.
+
+
+
+The heat flux is written to the file {{TAG|ML_HEAT}}.
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_LEATOM}}
+
+{{sc|ML_LHEAT|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

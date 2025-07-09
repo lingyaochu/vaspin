@@ -1,0 +1,65 @@
+{{TAGDEF|PLUGINS/STRUCTURE| .True. {{!}} .False.|.False.}}
+
+Description: {{TAG|PLUGINS/STRUCTURE}} calls the Python plugin for the structure interface for each ionic relaxation step
+----
+
+When {{TAG|PLUGINS/STRUCTURE}}=.TRUE., VASP calls the <code>structure</code> Python function at the end of each ionic relaxation step.
+The primary use-case of this tag is to modify the structure based on the computed energy, force and stress tensor.
+
+==Expected inputs==
+
+The <code>structure</code> Python function expects the following inputs,
+<syntaxhighlight lang="python" line>
+def structure(constants, additions):
+</syntaxhighlight>
+where <code>constants</code> and <code>additions</code> and [https://docs.python.org/3/library/dataclasses.html Python dataclasses].
+The <code>constants</code> dataclass consists of the following inputs, listed here with their associated [https://numpy.org/doc/stable/user/basics.types.html datatypes]
+<syntaxhighlight lang="python" line>
+@dataclass(frozen=True)
+class ConstantsStructure:
+    number_ions: int
+    number_ion_types: int
+    ion_types: IndexArray
+    atomic_numbers: IntArray
+    lattice_vectors: DoubleArray
+    positions: DoubleArray
+    POMASS: DoubleArray
+    total_energy: float
+    forces: DoubleArray
+    stress: DoubleArray
+    shape_grid: IntArray
+    charge_density: DoubleArray
+</syntaxhighlight>
+Note that the {{FILE|INCAR}} tags are capitalized.
+<code>number_ions</code> is the total number of ions listed in the {{FILE|POSCAR}} file,
+<code>number_ion_types</code> is the number of ion corresponding to each ion type in the convention of the {{FILE|POSCAR}} file,
+<code>ion_types</code> stores the total number of ion types,
+<code>atomic_numbers</code> contains the atomic number for each atom type,
+<code>lattice_vectors</code> and <code>positions</code> contain the lattice vectors and positions of the current SCF step
+<code>forces</code> and <code>stress</code> are the computed forces and stress tensor and <code>charge_density</code> contains the charge density on the real space grid. <code>shape_grid</code> is a three dimensional integer array which stores the shape of the real space grid, {{TAG|NGXF}}, {{TAG|NGYF}} and {{TAG|NGZF}} and <code>charge_density</code> is the charge density on this real space grid.
+
+The <code>additions</code> dataclass consists of the following modifiable outputs
+<syntaxhighlight lang="python" line>
+@dataclass
+class AdditionsStructure:
+    lattice_vectors: DoubleArray
+    positions: DoubleArray
+</syntaxhighlight>
+
+==Modifying quantities==
+Modify the quantities listed in additions by adding to them.
+<syntaxhighlight lang="python" line>
+def structure(constants, additions)
+    additions.positions += np.ones((constants.number_ions,3))
+</syntaxhighlight>
+{{WARN_PLUGINS_CONSTANTS}}
+
+== Related tags and articles ==
+[[Plugins]],
+{{TAG|PLUGINS/FORCE_AND_STRESS}},
+{{TAG|PLUGINS/LOCAL_POTENTIAL}},
+{{TAG|PLUGINS/MACHINE_LEARNING}}
+
+{{sc|PLUGINS/STRUCTURE|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]]

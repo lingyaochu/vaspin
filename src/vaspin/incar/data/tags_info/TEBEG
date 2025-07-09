@@ -1,0 +1,32 @@
+{{TAGDEF|TEBEG|[real]|0}}
+
+Description: {{TAG|TEBEG}} sets the starting temperature (in K) for an ab-initio molecular dynamics run ({{TAG|IBRION}}=0) and other routines (e.g. {{TAG|Electron-phonon interactions from Monte-Carlo sampling}}).
+----
+If no initial velocities are supplied on the {{FILE|POSCAR}} file, the velocities are set randomly according to a Maxwell-Boltzmann distribution at the initial temperature {{TAG|TEBEG}}. Velocities are only used for molecular dynamics ({{TAG|IBRION}}=0).
+
+'''Mind''': If {{TAG|MDALGO}}>0 is used VASP defines the temperature as
+:<math>
+T= \frac{1}{ k_B T 3 (N_{\rm ions}-N_{\rm constraints})} \sum\limits_{n}^{N_{\rm ions}} M_n | \vec v_n |^2.
+</math>
+
+This temperature ist written to the {{FILE|OUTCAR}} file.
+Depending on the type of thermostat this temperature has to be rescaled to obtain the real simulation temperature.
+
+*{{TAG|Nose-Hoover thermostat}}:
+In this thermostat the number of degrees of freedom including constraines are already acounted for in the potential energy term. In this this method the center of mass is conserved. This lowers the degrees of freedom by one which is also taken into account in the {{TAG|OUTCAR}} file.
+
+*{{TAG|Andersen thermostat}}:
+Same as for {{TAG|Nose-Hoover thermostat}}.
+
+*{{TAG|Langevin thermostat}}:
+As for the {{TAG|Nose-Hoover thermostat}} and {{TAG|Andersen thermostat}} in this thermostat the number of degrees of freedom including constraines are already acounted for. The center of mass is not conserved in this method, hence this method has 3 degrees of freedom more than the {{TAG|Nose-Hoover thermostat}} and {{TAG|Andersen thermostat}}.
+
+== Related tags and articles ==
+{{TAG|TEEND}},
+{{TAG|IBRION}},
+{{TAG|SMASS}}
+
+{{sc|TEBEG|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Molecular dynamics]]

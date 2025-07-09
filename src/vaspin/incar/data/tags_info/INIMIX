@@ -1,0 +1,32 @@
+{{TAGDEF|INIMIX|0 {{!}} 1 {{!}} 2|1}}
+
+Description: Determines the functional form of the initial mixing matrix in the Broyden scheme ({{TAG|IMIX}}=4).
+----
+The initial mixing matrix might influence the convergence speed for complex situations (especially surfaces and magnetic systems), nevertheless {{TAG|INIMIX}} must not be changed from the default setting: anything which can be done with {{TAG|INIMIX}} can also be done with {{TAG|AMIX}} and {{TAG|BMIX}}, and changing {{TAG|AMIX}} and {{TAG|BMIX}} is definitely preferable.
+
+Possible choices for INIMIX are:
+
+*{{TAG|INIMIX}}=0
+:Linear mixing according to the setting of {{TAG|AMIX}}
+*{{TAG|INIMIX}}=1
+:Kerker mixing (see {{TAG|IMIX}}=1) according to the settings of {{TAG|AMIX}} and {{TAG|BMIX}}.
+:The mixed density is given by
+::<math>\rho_{\rm mix}\left(G\right)=\rho_{\rm in}\left(G\right)+A \frac{G^2}{G^2+B^2}\Bigl(\rho_{\rm out}\left(G\right)-\rho_{\rm in}\left(G\right)\Bigr)</math>
+:with <math>A</math>={{TAG|AMIX}} and <math>B</math>={{TAG|BMIX}}
+*{{TAG|INIMIX}}=2
+:No mixing (equal to {{TAG|INIMIX}}=0 and {{TAG|AMIX}}=1, not recommended)
+
+== Related tags and articles ==
+{{TAG|IMIX}},
+{{TAG|MAXMIX}},
+{{TAG|AMIX}},
+{{TAG|BMIX}},
+{{TAG|AMIX_MAG}},
+{{TAG|BMIX_MAG}},
+{{TAG|AMIN}},
+{{TAG|MIXPRE}},
+{{TAG|WC}}
+
+{{sc|INIMIX|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Density mixing]]

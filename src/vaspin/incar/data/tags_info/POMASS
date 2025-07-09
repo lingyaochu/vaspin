@@ -1,0 +1,21 @@
+{{TAGDEF|POMASS|[real array]|values read from {{TAG|POTCAR}}}}
+
+Description: Array of masses of the atoms in atomic units.
+
+----
+
+{{TAG|POMASS}} determines the atomic mass of each atomic species. For standard calculations this tag should be omitted since the atomic masses for each species are read from the {{TAG|POTCAR}} file (they are also called {{TAG|POMASS}} there). However if one needs to change the atomic mass of some species, e.g., the mass of Hydrogen atoms in [[molecular dynamics]] calculations, the atomic masses of all species need to be set with this tag in the order they appear on the {{TAG|POTCAR}} file. After setting {{TAG|POMASS}} to different values in the {{TAG|INCAR}} file than on the {{TAG|POTCAR}} file the following message will occur on stdout when running VASP, informing the user that the mass has changed:
+
+<code>
+WARNING: mass on POTCAR and INCAR are incompatible.
+</code>
+
+If any incompatibilities exist, e.g. the number of entries doesn't agree with that on the {{TAG|POTCAR}}, VASP will stop.
+
+== Related tags and sections ==
+{{TAG|ZVAL}}
+
+{{sc|POMASS|Examples|Examples that use this tag}}
+
+
+[[Category:INCAR tag]][[Category:POTCAR tag]][[Category:Pseudopotentials]]

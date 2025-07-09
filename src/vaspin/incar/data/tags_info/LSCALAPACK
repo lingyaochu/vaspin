@@ -1,0 +1,24 @@
+{{TAGDEF|LSCALAPACK|[logical]}}
+{{DEF|LSCALAPACK|.TRUE.|if VASP is compiled with scaLAPACK support (precompiler flag -DscaLAPACK)|.FALSE.|otherwise}}
+
+Description: {{TAG|LSCALAPACK}} controls the use of scaLAPACK.
+
+----
+
+For {{TAG|LSCALAPACK}}=.TRUE., VASP uses scaLAPACK routines for the orthonormalization of the wave functions and subspace diagonalizations.
+
+The use of scaLAPACK for the LU decomposition in the orthonormalization of the wave functions may be independently switched off ({{TAG|LSCALU}}=.FALSE.).
+
+== Related tags and articles ==
+{{TAG|NPAR}},
+{{TAG|NCORE}},
+{{TAG|LPLANE}},
+{{TAG|NSIM}},
+{{TAG|KPAR}},
+{{TAG|LSCALU}},
+{{TAG|LSCAAWARE}}
+
+{{sc|LSCALAPACK|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Performance]][[Category:parallelization]]

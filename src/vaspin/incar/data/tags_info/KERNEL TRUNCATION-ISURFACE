@@ -1,0 +1,17 @@
+{{TAGDEF|KERNEL_TRUNCATION/ISURFACE| 1 {{!}} 2 {{!}} 3 }}
+
+Description: {{TAG|KERNEL_TRUNCATION/ISURFACE}} specifies the non-periodic dimension when performing calculations with 2D kernel truncation methods.
+----
+
+When performing 2D kernel truncation with {{TAG|KERNEL_TRUNCATION/IDIMENSIONALITY}}=2, {{TAG|KERNEL_TRUNCATION/ISURFACE}} specifies which direction is non-periodic.
+The most common use case is to set {{TAG|KERNEL_TRUNCATION/ISURFACE}} to the dimension along the surface normal.
+
+If the surface normal points in the direction of the x-axis {{TAG|KERNEL_TRUNCATION/ISURFACE}} = 1, if it is along the y-axis, {{TAG|KERNEL_TRUNCATION/ISURFACE}} = 2 and if it is along the z-axis, {{TAG|KERNEL_TRUNCATION/ISURFACE}} = 3.
+{{NB|mind|IF {{TAG|KERNEL_TRUNCATION/LTRUNCATE}} is switched off, all other KERNEL_TRUNCATION tags, i.e. {{TAG|KERNEL_TRUNCATION/IDIMENSIONALITY}}, {{TAG|KERNEL_TRUNCATION/LCOARSEN}}, and {{TAG|KERNEL_TRUNCATION/ISURFACE}} will be ignored.}}
+
+== Related tags and articles ==
+{{TAG|KERNEL_TRUNCATION/LTRUNCATE}},
+{{TAG|KERNEL_TRUNCATION/LCOARSEN}},
+{{TAG|KERNEL_TRUNCATION/IDIMENSIONALITY}}
+
+[[Category:INCAR tag]][[Category:Electrostatics]]

@@ -1,0 +1,17 @@
+{{DISPLAYTITLE:NCORE_IN_IMAGE1}}{{TAGDEF|NCORE_IN_IMAGE1|[integer]|0}}
+
+Description: This tag specifies the number of cores in the first image.
+
+----
+
+This tag works for two images, specifically, if {{TAG|VCAIMAGES}} is set (this also sets {{TAG|IMAGES}}=2).
+{{TAG|VCAIMAGES}} splits the available cores into two groups both working independently in the subdirectories
+01 and 02.
+The tag {{TAG|NCORE_IN_IMAGE1}} defines how many of cores are used for the first image (01). The remainder of the cores is used for the second image (working in the subdirectory 02).
+
+== Related tags and articles ==
+{{TAG|VCAIMAGES}}, {{TAG|IMAGES}}, {{TAG|SCALEE}}
+
+----
+
+[[Category:INCAR tag]][[Category:Advanced molecular-dynamics sampling]][[Category:Parallelization]]

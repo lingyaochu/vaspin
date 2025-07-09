@@ -1,0 +1,28 @@
+{{DISPLAYTITLE:ELPH_SELFEN_IKPT}}
+{{TAGDEF|ELPH_SELFEN_IKPT|[real array]|All k-points}}
+
+Description: Compute the electron self-energy due to electron-phonon for a list of k-points specified by their index in the irreducible Brillouin zone generated from {{FILE|KPOINTS_ELPH}}.
+{{Available|6.5.0}}
+
+----
+
+For example, to select to compute for 4 different <b>k</b> points we specify their index in the {{FILE|INCAR}} file
+
+ {{TAGBL|ELPH_SELFEN_IKPT}} = 1 3 6 8
+
+This tag can be used in combination with
+{{TAG|ELPH_SELFEN_BAND_START}} and {{TAG|ELPH_SELFEN_BAND_STOP}} to select the calculation of the electron-phonon self-energy for a particular set of <b>k</b> points and bands.
+Instead of specifying the indexes of the <b>k</b> points in the irreducible Brillouin zone, one can specify their reduced coordinates with {{TAG|ELPH_SELFEN_KPTS}}.
+
+Instead of specifying the index of the <b>k</b> point appearing the in irreducible Brillouin zone, one can specify the reduced coordinates of the desired k-points using {{TAG|ELPH_SELFEN_KPTS}}.
+
+==Related tags and articles==
+* {{TAG|ELPH_RUN}}
+* {{FILE|KPOINTS_ELPH}}
+* {{TAG|ELPH_SELFEN_GAPS}}
+* {{TAG|ELPH_SELFEN_BAND_START}}
+* {{TAG|ELPH_SELFEN_BAND_STOP}}
+* {{TAG|ELPH_SELFEN_KPTS}}
+
+
+[[Category:INCAR tag]][[Category:Electron-phonon_interactions]]

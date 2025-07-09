@@ -1,0 +1,20 @@
+{{TAGDEF|NLSPLINE|.TRUE. {{!}} .FALSE. | .FALSE.}}
+
+Description: construct the PAW projectors in reciprocal space using spline interpolation so that they are ''k''-differentiable.
+----
+For {{TAG|NLSPLINE}}=.TRUE., the PAW projectors in reciprocal space ({{TAG|LREAL}}=.FALSE.) are set up using a spline interpolation so that they are ''k'' differentiable. This improves the susceptibility contribution to the chemical shifts. It only slightly affects the other contributions to the chemical shifts.
+
+It is advised to set {{TAG|NLSPLINE}}=.TRUE. if and only if PAW projectors are applied in reciprocal space and chemical shifts are calculated, i.e., if and only if {{TAG|LREAL}}=.FALSE. and {{TAG|LCHIMAG}}=.TRUE. As this option also gives slightly different total energies, it is advised to use the default {{TAG|NLSPLINE}}=.FALSE. in all other calculations for reasons of compatibility.
+
+Real-space projectors are ''k'' differentiable by construction, hence do not require to set {{TAG|NLSPLINE}}=.TRUE.
+
+== Related tags and articles ==
+{{TAG|LCHIMAG}},
+{{TAG|DQ}},
+{{TAG|ICHIBARE}},
+{{TAG|LNMR_SYM_RED}}
+
+{{sc|NLSPLINE|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Projector-augmented-wave method]][[Category:Crystal momentum]]

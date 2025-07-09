@@ -1,0 +1,30 @@
+{{TAGDEF|NBSEBLOCKV|[integer]}}
+{{DEF|NBSEBLOCKV|-1|}}
+
+Description: {{TAG|NBSEBLOCKV}} specifies the blocking factor for the unoccupied states when setting up the BSE Hamiltonian.
+----
+By default, the construction of the BSE Hamiltonian in VASP is parallelized over '''k'''-points, such that each MPI rank can compute a pair of '''k'''-points. This way the BSE Hamiltonian setup can be parallelized with
+::<math>\text{total ranks}=\mathrm{NKPTS\times(NKPTS+1)/2}</math>
+or for spin-polarized case
+::<math>\text{total ranks}=\mathrm{NKPTS\times 2\times(NKPTS\times 2+1)/2}</math>,
+
+where <math>\mathrm{NKPTS}</math> is the total number of '''k'''-points in the full Brillouin zone. However, if a large number of MPI ranks is used in a calculation with too few '''k'''-point, this leads to load imbalance, where some of the MPI ranks will have no data to compute. In such cases, it is recommended to use parallelization over bands. If the parallelization over bands is used, all occupied (unoccupied) bands are divided into
+::<math>\mathrm{NBLKO=NBANDSO/NBSEBLOCKO}</math>
+and
+::<math>\mathrm{NBLKV=NBANDSV/NBSEBLOCKV}</math>
+blocks, respectively.
+
+Such a band blocking allows VASP to parallelize the setup of the matrix with
+::<math>\text{total ranks}=\mathrm{NBLKO\times NBLKV\times NKPTS\times (NBLKO\times NBLKV\times NKPTS+1)/2}</math>
+or for spin-polarized case
+::<math>\text{total ranks}=\mathrm{NBLKO\times NBLKV\times NKPTS\times 2\times (NBLKO\times NBLKV\times NKPTS\times 2+1)/2}</math>
+
+If neither <math>\mathrm{NBSEBLOCKV}</math> nor <math>\mathrm{NBSEBLOCKO}</math> is specified, no paralliziation over bands is used and <math>\mathrm{NBLKO=1}</math> and <math>\mathrm{NBLKV=1}</math>.
+{{NB|mind|Parallelization over bands with {{TAG|NBSEBLOCKV}} does not work with the old BSE driver, i.e., {{TAG|IBSE}}{{=}}0}}
+
+We recommend using parallelization over bands only if the number of MPI ranks in the calculation exceeds <math>\text{total ranks}</math>.
+{{NB|mind|The {{TAG|NBSEBLOCKV}} and {{TAG|NBSEBLOCKO}} tags are available as of VASP.6.5.0}}
+== Related tags and sections ==
+{{TAG|BSE}}, {{TAG|NBSEBLOCKO}}, [[BSE calculations]], [[TDDFT calculations]]
+----
+[[Category:INCAR tag]][[Category:Bethe-Salpeter_equations]][[Category:Many-body perturbation theory]]

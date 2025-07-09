@@ -1,0 +1,21 @@
+{{TAGDEF|IGPAR|1 {{!}} 2 {{!}} 3}}
+
+Description: This tag specifies the socalled parallel or <math>\bold{G}_{\parallel}</math> direction in the integration over the reciprocal space unit cell needed for {{TAG|LCALCPOL}}.
+
+----
+
+== Related tags and articles ==
+{{TAG|LCALCPOL}},
+{{TAG|LCALCEPS}},
+{{TAG|EFIELD_PEAD}},
+{{TAG|LPEAD}},
+{{TAG|IPEAD}},
+{{TAG|LBERRY}},
+{{TAG|NPPSTR}},
+{{TAG|DIPOL}},
+[[Berry_phases_and_finite_electric_fields|Berry phases and finite electric fields]]
+
+{{sc|IGPAR|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Linear response]][[Category:Dielectric properties]][[Category:Berry phases]]

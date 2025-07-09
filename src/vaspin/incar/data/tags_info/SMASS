@@ -1,0 +1,35 @@
+{{TAGDEF|SMASS|-3 {{!}} -2 {{!}} -1 {{!}} [real] &ge; 0|-3}}
+
+Description: {{TAG|SMASS}} controls the velocities during an ab-initio molecular-dynamics run.
+----
+* {{TAG|SMASS}}=-3
+:For {{TAG|SMASS}}=-3 a microcanonical ensemble ([[NVE ensemble]]) is simulated (constant energy molecular dynamics). The calculated Hellmann-Feynman forces serve as an acceleration acting onto the ions. The total free energy (i.e. free electronic energy + Madelung energy of ions + kinetic energy of ions) is conserved. {{NB|tip|To calculate an [[NVE ensemble]] we instead recommend to use {{TAGO|MDALGO|1}} and {{TAGO|ANDERSEN_PROB|0.0}}.|:}}
+
+* {{TAG|SMASS}}=-2
+:For {{TAG|SMASS}}=-2 the initial velocities are kept constant. This allows to calculate the energy for a set of different linear dependent positions (for instance frozen phonons, or dimers with varying bond lengths).
+:'''Mind''': if {{TAG|SMASS}}=-2 the actual steps taken are {{TAG|POTIM}}&times;(velocities-read-from-the-{{FILE|POSCAR}}-file). To avoid ambiguities, set {{TAG|POTIM}}=1.
+
+* {{TAG|SMASS}}=-1
+:In this case the velocities are scaled each {{TAG|NBLOCK}} step (starting at the first step i.e. MOD(NSTEP,{{TAG|NBLOCK}})=1) to the temperature: T={{TAG|TEBEG}}+({{TAG|TEEND}}-{{TAG|TEBEG}})&times;NSTEP/{{TAG|NSW}},
+:where NSTEP is the current step (starting from 1). This allows a continuous increase or decrease of the kinetic energy. In the intermediate period, a micro-canonical ensemble is simulated.
+
+* {{TAG|SMASS}}&ge;0
+:For {{TAG|SMASS}}&ge;0, a canonical ensemble is simulated using the algorithm of Nosé. The Nosé mass controls the frequency of the temperature oscillations during the simulation.{{cite|nose:jcp:1984}}{{cite|nose:ptp:1991}}{{cite|bylander:prb:1992}} For {{TAG|SMASS}}=0, a Nosé-mass corresponding to period of 40 time steps will be chosen. The Nosé-mass should be set such that the induced temperature fluctuation show approximately the same frequencies as the typical 'phonon'-frequencies for the specific system. For liquids something like 'phonon'-frequencies might be obtained from the spectrum of the velocity auto-correlation function. If the ionic frequencies differ by an order of magnitude from the frequencies of the induced temperature fluctuations, Nosé thermostat and ionic movement might decouple leading to a non-canonical ensemble. The frequency of the approximate temperature fluctuations induced by the Nosé-thermostat is written to the {{FILE|OUTCAR}} file.
+
+== Related tags and articles ==
+[[structure optimization]],
+{{TAG|IBRION}},
+{{TAG|POTIM}},
+{{TAG|NBLOCK}},
+{{TAG|TEBEG}},
+{{TAG|TEEND}}
+
+{{sc|SMASS|Examples|Examples that use this tag}}
+
+== References ==
+<references/>
+
+<noinclude>
+----
+
+[[Category:INCAR tag]][[Category:Molecular dynamics]][[Category:Thermostats]]

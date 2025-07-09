@@ -1,0 +1,19 @@
+{{not released}}
+
+The {{FILE|POSNICS}} file is an input file that defines the positions to calculate the NMR nucleus-independent chemical shielding (NICS). If it is present in the directory running the job, it will be used by default, though it can be made explicit using {{TAGO|LPOSNICS|True}}. The first line defines the number of NICS positions, followed by the positions of the NICS in direct coordinates, i.e., as fractions of the lattice parameters <math>{\vec a}_1, {\vec a}_2</math> and <math>{\vec a}_3</math>:
+<pre>
+10000
+0.0 0.0 0.5
+0.0 0.01 0.5
+0.0 0.02 0.5
+...
+0.99 0.97 0.5
+0.99 0.98 0.5
+0.99 0.99 0.5
+</pre>
+
+== Related tags and articles ==
+
+{{TAG|LCHIMAG}}, {{FILE|NUCIND}}, {{TAG|LPOSNICS}}
+
+[[Category:INCAR tag]][[Category:NMR]]

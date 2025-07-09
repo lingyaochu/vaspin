@@ -1,0 +1,15 @@
+{{DISPLAYTITLE:VDW_ALPHA}}
+{{TAGDEF|VDW_ALPHA|[real (array)]}}
+
+Description: {{TAG|VDW_ALPHA}} defines the polarizability <math>\alpha_{0}</math> (bohr<math>^{3}</math>) for each species defined in the {{TAG|POSCAR}} file.
+----
+{{TAG|VDW_ALPHA}} sets the polarizability <math>\alpha_{0}</math> (bohr<math>^{3}</math>) for each species defined in the {{TAG|POSCAR}} file for the [[Tkatchenko-Scheffler_method|Tkatchenko-Scheffler]] and [[Many-body dispersion energy|Many-body dispersion energy]] methods.
+
+== Related tags and articles ==
+[[Tkatchenko-Scheffler_method|Tkatchenko-Scheffler method]],
+[[Many-body dispersion energy|Many-body dispersion energy]]
+
+{{sc|VDW_ALPHA|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:van der Waals functionals]]

@@ -1,0 +1,86 @@
+{{DISPLAYTITLE:NUCIND}}
+{{TAGDEF|NUCIND|.TRUE. {{!}} .FALSE. | .FALSE. }}
+
+Description: Allows the nucleus-independent chemical shielding (NICS) to be calculated.
+
+----
+
+{{not released}}
+
+In conjunction with {{TAGO|LCHIMAG|True}}, {{TAG|NUCIND}} calculates the chemical shielding tensor <math>\sigma_{ij}(\mathbf{R})</math> at positions <math>\textbf{R}</math> off-nucleus, hence nucleus-independent chemical shielding (NICS) {{Cite|schleyer:1996}}{{Cite|chen:schleyer:2005}}. VASP calculates only from the plane wave
+grid, there is no one-center augmentation.
+
+When {{TAGO|NUCIND|True}}, by default these are calculated on the fine FFT grid {{TAG|NGXF}} x {{TAG|NGYF}} x {{TAG|NGZF}} in ppm. The output is written to {{FILE|NICS}}.
+
+It is also written to {{FILE|vaspout.h5}}, if compiled with [[Makefile.include#Customize|HDF5 support]]. You can find the data groups:
+<pre>
+/results/nics            Group
+/results/nics/grid       Dataset {3}
+/results/nics/structure  Group
+/results/nics/structure/position Group
+/results/nics/structure/position/direct_coordinates Dataset {SCALAR}
+/results/nics/structure/position/ion_sha256 Dataset {2}
+/results/nics/structure/position/ion_types Dataset {2}
+/results/nics/structure/position/lattice_vectors Dataset {3, 3}
+/results/nics/structure/position/number_ion_types Dataset {2}
+/results/nics/structure/position/position_ions Dataset {8, 3}
+/results/nics/structure/position/scale Dataset {SCALAR}
+/results/nics/structure/position/system Dataset {SCALAR}
+/results/nics/values     Dataset {9, 108, 108, 108}
+</pre>
+
+and use {{py4vasp}} to access these, e.g., using
+<syntaxhighlight lang="python">
+import py4vasp as pv
+calc = pv.Calculation.from_path(".")
+calc.nics.plot()
+</syntaxhighlight>
+to select the isotropic chemical shielding <math>\sigma_{iso}</math> in 3D space {{Cite|klod:kleinpeter:2001}}{{Cite|kleinpeter:klod:koch:2007}}. It will produce an isosurface of the shielding (positive) and deshielding (negative) over the crystal structure.
+
+Alternatively, produce a 2D contour plot of the NICS in a plane {{Cite|karadakov:horner:2013}}:
+<syntaxhighlight lang="python">
+import py4vasp as pv
+calc = pv.Calculation.from_path(".")
+calc.nics.to_contour(a=0.5)
+</syntaxhighlight>
+It will result in a contour plot showing the isotropic chemical shielding <math>\sigma_{iso}</math> in the selected plane. The plane is selected as a fraction <code>x</code> of the lattice vector. Here, <code>x=0.5</code> corresponds to half of the primary lattice vector <math>\mathbf{a}</math>. For the other lattice vectors use <code>b=x</code> or <code>c=x</code>.
+
+For both the 2D and 3D plots, the isotropic chemical shielding is used by default. You can alternatively select the other properties (see {{TAG|LCHIMAG}} for details. Herzfeld-Berger convention is followed {{Cite|mason:ssn:1993}}) by inputting them as arguments into the functions, e.g., <code>calc.nics.plot("anisotropic")</code> or <code>calc.nics.to_contour("span", a=0.5)</code>:
+
+* <code>"isotropic"</code> (default) - plot the isotropic chemical shielding <math>\sigma_{iso}</math>
+* <code>"anisotropic"</code> - plot the anisotropic chemical shielding <math>\sigma_{ani}</math>
+* <code>"span"</code> - plots the span <math>\Omega</math>
+* <code>"skew"</code> - plot the skew <math>\kappa</math>
+
+== POSNICS ==
+
+Alternatively, if the {{FILE|POSNICS}} file is present, then the positions defined within that file will be used. The calculation takes longer as each point is calculated in serial and not in parallel as for the grid. However, there is far greater flexibility for defining physically relevant positions, e.g., hydrogen bonds, close to nuclei, or chemical bonds. These chemical shielding tensors are printed in the {{FILE|OUTCAR}} file as follows, e.g., for the 100th NICS point:
+<pre>
+ nics 100
+          1.187143         -0.003408         -0.000000
+         -0.002977         -1.893648         -0.000000
+         -0.000000         -0.000000         -0.326272
+</pre>
+
+It is also written to {{FILE|vaspout.h5}}, if compiled with [[Makefile.include#Customize|HDF5 support]]. You can find the data groups:
+<pre>
+/results/posnics         Group
+/results/posnics/label   Dataset {SCALAR}
+/results/posnics/positions Dataset {3, 10000}
+/results/posnics/values  Dataset {10000, 3, 3}
+</pre>
+
+and use {{py4vasp}} to access these, e.g., using
+<syntaxhighlight lang="python">
+import py4vasp as pv
+calc = pv.Calculation.from_path(".")
+calc.nics.read()
+</syntaxhighlight>
+to read the NICS values for the positions defined in {{FILE|POSNICS}}. Since the grid is not necessarily regular, you will need to plot these yourself.
+
+== Related tags and articles ==
+{{TAG|LCHIMAG}}, {{FILE|NICS}}, {{TAG|LNICSALL}}, {{TAG|LPOSNICS}}, {{TAG|POSNICS}}
+
+== References ==
+
+[[Category:INCAR tag]][[Category:NMR]]

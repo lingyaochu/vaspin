@@ -1,0 +1,68 @@
+{{TAGDEF|IVDW|1 {{!}} 11 {{!}} 12 {{!}} 2 {{!}} 21 {{!}} ...|0 (no correction)}}
+
+Description: {{TAG|IVDW}} specifies a vdW dispersion term of the atom-pairwise or many-body type.
+----
+
+== Available vdW atom-pairwise and many-body methods ==
+
+With all methods listed below, a dispersion correction is added to the total energy, but also to the atomic forces and stress tensor, such that lattice relaxations, molecular dynamics, and vibrational analysis (via finite differences) can be performed. Note, however, that these correction schemes are currently not available for phonon calculations based on [[Phonons:_Theory#Density_functional_perturbation_theory|density functional perturbation theory]].
+
+{| class="wikitable"
+|-
+! style="text-align:center;" style=width:4em | IVDW= !! style="text-align:center;" style=width:12em | Type !! class="unsortable" | Description
+
+|-
+| style="text-align:center;"| 1 or 10 || style="text-align:center;" | pairwise || {{TAG|DFT-D2}} method of Grimme.{{cite|grimme:jcc:06}} Available as of VASP.5.2.11.
+
+|-
+| style="text-align:center;"| 11 || style="text-align:center;" | pairwise || {{TAG|DFT-D3}} method of Grimme with zero-damping function.{{cite|grimme:jcp:10}} Available as of VASP.5.3.4.
+
+|-
+| style="text-align:center;"| 12 || style="text-align:center;" | pairwise || {{TAG|DFT-D3}} method with Becke-Johnson damping function.{{cite|grimme:jcc:11}} Available as of VASP.5.3.4.
+
+|-
+| style="text-align:center;"| 13 || style="text-align:center;" | pairwise || [[DFT-D4]] method.{{cite|caldeweyher:jcp:2019}} Available as of VASP.6.2 as [[Makefile.include#DFT-D4_.28optional.29|external package]].
+
+|-
+| style="text-align:center;"| 3 || style="text-align:center;" | pairwise || {{TAG|DFT-ulg}}{{cite|kim:jpcl:2012}} method. Available as of VASP.5.3.5.
+
+|-
+| style="text-align:center;"| 4 || style="text-align:center;" | pairwise || {{TAG|dDsC dispersion correction}}{{cite|steinmann:jcp:11}}{{cite|steinmann:jctc:11}} method. Available as of VASP.5.4.1.
+
+|-
+| style="text-align:center;"| 2 or 20 || style="text-align:center;" | pairwise || {{TAG|Tkatchenko-Scheffler method}}.{{cite|tkatchenko:prl:09}} Available as of VASP.5.3.3.
+
+|-
+| style="text-align:center;"| 21 || style="text-align:center;" | pairwise || {{TAG|Tkatchenko-Scheffler method with iterative Hirshfeld partitioning}}.{{cite|bucko:jctc:13}}{{cite|bucko:jcp:14}} Available as of VASP.5.3.5.
+
+|-
+| style="text-align:center;"| 202 || style="text-align:center;" | many-body || {{TAG|Many-body dispersion energy}} method (MBD@rsSCS).{{cite|tkatchenko:prl:12}}{{cite|ambrosetti:jcp:14}} Available as of VASP.5.4.1.
+
+|-
+| style="text-align:center;"| 263 || style="text-align:center;" | many-body || {{TAG|Many-body dispersion energy with fractionally ionic model for polarizability}} method (MBD@rSC/FI).{{cite|gould:jctc:2016_a}}{{cite|gould:jctc:2016_b}} Available as of VASP.6.1.0.
+
+|-
+| style="text-align:center;"| 14 || style="text-align:center;" | pairwise and many-body || One of the methods available in the [[LIBMBD_METHOD|Library libMBD of many-body dispersion methods]].{{cite|libmbd_1}}{{cite|libmbd_2}}{{cite|hermann:jcp:2023}} Available as of VASP.6.4.3 as [[Makefile.include#libMBD_.28optional.29|external package]].
+
+|}
+{{NB|mind|
+*The [[LIBMBD_METHOD|libMBD]] implementations ({{TAG|IVDW}}{{=}}14) of the Tkatchenko-Scheffler methods and their MBD extensions are much faster (analytical calculation of the forces) than the VASP implementations (numerical calculation of the forces). Therefore, it is strongly recommended to use the [[LIBMBD_METHOD|libMBD]] implementation if available.
+*The parameter {{TAG|LVDW}} used in previous versions of VASP (5.2.11 and later) to activate the {{TAG|DFT-D2}} method is now obsolete. If {{TAG|LVDW}}{{=}}''.TRUE.'' is defined, {{TAG|IVDW}} is automatically set to 1 (unless {{TAG|IVDW}} is specified in {{FILE|INCAR}}).}}
+
+== Related tags and articles ==
+{{TAG|DFT-D2}}, {{TAG|DFT-D3}}, [[DFT-D4]],
+{{TAG|Tkatchenko-Scheffler method}},
+{{TAG|Self-consistent screening in Tkatchenko-Scheffler method}},
+{{TAG|Tkatchenko-Scheffler method with iterative Hirshfeld partitioning}},
+{{TAG|Many-body dispersion energy}},
+{{TAG|Many-body dispersion energy with fractionally ionic model for polarizability}},
+{{TAG|DFT-ulg}},
+{{TAG|dDsC dispersion correction}},
+{{TAG|LIBMBD_METHOD}}
+
+See also the alternative vdW-DF functionals: {{TAG|LUSE_VDW}}, {{TAG|Nonlocal vdW-DF functionals}}.
+
+{{sc|IVDW|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category: van der Waals functionals]]

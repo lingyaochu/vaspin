@@ -1,0 +1,29 @@
+{{DISPLAYTITLE:ELPH_SELFEN_GAPS}}
+{{TAGDEF|ELPH_SELFEN_GAPS|[logical]|.false.}}
+
+Description: Find the direct and indirect gaps and the valence and conduction Kohn-Sham states that form it and select to compute their self-energy due to electron-phonon coupling.
+{{Available|6.5.0}}
+
+----
+This tag additionally activates the reporting of the value of the band-gap renormalization to the standard output, the {{FILE|OUTCAR}} file
+
+  $ grep -A7 'KS-QP gap (meV)' OUTCAR
+
+and the {{FILE|vaspout.h5}} file under
+
+  $ h5ls -r vaspout.h5 | grep gap_renorm
+  /results/electron_phonon/electrons/self_energy_1/direct_gap_renorm
+  /results/electron_phonon/electrons/self_energy_1/fundamental_gap_renorm`
+
+This output is reported once for each [[Electron-phonon_accumulators | electron-phonon accumulator]].
+
+If instead, the computation of the self-energy for a particular set of states is desired, those can be manually specified using a combination of {{TAG|ELPH_SELFEN_KPTS}}, {{TAG|ELPH_SELFEN_IKPT}}, {{TAG|ELPH_SELFEN_BAND_START}} and {{TAG|ELPH_SELFEN_BAND_STOP}}.
+
+==Related tags and articles==
+* [[Bandgap renormalization due to electron-phonon coupling|Bandstructure renormalization]]
+* [[Electron-phonon accumulators]]
+* {{TAG|ELPH_RUN}}
+* {{TAG|ELPH_SELFEN_BAND_START}}
+* {{TAG|ELPH_SELFEN_BAND_STOP}}
+
+[[Category:INCAR tag]][[Category:Electron-phonon_interactions]]

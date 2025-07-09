@@ -1,0 +1,30 @@
+{{DISPLAYTITLE:ML_IAFILT2}}
+{{TAGDEF|ML_IAFILT2|[integer]|2}}
+
+Description: This tag specifies the type of angular filtering used in the machine learning force field method.
+----
+[[File:Angular filtering MLFF cropped.png|400px|thumb|Fig. 1: Square of filtering function.]]
+
+This tag is only used if {{TAG|ML_LAFILT2}}=''.TRUE.'' is set.
+
+Following cases are possible for the angular filtering function <math>\eta</math> (see also [[On-the-fly machine learning force field generation using Bayesian linear regression#Basis set expansion|here]]):
+*{{TAG|ML_IAFILT2}}=1: The angular filtering function is described as <math>\eta_{l}=\frac{1}{(2l+1)^{1/4}}</math>.
+*{{TAG|ML_IAFILT2}}=2: The angular filtering function{{cite|boyd:book:2000}} is described as <math>\eta_{l,a_{\mathrm{FILT}}}=\frac{1}{1+a_{\mathrm{FILT}} [l (l+1)]^{2}} </math>. Using this function the parameter <math>a_{\mathrm{FILT}}</math> has to be defined too. It is set in the {{TAG|INCAR}} file by setting {{TAG|ML_AFILT2}}. This option is the default.
+
+In the case of the angular descriptor two radial basis functions are multiplied by each other (see [[On-the-fly machine learning force field generation using Bayesian linear regression#Basis set expansion|here]]). Both basis functions use the same filtering function and hence the filtering is done by the square of the filtering function. This is plotted in Fig. 1 for the two different functions used for {{TAG|ML_IAFILT2}}=1 and 2 (labeled as TYPE1 and TYPE2, respectively). In the case of {{TAG|ML_IAFILT2}}=2 it can be seen that for the filtering parameter {{TAG|ML_AFILT2}}=0.002 and <math>l</math>=5 the function has only a contribution of 0.15. Using this filtering parameter the maximum cut-off for the angular quantum number can be reduced to {{TAG|ML_LMAX2}}=4.
+
+
+
+
+
+== References ==
+<references/>
+<noinclude>
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_LAFILT2}}, {{TAG|ML_AFILT2}}
+
+{{sc|ML_IAFILT2|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

@@ -1,0 +1,24 @@
+{{TAGDEF|LPARDH5|[logical]|.FALSE.}}
+
+Description: {{TAG|LPARDH5}} determines whether the partial charges are written to {{FILE|PARCHG}} or {{FILE|vaspout.h5}}.
+{{Available|6.5.0}}
+----
+[[Band-decomposed charge densities|Partial charges]] can be calculated as a postprocessing step when {{TAG|LPARD}} = .TRUE.. The output is written to one or several {{FILE|PARCHG}} files if {{TAG|LPARDH5}}=.FALSE., and to {{FILE|vaspout.h5}} if {{TAG|LPARDH5}}=.TRUE.. If {{TAG|NBMOD}} = -1, the setting of {{TAG|LPARD}} is irrelevant. Instead of a {{FILE|PARCHG}} file, or a partial_charges group in the {{FILE|vaspout.h5}} hdf5 file, a {{FILE|CHGCAR}} file ''without'' augmentation charges will be written.
+
+If the output is redirected to {{FILE|vaspout.h5}}, {{py4vasp}} can be used to analyze the partial charge density and to simulate STM pictures.
+== Related tags and articles ==
+{{TAG|LPARD}},
+{{TAG|LWAVEH5}},
+{{TAG|LCHARGH5}},
+{{TAG|IBAND}},
+{{TAG|EINT}},
+{{TAG|NBMOD}},
+{{TAG|KPUSE}},
+{{TAG|LSEPB}},
+{{TAG|LSEPK}},
+{{FILE|PARCHG}},
+[[band-decomposed charge densities]]
+
+{{sc|LPARDH5|Examples|Examples that use this tag}}
+----
+[[Category:INCAR tag]][[Category:Charge density]]

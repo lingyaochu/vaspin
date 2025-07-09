@@ -1,0 +1,28 @@
+{{DISPLAYTITLE:CUTOFF_MU}}
+{{TAGDEF|CUTOFF_MU| [real] ( [real] )}}
+{{DEF|CUTOFF_MU| 0.8 * Fermi level of a system with {{TAG|NUM_WANN}} orbitals occupied|}}
+
+Description: {{TAG|CUTOFF_MU}} specifies the energy cutoff <math>\mu</math> in eV for the function specified by {{TAG|CUTOFF_MU}}.
+
+----
+
+The value <math>\mu</math> of {{TAG|CUTOFF_MU}} corresponds to the energy cutoff of the cutoff function used to obtain Wannier functions with the
+[[Wannier_functions#One-shot_single_value_decomposition (SVD)| one-shot method]].
+The meaning of <math>\mu</math> depends on the {{TAG|CUTOFF_TYPE}} tag.
+
+For spin-polarized calculations ({{TAGO|ISPIN|2}}), two values can be specified for {{TAG|CUTOFF_MU}}, one for each spin channel.
+If only a single value is specified, it will be used for both spin channels.
+
+The default value is computed by first determining the Fermi level
+of the system if it had {{TAG|NUM_WANN}} orbitals occupied and multiplying by 0.8. This gives reasonable freedom to determine the unitary transformation <math>U_{mn\mathbf{k}}</math> from Bloch states to Wannier functions.
+{{NB|tip|Careful tuning of this parameter is required to obtain a good Wannierization.}}
+
+== Related tags and articles==
+{{TAG|CUTOFF_TYPE}},
+{{TAG|CUTOFF_SIGMA}},
+{{TAG|LSCDM}},
+{{TAG|LOCPROJ}}
+
+{{sc|CUTOFF_MU|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Wannier functions]]

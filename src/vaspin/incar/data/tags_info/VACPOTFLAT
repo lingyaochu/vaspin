@@ -1,0 +1,17 @@
+{{TAGDEF|VACPOTFLAT|[real]|0.1}}
+
+Description: Maximum permissible 2D-averaged electric field for a region considered to be field-free in eV/Å.
+----
+
+A region of space is considered to be field-free if the 2D-averaged electric field ({{TAG|LVACPOTAV}}=True) is smaller than {{TAG|VACPOTFLAT}}.
+{{NB|tip| Increase {{TAG|VACPOTFLAT}} for a quick estimation of the vacuum potential and decrease for a precise value. If the cell is large and {{TAG|EDIFF}} small, the final result of {{TAG|LVACPOTAV}} should be independent of {{TAG|VACPOTFLAT}}.}}
+== Related tags and articles ==
+{{TAG|LVACPOTAV}},
+{{TAG|LVTOT}},
+{{TAG|LVHAR}},
+{{TAG|WRT_POTENTIAL}},
+{{TAG|DIPOL}},
+{{TAG|LDIPOL}},
+{{TAG|IDIPOL}}
+
+[[Category:INCAR tag]][[Category:Electrostatics]]

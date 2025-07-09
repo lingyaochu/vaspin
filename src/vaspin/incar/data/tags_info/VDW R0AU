@@ -1,0 +1,16 @@
+{{DISPLAYTITLE:VDW_R0AU}}
+{{TAGDEF|VDW_R0AU|[real (array)]}}
+
+Description: {{TAG|VDW_R0AU}} defines the <math>R_0</math> parameters (bohr) for each species defined in the {{TAG|POSCAR}} file.
+----
+{{TAG|VDW_R0AU}} sets the <math>R_0</math> parameters (bohr) for each species defined in the {{TAG|POSCAR}} file for the [[Tkatchenko-Scheffler_method|Tkatchenko-Scheffler]] and [[Many-body dispersion energy|Many-body dispersion energy]] methods.
+
+== Related tags and articles ==
+{{TAG|VDW_R0}},
+[[Tkatchenko-Scheffler_method|Tkatchenko-Scheffler method]],
+[[Many-body dispersion energy|Many-body dispersion energy]]
+
+{{sc|VDW_R0AU|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:van der Waals functionals]]

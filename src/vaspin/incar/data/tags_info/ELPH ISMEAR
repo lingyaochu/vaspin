@@ -1,0 +1,37 @@
+{{DISPLAYTITLE:ELPH_ISMEAR}}
+{{TAGDEF|ELPH_ISMEAR|-15 {{!}} -14 {{!}} -5 {{!}} -4 {{!}} -1 {{!}} 0 {{!}} [integer]>0 |0}}
+
+Description: Chooses the smearing method to determine the fermi level and chemical potential before an electron-phonon calculation.
+{{Available|6.5.0}}
+
+----
+
+{{TAG|ELPH_ISMEAR}} is very similar to {{TAG|ISMEAR}}.
+The difference is that {{TAG|ELPH_ISMEAR}} is used to determine the chemical potential in the context of electron-phonon calculation.
+The Kohn-Sham states for which to calculate the chemical potential correspond to the <b>k</b>-point grid specified via the {{FILE|KPOINTS_ELPH}} file.
+
+The chemical potential is determined for the list of temperatures {{TAG|ELPH_SELFEN_TEMPS}} and carrier concentrations specified by
+{{TAG|ELPH_SELFEN_CARRIER_DEN}} or {{TAG|ELPH_SELFEN_CARRIER_PER_CELL}}. Alternatively, one can specify the chemical potential and determine the carrier concentration using {{TAG|ELPH_SELFEN_MU}}.
+
+== Tag options ==
+;{{TAGO|ELPH_ISMEAR|1|op=>}}
+:Method of Methfessel-Paxton of order {{TAG|ELPH_ISMEAR}} (for details see {{TAG|ISMEAR}})
+;{{TAGO|ELPH_ISMEAR|0}}
+:Gaussian smearing (for details see {{TAG|ISMEAR}})
+;{{TAGO|ELPH_ISMEAR|-1}}
+:Fermi-Dirac smearing (for details see {{TAG|ISMEAR}})
+;{{TAGO|ELPH_ISMEAR|-4}}
+:Tetrahedron method (zero temperature) (for details see {{TAG|ISMEAR}})
+;{{TAGO|ELPH_ISMEAR|-5}}
+:Tetrahedron method (zero temperature) with Blöchl corrections (for details see {{TAG|ISMEAR}})
+;{{TAGO|ELPH_ISMEAR|-14}}
+:Tetrahedron method (finite temperature)
+;{{TAGO|ELPH_ISMEAR|-15}}
+:Tetrahedron method (finite temperature) with Blöchl corrections
+
+==Related tags and articles==
+* {{TAG | ISMEAR}}
+* {{TAG | ELPH_SELFEN_MU}}
+* {{FILE | KPOINTS_ELPH}}
+
+[[Category:INCAR tag]][[Category:Electron-phonon_interactions]]

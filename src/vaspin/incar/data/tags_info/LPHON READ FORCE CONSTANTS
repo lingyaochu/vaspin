@@ -1,0 +1,26 @@
+{{DISPLAYTITLE:LPHON_READ_FORCE_CONSTANTS}}
+{{TAGDEF|LPHON_READ_FORCE_CONSTANTS|.TRUE. {{!}} .FALSE. }}
+{{DEF|LPHON_READ_FORCE_CONSTANTS|.FALSE.|}}
+
+Description: {{TAG|LPHON_READ_FORCE_CONSTANTS}} read the force constants from a vaspin.h5 file containing the force constants computed with a previous VASP run.
+
+----
+
+After the computation of the force constants using finite-differences ({{TAG|IBRION}}=5,6) or density-functional perturbation theory ({{TAG|IBRION}}=7,8) on a supercell the force constants are written to the vaspout.h5 file.
+To plot the phonon dispersion on a different path the user can modify the {{FILE|QPOINTS}} file and read the force constants computed previously (i.e. without performing the finite-differences computations on supercells again).
+To do so copy vaspout.h5 to vaspin.h5 and set {{TAG|LPHON_READ_FORCE_CONSTANTS}}=.TRUE. in the {{FILE|INCAR}} file.
+Note that when this is set only the phonon dispersion is performed and then VASP quits without running any additional calculation specified in the {{TAG|INCAR}} file.
+{{NB|mind| Only available as of VASP 6.4.0.}}
+
+==Related tags and articles==
+{{FILE| QPOINTS}},
+{{TAG | LPHON_DISPERSION}},
+{{TAG | PHON_NWRITE}},
+{{TAG | LPHON_POLAR}},
+{{TAG | PHON_DIELECTRIC}},
+{{TAG | PHON_BORN_CHARGES}},
+{{TAG | PHON_G_CUTOFF}}
+
+{{sc|LPHON_DISPERSION|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Phonons]]

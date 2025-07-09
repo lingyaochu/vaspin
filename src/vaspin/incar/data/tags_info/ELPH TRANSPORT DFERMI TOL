@@ -1,0 +1,24 @@
+{{DISPLAYTITLE:ELPH_TRANSPORT_DFERMI_TOL}}
+{{TAGDEF|ELPH_TRANSPORT_DFERMI_TOL|[real]|1e-6}}
+
+Description: choose the percentage of the integral of the derivative of the Fermi-dirac distribution with respect to the energy that is excluded from the integral that yields the Onsager coefficients.
+{{Available|6.5.0}}
+
+----
+Using this parameter, the values of {{TAG|ELPH_TRANSPORT_EMIN}} and {{TAG|ELPH_TRANSPORT_EMAX}} are automatically computed based on the list of chemical potential and the integral of the derivative of the Fermi-dirac distribution.
+This allows having a material independent parameter that is used to determine the energy window for which the electronic lifetimes must be computed.
+
+A small value means that only the tails of the derivative of the Fermi-dirac distribution are excluded from the integral.
+A large value means that only a small energy window around the chemical potential is used.
+
+The number of energy points is determined by {{TAG|TRANSPORT_NEDOS}}.
+
+==Related tags and articles==
+* [[Transport coefficients including electron-phonon scattering|Transport calculations]]
+* {{TAG|ELPH_RUN}}
+* {{TAG|ELPH_TRANSPORT}}
+* {{TAG|ELPH_TRANSPORT_EMIN}}
+* {{TAG|ELPH_TRANSPORT_EMAX}}
+* {{TAG|TRANSPORT_NEDOS}}
+
+[[Category:INCAR tag]][[Category:Electron-phonon_interactions]]

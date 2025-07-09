@@ -1,0 +1,22 @@
+{{DISPLAYTITLE:LPHON_DISPERSION}}
+{{TAGDEF|LPHON_DISPERSION|.TRUE. {{!}} .FALSE. }}
+{{DEF|LPHON_DISPERSION|.FALSE.|}}
+
+Description: {{TAG|LPHON_DISPERSION}} requests the calculation of the phonon dispersion along the q-point path supplied in file {{TAG|QPOINTS}} (same format as {{FILE|KPOINTS}}).
+
+----
+
+After the computation of the force constants using finite differences ({{TAG|IBRION}}=5,6) or density-functional perturbation theory ({{TAG|IBRION}}=7,8) on a supercell it is possible to compute the phonon dispersion for the equivalent primitive cell determined by VASP by setting {{TAG|LPHON_DISPERSION}}=.TRUE.
+{{NB|mind| Only available as of VASP 6.3.2.}}
+
+==Related tags and articles==
+{{FILE| QPOINTS}},
+{{TAG | PHON_NWRITE}},
+{{TAG | LPHON_POLAR}},
+{{TAG | PHON_DIELECTRIC}},
+{{TAG | PHON_BORN_CHARGES}},
+{{TAG | PHON_G_CUTOFF}}
+
+{{sc|LPHON_DISPERSION|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Phonons]]

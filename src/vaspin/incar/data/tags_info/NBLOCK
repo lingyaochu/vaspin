@@ -1,0 +1,19 @@
+{{TAGDEF|NBLOCK|[integer]|1}}
+
+Description: After {{TAG|NBLOCK}} ionic steps the pair-correlation function and the DOS are calculated
+and the ionic configuration is written to the {{FILE|XDATCAR}}-file.
+----
+It is recommended to leave  {{TAG|NBLOCK}} to 1, since the computational overhead to determine the DOS and pair correlation function is minimal. Only for  molecular dynamics simulations with many 1000 steps or when using machine-learned force fields, it might be expedient to increase {{TAG|NBLOCK}} to say 10 or even 100, to avoid large {{FILE|XDATCAR}}-files and the evaluation of the pair correlation function at every step. {{NB|tip|If machine-learned force fields are used in prediction-only mode ({{TAGO|ML_MODE|run}}) prefer to use the {{TAG|ML_OUTBLOCK}} tag instead of {{TAG|NBLOCK}} to control the output frequency.}}
+
+In addition
+
+*{{TAG|NBLOCK}} controls how often the kinetic energy is scaled if {{TAGO|SMASS|-1}}.
+
+*After <code>{{TAG|KBLOCK}} * {{TAG|NBLOCK}}</code> ionic steps the averaged pair correlation function and DOS are written to the files {{FILE|PCDAT}}  and {{FILE|DOSCAR}}. The internal accumulators are reset, and after another <code>{{TAG|KBLOCK}} * {{TAG|NBLOCK}}</code> steps the new averaged quantities are written out. {{NB|warning|The product of {{TAG|KBLOCK}} and {{TAG|NBLOCK}} should not be larger than the number of steps {{TAG|NSW}}. If <code>{{TAG|KBLOCK}} * {{TAG|NBLOCK}} > {{TAG|NSW}}</code> before starting the main ion loop then {{TAG|KBLOCK}} is automatically reset to 1. Next, if the same conditions is still true, {{TAG|NBLOCK}} is reset to {{TAG|NSW}}. Also, mind that {{TAG|NBLOCK}} will be at minimum {{TAG|ML_OUTBLOCK}} in MLFF prediction-only MD runs.}}
+
+== Related tags and articles ==
+[[PCDAT]], [[DOSCAR]], [[XDATCAR]], {{TAG|KBLOCK}}, {{TAG|ML_OUTBLOCK}}
+
+{{sc|NBLOCK|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Molecular dynamics]][[Category:Performance]]

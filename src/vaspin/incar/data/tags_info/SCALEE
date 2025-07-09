@@ -1,0 +1,15 @@
+{{TAGDEF|SCALEE|[real]|1}}
+
+Description: This tag specifies the coupling parameter of the energies and forces between a fully interacting system and a reference system.
+
+----
+The tag {{TAG|SCALEE}} sets the coupling parameter <math>\lambda</math> and hence controls the Hamiltonian of the calculation.
+By default {{TAG|SCALEE}}=1 and the scaling of the energies and forces via the coupling constant is internally skipped in the code. To enable the scaling {{TAG|SCALEE}}<math>\ne</math>1 has to be specified.
+
+More information using this tag is given [[Thermodynamic integration calculations|here]].
+
+== Related tags and articles ==
+{{TAG|VCAIMAGES}}, {{TAG|IMAGES}}, {{TAG|NCORE IN IMAGE1}}, {{TAG|PHON_NSTRUCT}}, {{TAG|IBRION}}
+
+----
+[[Category:INCAR tag]][[Category:Advanced molecular-dynamics sampling]]

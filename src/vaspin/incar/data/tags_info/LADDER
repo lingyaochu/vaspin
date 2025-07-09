@@ -1,0 +1,35 @@
+{{TAGDEF|LADDER|[logical]| .NOT. {{TAG|LRPA}}}}
+
+Description: Controls whether the ladder diagrams are included in the {{TAG|BSE}} calculation. Note that the default for {{TAG|LRPA}} and therefore LADDER is somewhat convoluted; so better to always double-check the {{TAG|OUTCAR}} file whether VASP behaves as expected. Generally, VASP will select ladder diagrams whenever this seems reasonable. This is for instance the case for {{TAG|ALGO}}="BSE" or "TDHF" calculations.
+
+----
+
+{{TAG|LADDER}} is used together with {{TAG|LHARTREE}}. If {{TAG|LADDER}}=''.FALSE.'', the ladder diagrams (i.e. the exchange terms related to <math>W</math> or the screened exchange) are not included.
+If {{TAG|LHARTREE}}=''.FALSE.'', the Hartree diagrams or bubble diagrams are not included. The following table summarizes all possible combinations:
+
+::{| cellpadding="5" cellspacing="0" border="1"
+|{{TAG|LHARTREE}} || {{TAG|LADDER}} ||
+|-
+| .TRUE. || .TRUE. || full BSE / TDHF
+|-
+| .FALSE. || .TRUE. || only excitonic effects (ladders)
+|-
+| .TRUE. || .FALSE. || random phase approximation (rings = bubbles only)
+|-
+| .FALSE. || .FALSE. || independent particle picture
+|}
+
+The last combination can be useful for sanity checks: the results must be identical to the results obtained using
+{{TAG|LOPTICS}}=''.TRUE.'' in the preceding calculations. If this is not the case, it usually implies that the one-electron
+energies have been updated in the {{TAG|WAVECAR}} file, or that the  {{TAG|WAVEDER}} file is not properly set up. The end of {{TAG|BSE}} explains how to recalculate
+the {{TAG|WAVEDER}} file from an existing {{TAG|WAVECAR}} file.
+
+== Related tags and articles ==
+{{TAG|LHARTREE}},
+{{TAG|LOPTICS}},
+{{TAG|BSE_calculations}}
+
+{{sc|LADDER|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Many-body perturbation theory]][[Category:Bethe-Salpeter equations]]

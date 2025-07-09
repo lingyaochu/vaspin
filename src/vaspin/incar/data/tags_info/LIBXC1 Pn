@@ -1,0 +1,53 @@
+{{DISPLAYTITLE:LIBXC1_Pn}}
+{{TAGDEF|LIBXC1_Pn|[real]}}
+
+Description: {{TAG|LIBXC1_Pn}}, where <math>n=1, 2, \ldots</math> allows to specify the values of the parameters of the functional implemented in Libxc that is called with {{TAG|LIBXC1}}.
+----
+
+For many of the functionals implemented in the library of exchange-correlation functionals Libxc{{cite|marques:cpc:2012}}{{cite|lehtola:sx:2018}}{{cite|libxc}} it is possible to modify the parameters if one does not want to use the default values. If a functional from Libxc has parameters that can be modified, then they are listed in {{FILE|OUTCAR}} below "Parameters of Libxc functionals:" as P<math>n</math> (<math>n=1, 2, \ldots</math>). {{TAG|LIBXC1_Pn}} and {{TAG|LIBXC2_Pn}} are for the functionals called with {{TAG|LIBXC1}} and {{TAG|LIBXC2}}, respectively.
+
+An example is given below for the GGA PBE functional{{cite|perdew:prl:1996}} where the default parameters <math>\mu=0.21951</math> in exchange and <math>\beta=0.066725</math> in correlation are changed to <math>\mu=10/81\approx0.12345679</math> and <math>\beta=0.046</math> to get the PBEsol functional{{cite|perdew:prl:2008}} (of course, the simpler way to use PBEsol from Libxc would be to call it directly with {{TAG|LIBXC1}}=GGA_X_PBE_SOL and {{TAG|LIBXC2}}=GGA_C_PBE_SOL).
+ {{TAG|GGA}} = LIBXC
+ {{TAG|LIBXC1}} = GGA_X_PBE # or 101
+ {{TAG|LIBXC2}} = GGA_C_PBE # or 130
+ [[LIBXC1_Pn|LIBXC1_P2]] = 0.12345679
+ [[LIBXC2_Pn|LIBXC2_P1]] = 0.046
+{{NB|mind|The {{TAG|ALDAX}}, {{TAG|ALDAC}}, {{TAG|AGGAX}}, {{TAG|AGGAC}}, {{TAG|AMGGAX}}, and {{TAG|AMGGAC}} tags are ignored if the Libxc functional is an exchange-correlation functional (those with a tag that contains XC)}}
+
+For Libxc functionals that are the semilocal component of a hybrid functional, i.e. those with a tag that starts with HYB ({{TAG|LHFCALC}}=.TRUE. will be set automatically if such a functional is selected), the following explains how it works for the mixing and screening parameters:
+*Mixing parameter:
+**It is usually one of the parameters {{TAG|LIBXC1_Pn}}, and can therefore be modified.
+**For HYB_GGA_XC_PBEH, HYB_GGA_XC_B1WC, HYB_GGA_XC_HSE03, HYB_GGA_XC_HSE06, HYB_GGA_XC_HSE12, and HYB_GGA_XC_HSE12S, the value of {{TAG|AEXX}} (even if not specified explicitly in {{FILE|INCAR}}) will be used and automatically passed to the corresponding parameter in Libxc. On the other hand, if this corresponding parameter ({{TAG|LIBXC1_Pn}}) is specified in {{FILE|INCAR}}, then it will be used (instead of {{TAG|AEXX}}), however note that it will be only for the semilocal component of the hybrid functional and not for the exact exchange that will still use {{TAG|AEXX}}.
+**For all hybrid functionals except those listed just above, {{TAG|AEXX}} will not be considered for the semilocal component of the hybrid functional, but only for the exact exchange component. Therefore, a particular choice for the mixing parameter has to be done by specifying both {{TAG|AEXX}} (for the exact exchange) and the appropriate {{TAG|LIBXC1_Pn}} (for the semilocal component).
+**The {{TAG|ALDAX}}, {{TAG|ALDAC}}, {{TAG|AGGAX}}, {{TAG|AGGAC}}, {{TAG|AMGGAX}}, and {{TAG|AMGGAC}} tags are ignored if the Libxc functional is an hybrid functional (those with a tag that starts with HYB).
+*Screening parameter:
+**It is usually one of the parameters {{TAG|LIBXC1_Pn}} if it is a screened functional, and can therefore be modified.
+**For HYB_GGA_XC_HSE03, HYB_GGA_XC_HSE06, HYB_GGA_XC_HSE12, and HYB_GGA_XC_HSE12S, the value of {{TAG|HFSCREEN}} (even if not specified explicitly in {{FILE|INCAR}}) will be used and automatically passed to the corresponding parameter in Libxc. On the other hand, if this corresponding parameter ({{TAG|LIBXC1_Pn}}) is specified in {{FILE|INCAR}}, then it will be used (instead of {{TAG|HFSCREEN}}), however note that it will be only for the semilocal component of the hybrid functional and not for the exact exchange that will still use {{TAG|HFSCREEN}}.
+**For all hybrid functionals except those listed just above, {{TAG|HFSCREEN}} will not be considered for the semilocal component of the hybrid functional, but only for the exact exchange component. Therefore, a particular choice for the screening parameter has to be done by specifying both {{TAG|HFSCREEN}} (for the exact exchange) and the appropriate {{TAG|LIBXC1_Pn}} (for the semilocal component).
+
+== Related tags and articles ==
+{{TAG|LIBXC1}},
+{{TAG|LIBXC2}},
+{{TAG|LIBXC2_Pn}},
+{{TAG|LTBOUNDLIBXC}},
+{{TAG|GGA}},
+{{TAG|METAGGA}},
+{{TAG|LHFCALC}},
+{{TAG|AEXX}},
+{{TAG|ALDAX}},
+{{TAG|ALDAC}},
+{{TAG|AGGAX}},
+{{TAG|AGGAC}},
+{{TAG|AMGGAX}},
+{{TAG|AMGGAC}},
+[[list_of_hybrid_functionals|List of hybrid functionals]]
+
+
+{{sc|LIBXC1_Pn|Examples|Examples that use this tag}}
+
+== References ==
+<references/>
+
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:Hybrid_functionals]]

@@ -1,0 +1,35 @@
+{{TAGDEF|ENCUT|[real]}}
+{{DEF|ENCUT| largest {{TAG|ENMAX}} in the {{FILE|POTCAR}} file | }}
+
+Description: {{TAG|ENCUT}} specifies the energy cutoff for the plane-wave basis set in eV.
+
+----
+All plane waves with a kinetic energy smaller than <math>E_{\mathrm{cut}}</math> are included in the basis set, i.e.,
+
+::<math> | \mathbf{G} + \mathbf{k} | < G_{\mathrm{cut}} </math> with <math> E_{\mathrm{cut}} = \frac{\hbar^2}{2m} G^2_{\mathrm{cut}} </math>
+
+With this energy cutoff, the number of plane waves included in the basis set depends on the '''k'''-point, leading to a superior behavior. For instance, for energy-volume calculations the total number of plane waves changes fairly smoothly according to the volume, while the criterion <math>| \mathbf{G} | < G_{\mathrm{cut}} </math> (i.e. same number of plane waves for all '''k'''-points) would lead to a very rough energy-volume curve and, generally, to a slower energy convergence with respect to the basis set size.
+
+The {{FILE|POTCAR}} files contain a default {{TAG|ENMAX}} (and {{TAG|ENMIN}}). Therefore, it is, in principle, not necessary to specify {{TAG|ENCUT}} in the {{FILE|INCAR}} file.
+For calculations with more than one species, the maximum cutoff {{TAG|ENMAX}} (or {{TAG|ENMIN}}) value is used for the calculation (see {{TAG|PREC}}).
+{{NB|important|
+*The convergence of the quantity of interest with respect to the energy cutoff {{TAG|ENCUT}} should always be checked.
+*We strongly recommend specifying the energy cutoff {{TAG|ENCUT}} always manually in the {{FILE|INCAR}} file to ensure the same accuracy between calculations. Otherwise, the default {{TAG|ENCUT}} may differ among the different calculations (e.g., for the calculation of the cohesive energy), with the consequence that the total energies, for instance, can not be compared.}}
+
+== Related tags and articles ==
+{{TAG|ENMAX}},
+{{TAG|ENMIN}},
+{{TAG|ENINI}},
+{{TAG|ENAUG}},
+{{TAG|PREC}},
+{{TAG|NGX}},
+{{TAG|NGY}},
+{{TAG|NGZ}},
+{{TAG|NGXF}},
+{{TAG|NGYF}},
+{{TAG|NGZF}},
+{{FILE|POTCAR}}
+
+{{sc|ENCUT|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Projector-augmented-wave method]]

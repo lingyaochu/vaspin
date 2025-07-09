@@ -1,0 +1,35 @@
+{{TAGDEF|LSCDM|.TRUE. {{!}} .FALSE. }}
+{{DEF|LSCDM|.FALSE.|}}
+
+Description: {{TAG|LSCDM}} switches on the selected columns of the density matrix (SCDM) method.
+
+----
+
+The selected columns of the density matrix (SCDM) method works by fitting a unitary matrix <math>U_{mn\mathbf{k}}</math> that transforms
+the basis from Bloch states <math>|\psi_{n\mathbf{k}}\rangle</math> obtained by VASP to a [[Wannier functions| Wannier basis]] <math>|w_{m\mathbf{R}}\rangle</math>.
+
+::<math>
+|w_{m\mathbf{R}}\rangle =
+\sum_{n\mathbf{k}}
+e^{-i\mathbf{k}\cdot\mathbf{R}}
+U_{mn\mathbf{k}}
+|\psi_{n\mathbf{k}}\rangle.
+</math>
+
+This is done using a [[Wannier_Functions#One-shot_single_value_decomposition (SVD) | one-shot method ]] through a singular-value decomposition as proposed by A. Damle and L. Lin {{cite|damle:mms:2018}}.
+
+In order to obtain a good Wannierization, a certain level of freedom should be given to the localized orbitals to adequately accommodate the Bloch states. This is controlled by the cutoff function specified by the {{TAG|CUTOFF_TYPE}} tag and related parameters
+<math>\mu</math> ({{TAG|CUTOFF_MU}}) and
+<math>\sigma</math> ({{TAG|CUTOFF_SIGMA}}).
+
+== Related tags and articles==
+{{TAG|CUTOFF_TYPE}},
+{{TAG|CUTOFF_MU}},
+{{TAG|CUTOFF_SIGMA}}
+
+{{sc|LSCDM|Examples|Examples that use this tag}}
+
+== References ==
+<references/>
+
+[[Category:INCAR tag]][[Category:Wannier functions]]

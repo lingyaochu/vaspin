@@ -1,0 +1,14 @@
+{{DISPLAYTITLE:ML_NHYP}}
+{{TAGDEF|ML_NHYP|[integer]|4}}
+
+Description: This tag specifies the polynomial power <math> \zeta</math> of the kernel within the machine learning force field method (see [[Machine learning force field: Theory#Potential energy fitting|this section]]).
+----
+The value of {{TAG|ML_NHYP}} must be an integer number <math>\ge</math> 1.
+
+== Related tags and articles ==
+{{TAG|ML_RCUT1}}, {{TAG|ML_SION1}}, {{TAG|ML_RCUT2}}, {{TAG|ML_SION2}}
+
+{{sc|ML_NHYP|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

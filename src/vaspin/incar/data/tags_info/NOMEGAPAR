@@ -1,0 +1,12 @@
+{{TAGDEF|NOMEGAPAR|[integer]}}
+{{DEF|NOMEGAPAR|NOMEGA|used in low scaling [[GW approximation of Hedin's equations#lowGW|GW]] and RPA/ACFDT calculations.}}
+Description: {{TAG|NOMEGAPAR}} available as of VASP.6, specifies the number of processor groups sharing the same imaginary frequency grid points.
+----
+== Related tags and articles ==
+{{TAG|NTAUPAR}},
+{{TAG|NOMEGA}}
+
+{{sc|NOMEGAPAR|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Many-body perturbation theory]][[Category:GW]] [[Category:ACFDT]][[Category:Performance]][[Category:Parallelization]][[Category:Low-scaling GW and RPA]]

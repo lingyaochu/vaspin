@@ -1,0 +1,24 @@
+{{DISPLAYTITLE: RANDOM_SEED}}{{TAGDEF|RANDOM_SEED|[integer][integer][integer]|based on the system clock}}
+
+Description: {{TAG|RANDOM_SEED}} specifies the seed of the random-number generator (compile VASP with [[Precompiler options#-Dtbdyn|-Dtbdyn]]).
+----
+The random-number generator (RNG) generates a sequence of random numbers, which is initialized by the tag {{TAG|RANDOM_SEED}}.
+For example, in molecular dynamics simulations, the RNG can be used to initialize atomic velocities. Hence, the seed for the RNG influences the trajectory of a molecular dynamics simulation.
+The three integers of {{TAG|RANDOM_SEED}} must fulfill these conditions:
+ 0 <= RANDOM_SEED(1) < 900000000
+ 0 <= RANDOM_SEED(2) < 1000000
+ 0 <= RANDOM_SEED(3)
+
+A typical input for the {{TAG|RANDOM_SEED}} looks like this:
+ {{TAGBL|RANDOM_SEED}} =         248489752                0                0
+
+The initial value of {{TAG|RANDOM_SEED}} and the value after each MD step are written to the {{FILE|REPORT}} file.
+{{NB|tip|If multiple molecular dynamics runs with different random seeds result in inconsistent time averages, then not enough configurations were sampled. Hence, longer or more trajectories are required to get converged ensemble averages.}}
+{{NB|mind|If no {{TAG|RANDOM_SEED}} is set in the {{FILE|INCAR}} then the used value will depend on the system time. For example, in molecular dynamics simulations, initial velocities will be different each time {{VASP}} is executed (if {{TAG|TEBEG}} is used and no velocities are provided in the {{FILE|POSCAR}} file). Hence, the trajectories will diverge. If reproducibility is desired the {{TAG|RANDOM_SEED}} has to be set manually.}}
+== Related tags and articles ==
+{{TAG|IBRION}}, {{TAG|MDALGO}}
+
+{{sc|RANDOM_SEED|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Molecular dynamics]]

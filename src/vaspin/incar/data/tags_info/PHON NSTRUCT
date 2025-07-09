@@ -1,0 +1,24 @@
+{{DISPLAYTITLE:PHON_NSTRUCT}}
+{{TAGDEF|PHON_NSTRUCT|[integer]|none}}
+
+Description: Sets the number of structures for electron-phonon interactions from Monte-Carlo (MC) sampling.
+----
+For {{TAG|PHON_NSTRUCT}}=-1 the eigenvalues and eigenvectors of the dynamic matrix are written to the file {{TAG|DYNMATFULL}}.
+
+For {{TAG|PHON_NSTRUCT}}=0 the ZG configuration{{cite|zacharias:prb:2016}} (one-shot) method is executed.
+
+For {{TAG|PHON_NSTRUCT}}>0 that many MC structures are prepared.
+
+For further usage of this tag see: {{TAG|Electron-phonon interactions from Monte-Carlo sampling}}.
+{{NB|mind|This feature is available for VASP >{{=}} 6.0.}}
+
+== Related tags and articles ==
+[[Electron-phonon interactions from Monte-Carlo sampling]], {{TAG|PHON_LMC}}, {{TAG|PHON_LBOSE}}, {{TAG|PHON_NTLIST}}, {{TAG|PHON_TLIST}}, {{TAG|TEBEG}}
+
+{{sc|PHON_NSTRUCT|Examples|Examples that use this tag}}
+
+== References ==
+<references/>
+----
+
+[[Category:INCAR tag]][[Category:Electron-phonon interactions]][[Category:Phonons]]

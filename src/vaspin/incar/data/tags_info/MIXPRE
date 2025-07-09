@@ -1,0 +1,31 @@
+{{TAGDEF|MIXPRE|0 {{!}} 1 {{!}} 2 {{!}} 3|1}}
+
+Description: {{TAG|MIXPRE}} specifies the metric in the Broyden mixing scheme({{TAG|IMIX}}=4).
+----
+*{{TAG|MIXPRE}}=0
+:No preconditioning, metric=1
+*{{TAG|MIXPRE}}=1
+:"Inverse Kerker" metric with automatically determined {{TAG|BMIX}} (determined in such a way that the variation of the preconditioning weights covers a range of a factor 20)
+*{{TAG|MIXPRE}}=2
+:"Inverse Kerker" metric with automatically determined {{TAG|BMIX}} (determined in such a way that the variation of the preconditioning weights covers a range of a factor 200)
+*{{TAG|MIXPRE}}=3 (implemented for test purposes; '''not''' recommended)
+:"Inverse Kerker" metric with {{TAG|BMIX}} from {{FILE|INCAR}}, the weights for the metric are given by
+::<math>P\left(G\right)=1+\frac{B^2}{G^2}</math>
+:with <math>B</math>={{TAG|BMIX}}.
+
+The preconditioning is done only on the total charge density (i.e. up+down component) and not on the magnetization charge density (i.e. up-down component). In our experience, the introduction of a metric always improves the convergence speed. The best choice is {{TAG|MIXPRE}}=1 (i.e. the default).
+
+== Related tags and articles ==
+{{TAG|IMIX}},
+{{TAG|INIMIX}},
+{{TAG|MAXMIX}},
+{{TAG|AMIX}},
+{{TAG|BMIX}},
+{{TAG|AMIX_MAG}},
+{{TAG|BMIX_MAG}},
+{{TAG|AMIN}},
+{{TAG|WC}}
+
+{{sc|MIXPRE|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Density mixing]]

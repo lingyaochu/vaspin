@@ -1,0 +1,37 @@
+{{DISPLAYTITLE:ML_IALGO_LINREG}}
+{{TAGDEF|ML_IALGO_LINREG|[integer]|1}}
+
+Description: This tag determines the algorithm that is employed to solve the system of linear equations in the ridge regression method for machine learning.
+----
+
+In the ridge regression method for machine learning one needs to solve for the unknown weights <math>\mathbf{w}</math> minimizing
+
+<math>
+ || \mathbf{Y} - \mathbf{\Phi} \mathbf{w} || \rightarrow \mbox{min}.
+</math>
+
+For the theory of the available methods please see [[Machine learning force field: Theory#Regression|here]].
+
+The following options are available to solve for <math>\mathbf{w}</math>:
+*{{TAG|ML_IALGO_LINREG}}=1: Bayesian linear regression (see [[Machine learning force field: Theory#Bayesian error estimation|here]]). Recommended for {{TAG|NSW}}<math>\ge</math>1. Usable with {{TAG|ML_MODE}} = ''TRAIN'', ''SELECT'', and ''REFITBAYESIAN''.
+*{{TAG|ML_IALGO_LINREG}}=2: QR factorization. Usable with {{TAG|ML_MODE}} = ''REFIT'' and ''REFITBAYESIAN''.
+*{{TAG|ML_IALGO_LINREG}}=3: Singular value decomposition. Usable with {{TAG|ML_MODE}} = ''REFIT'' and ''REFITBAYESIAN''.
+*{{TAG|ML_IALGO_LINREG}}=4: Singular value decomposition with Tikhonov regularization. The regularization can be controlled via {{TAG|ML_SIGW0}}. Usable with {{TAG|ML_MODE}} = ''REFIT'' and ''REFITBAYESIAN''.
+
+For on the fly learning {{TAG|ML_MODE}} = ''TRAIN'' and reselection of local reference configurations {{TAG|ML_MODE}} = ''SELECT'', it is strictly necessary to use Bayesian regression ({{TAG|ML_IALGO_LINREG}}=1), since uncertainty estimates are only available for Bayesian regression.
+
+'''Refitting''':
+Although the above modes result in an {{TAG|ML_FFN}} file that could be used for production runs, we strongly advise to refit the {{TAG|ML_ABN}} files. For that copy the {{TAG|ML_ABN}} file to the {{TAG|ML_AB}} file and use {{TAG|ML_MODE}}= ''REFIT'' (if Bayesian error estimation is required during production runs {{TAG|ML_MODE}}= ''REFITBAYESIAN'' is an option, but at the cost of significatnly slower calculation time). {{TAG|ML_MODE}}= ''REFIT'' employs {{TAG|ML_IALGO_LINREG}}=4 by default.
+
+For {{TAG|ML_IALGO_LINREG}}>1, {{TAG|ML_IALGO_LINREG}}=3 and 4 are the most tested approaches and we use {{TAG|ML_IALGO_LINREG}}=4 routinely before employing a machine learned force field. {{TAG|ML_IALGO_LINREG}}=4 gives more stable force fields and better fitting accuracy than {{TAG|ML_IALGO_LINREG}}=3, due to the regularization term employed (for details please see [[Machine learning force field: Theory#Solution via regularized SVD|here]]).
+
+{{TAG|ML_IALGO_LINREG}}=4 dramatically improves the condition number of the fitting compared to {{TAG|ML_IALGO_LINREG}}=1 since it directly uses the design matrix. In contrast {{TAG|ML_IALGO_LINREG}}=1 requires to use the covariance matrix (square of the design matrix), which effectively doubles the condition number.
+However, {{TAG|ML_IALGO_LINREG}}=4 needs significantly more memory than {{TAG|ML_IALGO_LINREG}}=1 (at least twice that much). Please always monitor the memory estimates in the {{TAG|ML_LOGFILE}}! It should be also noted that {{TAG|ML_IALGO_LINREG}}=4 is computationally somewhat more demanding than {{TAG|ML_IALGO_LINREG}}=1, but it typically requires between a few minutes and an hour. So usually the extra cost is negligible compared to the original training.
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_MODE}}, {{TAG|ML_W1}}, {{TAG|ML_WTOTEN}}, {{TAG|ML_WTIFOR}}, {{TAG|ML_WTSIF}}, {{TAG|ML_SIGW0}}
+
+{{sc|ML_IALGO_LINREG|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

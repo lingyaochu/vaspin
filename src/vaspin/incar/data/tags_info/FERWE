@@ -1,0 +1,46 @@
+{{TAGDEF|FERWE|[real array]}}
+
+Description: {{TAG|FERWE}} sets the occupancies of the states for {{TAG|ISMEAR}}=-2.
+----
+To set the occupancies, specify
+  {{TAG|FERWE}} = f(1) f(2) f(3) ... f({{TAG|NBANDS}}&times;N<sub>'''k'''</sub>)
+The occupancies must be specified for all bands and k points.
+The band index runs fastest.
+The occupancies must be between 0 and 1.
+In the case of spin-polarized calculations ({{TAGO|ISPIN|2}}), {{TAG|FERWE}} sets the occupancies of the states in the up-spin channel.
+Specify the occupancies of the states in the down-spin channel by means of the {{TAG|FERDO}} tag.
+
+Note that the partial occupancies are also written to the {{FILE|OUTCAR}} file
+ k-point     8 :       0.3750    0.0000    0.0000
+  band No.  band energies     occupation
+      1      -2.0636      2.00000
+      2       0.1506      2.00000
+      3       6.0155      1.99808
+      4       6.0188      1.99432
+      5       7.3309      1.71014
+      6       7.3311      1.54777
+      7       8.0841      0.28501
+      8       8.0894      0.18039
+      9       9.5834      0.00086
+     10       9.5880      0.00071
+     11      13.0368      0.00000
+     12      14.3253      0.00000
+Keep in mind that for systems without spin-polarization the occupations are twice as large in the {{FILE|OUTCAR}} file than what you should provide for {{TAG|FERWE}} because of spin degeneracy.
+{{NB|mind|VASP changes the number of bands {{TAG|NBANDS}} to accommodate your parallel setup. If {{TAG|NBANDS}} is inconsistent with the number of elements you provide with {{TAG|FERWE}} VASP will exit with an error message. The used {{TAG|NBANDS}} is indicated in the error message. Adjust the occupancies provided to {{TAG|FERWE}} to this new value. Alternatively, you can choose an {{TAG|NBANDS}} as the common factor of all your parallel setups to avoid changes in the number of bands (see [[NBANDS#Parallelization|here]]).}}
+
+You can use {{TAG|FERWE}} to keep occupancies fixed during ionic relaxations or molecular dynamics simulations.
+However, keeping the orbital occupancies fixed, requires that the orbital order does not change during the self-consistency cycle or during the optimization of the orbitals.
+Imagine, for instance, that the eigenenergy of the 65th orbital moves below the orbital energy of the 64th orbital.
+By default, VASP will order the eigenenergies so that enforcing {{TAG|FERWE}} will move the electrons to the originally unoccupied 65th orbital because it has now the lower energy.
+This problem can be often circumvented by specifying {{TAGO|LDIAG|.FALSE.}} in the {{FILE|INCAR}} file.
+
+
+== Related tags and articles ==
+{{TAG|FERDO}},
+{{TAG|ISMEAR}},
+{{TAG|NBANDS}},
+{{TAG|LDIAG}}
+
+{{sc|FERWE|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Electronic occupancy]][[Category:Density of states]]

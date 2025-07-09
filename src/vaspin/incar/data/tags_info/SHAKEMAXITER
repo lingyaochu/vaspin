@@ -1,0 +1,22 @@
+{{TAGDEF|SHAKEMAXITER|[Integer]|1000}}
+
+Description: {{TAG|SHAKEMAXITER}} specifies the maximum number of iterations in the SHAKE algorithm (in case VASP was compiled with [[Precompiler options#-Dtbdyn|-Dtbdyn]]).
+----
+Constrained molecular dynamics ({{TAG|MDALGO}}=1 {{!}} 2) are performed using a [[MDALGO#SHAKE|SHAKE algorithm]].<ref name="Ryckaert77"/>
+
+If the error for all geometric constraints does not decrease below a predefined tolerance ({{TAG|SHAKETOL}}) within the allowed number of iterations, VASP terminates with an error message.
+The aforementioned maximum number of iterations is set by means of the {{TAG|SHAKEMAXITER}} tag.
+
+== Related tags and articles ==
+{{TAG|SHAKETOL}},
+{{TAG|MDALGO}}
+
+{{sc|SHAKEMAXITER|Examples|Examples that use this tag}}
+
+== References ==
+<references>
+<ref name="Ryckaert77">[http://dx.doi.org/10.1016/0021-9991(77)90098-5 J. P. Ryckaert, G. Ciccotti, and H. J. C. Berendsen, J. Comp. Phys. 23, 327 (1977).]</ref>
+</references>
+
+----
+[[Category:INCAR tag]][[Category:Advanced molecular-dynamics sampling]]

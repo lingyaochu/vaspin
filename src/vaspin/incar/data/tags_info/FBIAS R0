@@ -1,0 +1,21 @@
+{{DISPLAYTITLE:FBIAS_R0}}
+{{TAGDEF|FBIAS_R0|[real (array)]}}
+
+Description: Defines the half-step position for the bias potential.
+----
+{{TAG|FBIAS_R0}} defines the half-step position (<math>\xi_{0\mu}</math>) for the Fermi-like step-shaped bias potential of the following form:
+
+::<math>
+\tilde{V}(\xi_1,\dots,\xi_{M_4}) = \sum_{\mu=1}^{M_4}\frac{A_{\mu}}{1+\text{exp}\left [-D_{\mu}(\frac{\xi(q)}{\xi_{0\mu}} -1) \right ]}, \;
+</math>
+
+where the sum runs over all (<math>M_4</math>) coordinates the potential acts upon, which are defined in the {{FILE|ICONST}} file by setting the <code>status</code> to 4.
+The units of <math>\xi_{0\mu}</math> correspond to units of the coordinate the potential acts upon (e.g., <math>{\AA}</math> for coordinates with <code>flag</code> R, <math>rad.</math> for coordinates with <code>flag</code> A, dimensionless for coordinates with <code>flag</code> W, etc...).
+The number of items defined via {{TAG|FBIAS_R0}} must be equal to <math>M_4</math>. Otherwise, the calculation terminates with an error message.
+
+== Related tags and articles ==
+{{TAG|FBIAS_A}},
+{{TAG|FBIAS_D}},
+{{FILE|ICONST}}
+----
+[[Category:INCAR tag]][[Category:Advanced molecular-dynamics sampling]]

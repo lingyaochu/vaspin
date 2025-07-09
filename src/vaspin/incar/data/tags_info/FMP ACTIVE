@@ -1,0 +1,18 @@
+{{DISPLAYTITLE:FMP_ACTIVE}}
+{{TAGDEF|FMP_ACTIVE|logical (aray)}}
+{{DEF|FMP_ACTIVE|NIONS * False|}}
+
+Description: Select which atom types in the {{FILE|POSCAR}}-file participate in swapping within the [[Müller-Plathe method]].
+
+-----
+
+{{TAG|FMP_ACTIVE}} specifies whether or not (.TRUE. or .FALSE., respectively) an atomic type allowed for swapping within the [[Müller-Plathe method]]. One item for each of the atomic types defined in {{FILE|POSCAR}} must be supplied.
+{{NB|mind|This tag will only be available from VASP 6.4.4}}
+== Related tags and articles ==
+[[Müller-Plathe method]],
+{{TAG|FMP_DIRECTION}},
+{{TAG|FMP_SNUMBER}},
+{{TAG|FMP_SWAPNUM}},
+{{TAG|FMP_PERIOD}}
+
+[[Category:INCAR tag]][[Category:Molecular dynamics]][[Category:Ensemble properties]]

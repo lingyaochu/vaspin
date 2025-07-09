@@ -1,0 +1,16 @@
+{{TAGDEF|INCREM|[real array]|0}}
+
+Description: {{TAG|INCREM}} controls the transformation velocity in the slow-growth approach (in case VASP was compiled with [[Precompiler options#-Dtbdyn|-Dtbdyn]]).
+----
+In [[Slow-growth_approach|slow-growth simulations]] ({{TAG|MDALGO}}=1 {{!}} 2), the value of each controlled geometric parameter with <tt>STATUS=0</tt> is increased by {{TAG|INCREM}} in every simulation step.
+
+It must be supplied for each controlled geometric parameter for which <tt>STATUS=0</tt> was specified in the {{FILE|ICONST}}-file.
+
+== Related tags and articles ==
+{{TAG|MDALGO}},
+{{TAG|ICONST}}
+
+{{sc|INCREM|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Advanced molecular-dynamics sampling]]

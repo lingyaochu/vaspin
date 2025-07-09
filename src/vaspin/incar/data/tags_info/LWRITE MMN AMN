@@ -1,0 +1,16 @@
+{{DISPLAYTITLE:LWRITE_MMN_AMN}}
+{{TAGDEF|LWRITE_MMN_AMN|.TRUE. {{!}} .FALSE.}}
+{{DEF|LWRITE_MMN_AMN|.TRUE.|if {{TAG|LWANNIER90}}{{=}}.TRUE.|.FALSE.|otherwise}}
+
+Description: {{TAG|LWRITE_MMN_AMN}}=.TRUE. tells the VASP2WANNIER90 interface to write the '''wannier90.mmn''' and '''wannier90.amn''' files.
+----
+When running WANNIER90 in library mode ({{TAG|LWANNIER90_RUN}}=.TRUE.), the '''wannier90.mmn''' and '''wannier90.amn''' files are not written. The information these files normally contain is passed on to <tt>wannier_run</tt> internally. If you want these files to be written anyway, for instance, to be able to run WANNIER90 standalone later on, set {{TAG|LWRITE_MMN_AMN}}=.TRUE. in the {{FILE|INCAR}} file.
+
+== Related tags and articles ==
+{{TAG|LWANNIER90}},
+{{TAG|LWANNIER90_RUN}}
+
+{{sc|LWRITE_MMN_AMN|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Wannier functions]]

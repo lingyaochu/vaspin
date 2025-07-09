@@ -1,0 +1,36 @@
+{{TAGDEF|LDISENTANGLED|[logical]|.FALSE.}}
+
+Description: Selects the [[Constrained–random-phase–approximation_formalism#Disentangled_method|disentangled cRPA method]].
+----
+Selects the cRPA method of Miyake, Aryasetiawan, and Imada{{cite|miyake:prb:80}}. Following screening is subtracted from the full RPA polarizability:
+::<math>\tilde  \chi^\sigma_{{\bf G,G}'}({\bf q},i\omega)=
+\frac 1{N_k}\sum_{\bf k}\sum_{nn'\in{\cal T}}
+\frac{
+f_{n\bf k}-f_{n'\bf k-q}
+}{
+\tilde\epsilon_{n{\bf k}} -  \tilde\epsilon_{n'\bf k-q} - i \omega
+}
+\langle
+\tilde u_{n {\bf k  }}^{\sigma  }
+|e^{-i \bf (G+q) r}|
+\tilde u_{n'{\bf k-q}}^{ \sigma' }
+\rangle
+\langle
+\tilde u_{n' {\bf k-q}}^{\sigma' }
+|e^{-i \bf (G'-q)r'} |
+\tilde u_{n{\bf k  }}^{ \sigma  }
+\rangle
+</math>,
+where <math>\tilde \epsilon_{n\bf k}^\sigma</math> is the disentangled band structure.
+
+== Related tags and articles==
+{{TAG|LWEIGHTED}},
+{{TAG|LSCRPA}},
+{{TAG|ALGO}}
+
+{{sc|LDISENTANGLED|Examples|Examples that use this tag}}
+
+== References ==
+<references/>
+
+[[Category:INCAR_tag]][[Category:Constrained-random-phase approximation]]

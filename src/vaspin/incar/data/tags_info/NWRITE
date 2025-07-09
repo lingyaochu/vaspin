@@ -1,0 +1,55 @@
+{{TAGDEF|NWRITE|0 {{!}} 1 {{!}} 2 {{!}} 3 {{!}} 4|2}}
+
+Description: This tag determines how much will be written to the file {{TAG|OUTCAR}} ('verbosity tag').
+----
+
+The options for {{TAG|NWRITE}} are given in detail as
+::{| cellpadding="5" cellspacing="0" border="1"
+| NWRITE || 0 || 1 || 2 ||3
+|-
+| contributions to electronic energy at each electronic iteration || f || f || e || e
+|-
+| convergence information || f || f || e || e
+|-
+| eigenvalues || f+l || i || i || e
+|-
+| DOS + charge density || f+l || i || i || e
+|-
+| total energy and electronic contributions || i || i || i || i
+|-
+| stress || i || i || i || i
+|-
+| basis vectors || f+l || i || i || i
+|-
+| forces || f+l || i || i || i
+|-
+| lattice and space group information for {{TAG|ISYM}}>0 || f || f || f || f
+|-
+| symmetry operations for {{TAG|ISYM}}>0 ||  ||  ||  || f
+|-
+| timing information ||  ||  || X || X
+|}
+
+where the following abbreviations have been used
+
+::{| cellpadding="5" cellspacing="0" border="1"
+| f+l|| first and last ionic step
+|-
+| f || first ionic step
+|-
+| i || each ionic step
+|-
+| e || each electronic step
+|-
+| X || when applicable
+|-
+|}
+{{NB|tip|For long molecular-dynamics runs, use {{TAG|NWRITE}}{{=}}0 or {{TAG|NWRITE}}{{=}}1. For short runs use {{TAG|NWRITE}}{{=}}2. {{TAG|NWRITE}}{{=}}3 might give information if something goes wrong.}}
+{{TAG|NWRITE}}=4 is for debugging only.
+== Related tags and articles ==
+
+{{TAG|OUTCAR}}, {{TAG|IALGO}}, {{TAG|IBRION}}, {{TAG|MDALGO}}, {{TAG|ISIF}}, {{TAG|ISYM}}
+
+{{sc|NWRITE|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Symmetry]][[Category:Forces]]

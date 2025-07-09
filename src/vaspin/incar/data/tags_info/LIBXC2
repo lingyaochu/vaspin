@@ -1,0 +1,30 @@
+{{TAGDEF|LIBXC2|[string] or [integer]}}
+
+Description: {{TAG|LIBXC2}} specifies the correlation functional from the library of exchange-correlation functionals Libxc{{cite|marques:cpc:2012}}{{cite|lehtola:sx:2018}}{{cite|libxc}}. {{TAG|LIBXC2}} can be used only if the functional specified with {{TAG|LIBXC1}} corresponds to only exchange and not to exchange and correlation.
+
+----
+A detailed explanation of how to use {{TAG|LIBXC1}} and {{TAG|LIBXC2}} and examples can be found on the {{TAG|LIBXC1}} page.
+
+== Related Tags and Sections ==
+{{TAG|LIBXC1}},
+{{TAG|LIBXC1_Pn}},
+{{TAG|LIBXC2_Pn}},
+{{TAG|LTBOUNDLIBXC}},
+{{TAG|GGA}},
+{{TAG|METAGGA}},
+{{TAG|LHFCALC}},
+{{TAG|AEXX}},
+{{TAG|ALDAX}},
+{{TAG|ALDAC}},
+{{TAG|AGGAX}},
+{{TAG|AGGAC}},
+[[list_of_hybrid_functionals|List of hybrid functionals]]
+
+
+{{sc|LIBXC2|Examples|Examples that use this tag}}
+
+== References ==
+<references/>
+
+----
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:Hybrid_functionals]]

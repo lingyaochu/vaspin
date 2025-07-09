@@ -1,0 +1,15 @@
+{{DISPLAYTITLE:OFIELD_KAPPA}}{{TAGDEF|OFIELD_KAPPA|[real]}}
+
+Description: The tag {{TAG|OFIELD_KAPPA}} sets the strength of the bias potential in the [[:Category:Interface pinning|Interface pinning]] method.
+----
+The bias potential in the [[:Category:Interface pinning|Interface pinning]] method is written as
+::<math>U_\text{bias}(\mathbf{R}) = \frac\kappa2 \left(Q_6(\mathbf{R}) - A\right)^2 </math>.
+The tag {{TAG|OFIELD_KAPPA}} method sets the strength of the bias potential <math>\kappa</math>. The unit of <math>\kappa</math> is <math>\textrm{eV}/(\textrm{unit} \,\, \textrm{ of }\,\, Q)^2</math>.
+
+== Related tags and articles ==
+[[:Category:Interface pinning|Interface pinning]], {{TAG|OFIELD_Q6_NEAR}}, {{TAG|OFIELD_Q6_FAR}}, {{TAG|OFIELD_A}}
+
+{{sc|OFIELD_KAPPA|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Advanced molecular-dynamics sampling]]

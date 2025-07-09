@@ -1,0 +1,23 @@
+{{DISPLAYTITLE:NOMEGA_DUMP}}
+{{TAGDEF|NOMEGA_DUMP|[integer]}}
+{{DEF|NOMEGA_DUMP|-1|}}
+{{NB| warning | Available as of version 6.3.2.}}
+Description: {{TAG|NOMEGA_DUMP}} selects the imaginary frequency point of screened potential in [[Practical_guide_to_GW_calculations#Low_scaling_GW_algorithms|low-scaling GW calculations]] that is written to file.
+{{NB| mind | This tag can be used to obtain {{FILE|WFULLxxxx.tmp}} for [[Bethe-Salpeter-equations_calculations|BSE calculations]].}}
+
+----
+{{TAG|NOMEGA_DUMP}} selects the imaginary frequency point of the screened Coulomb kernel that is written to {{FILE|WFULLxxxx.tmp}} in [[Practical_guide_to_GW_calculations#Low_scaling_GW_algorithms|low-scaling GW calculations]].
+If set to 0, {{FILE|WFULLxxxx.tmp}} contains the screened Coulomb interaction W at <math>\omega=0</math>.
+For positive values, these files contain the screened Coulomb interaction at the corresponding imaginary frequency point.
+For negative values, {{FILE|WFULLxxxx.tmp}} is not written.
+
+== Related tags and articles==
+{{TAG|ALGO}},
+{{TAG|NOMEGA}}
+
+{{sc|NOMEGA_DUMP|Examples|Examples that use this tag}}
+
+----
+
+[[Category:INCAR tag]][[Category:Many-body perturbation theory]][[Category:GW]][[Category:Low-scaling GW and RPA]][[Category:Constrained-random-phase approximation]]
+[[Category:Bethe-Salpeter equations]]

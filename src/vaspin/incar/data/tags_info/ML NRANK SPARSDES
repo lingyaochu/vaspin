@@ -1,0 +1,18 @@
+{{DISPLAYTITLE:ML_NRANK_SPARSDES}}
+{{TAGDEF|ML_NRANK_SPARSDES|[integer]|5}}
+
+Description: This tag sets the number of highest eigenvalues to which the correlation is measured within the angular descriptor sparsification (within the machine learning force field method).
+{{NB|mind|This tag is only available as of VASP 6.4.3.}}
+----
+This tag usually does not need to be changed by the user!
+
+For details on the theory of angular descriptor sparsification see [[Machine learning force field: Theory#Sparsification of angular descriptors|here]].
+
+For details on how to use the sparsification see the tag {{TAG|ML_LSPARSDES}}.
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_LSPARSDES}}, {{TAG|ML_RDES_SPARSDES}}, {{TAG|ML_DESC_TYPE}}
+
+{{sc|ML_EPS_LOW|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

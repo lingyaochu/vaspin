@@ -1,0 +1,23 @@
+{{DISPLAYTITLE:ML_LSPARSDES}}
+{{TAGDEF|ML_LSPARSDES|[logical]|.FALSE.}}
+
+Description: Specifies whether angular-descriptor sparsification is enabled within the machine learning force field method.
+{{NB|mind|This tag is only available as of VASP 6.4.3.}}
+----
+{{NB|warning|This tag only works for {{TAG|ML_MODE}}{{=}}''refit'' or ''reftbayesian''!}}
+
+To use the [[Machine learning force field: Theory#Sparsification of angular descriptors|sparsification of angular descriptors set]] the following tags:
+*{{TAG|ML_LSPARSDES}}=''.TRUE.''.
+*The ratio of the selected descriptors to the total number of descriptors: {{TAG|ML_RDES_SPARSDES}}. This tag controls the extent of the sparsification.
+*The number of the highest eigenvalues <math>k</math> to which the correlation is measured via the leverage scoring: {{TAG|ML_NRANK_SPARSDES}}. This parameter usually does not need to be changed.
+
+We advise the user to adjust this parameter carefully and test it individually for each system. This means e.g. plotting the accuracy of the calculation against the computational speed (Pareto curves) for different values of {{TAG|ML_RDES_SPARSDES}}. The user can then choose a tradeoff between efficiency and accuracy.
+The behavior is system dependent, however, we have experienced the following trends for our test cases: For {{TAG|ML_DESC_TYPE}}=0 a descriptor sparsification of 50 percent {{TAG|ML_RDES_SPARSDES}}=0.5 leaves the accuracy almost untouched.
+If more spars descriptors are used such as e.g. {{TAG|ML_DESC_TYPE}}=1, which already contain much fewer descriptors than the standard descriptor {{TAG|ML_DESC_TYPE}}=0, a 50 percent sparsification for {{TAG|ML_DESC_TYPE}}=1 results in noticeable accuracy loss.
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_RDES_SPARSDES}}, {{TAG|ML_NRANK_SPARSDES}}, {{TAG|ML_DESC_TYPE}}
+
+{{sc|ML_EPS_LOW|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

@@ -1,0 +1,16 @@
+{{DISPLAYTITLE:NHC_NS}}
+{{TAGDEF|NHC_NS|[integer] 1 {{!}} 3 {{!}} 7|1}}
+
+Description: The number of subdivisions of each RESPA step used in the integration step used in propagation of thermostat variables in [[Nose-Hoover-chain thermostat|Nosé-Hoover–chain (NHC) thermostat]].
+
+----
+The RESPA steps used in in propagation of thermostat variables in  [[Nose-Hoover-chain thermostat|Nosé-Hoover–chain (NHC) thermostat]] are treated by Suzuki-Yoshida scheme<ref>[https://pubs.aip.org/aip/jmp/article/26/4/601/227573/Decomposition-formulas-of-exponential-operators M. Suzuki, J. Math. Phys. 26, 601 (1985).]</ref><ref>[https://www.sciencedirect.com/science/article/abs/pii/0375960190900923 H. Yoshida, Phys. Lett. A 150, 262 (1990).]</ref>, whereby each step is subdivided further into {{TAG|NHC_NS}} parts. First, fourth, and sixth order schemes with, 1, 3, and 7 steps, respectively, are supported.
+
+
+
+== Related tags and articles ==
+{{TAG|NHC_PERIOD}}, {{TAG|NHC_NRESPA}}, [[NHC thermostat]]
+
+----
+
+[[Category:INCAR tag]][[Category:Thermostats]]

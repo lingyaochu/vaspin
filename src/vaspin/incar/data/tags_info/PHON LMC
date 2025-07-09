@@ -1,0 +1,14 @@
+{{DISPLAYTITLE:PHON_LMC}}
+{{TAGDEF|PHON_LMC|[logical]|.FALSE.}}
+
+Description: Controls whether electron-phonon interactions from Monte-Carlo sampling are calculated or not.
+----
+For further usage of this tag see: {{TAG|Electron-phonon interactions from Monte-Carlo sampling}}.
+{{NB|mind|This feature is available for VASP >{{=}} 6.0.}}
+== Related tags and articles ==
+[[Electron-phonon interactions from Monte-Carlo sampling]], {{TAG|PHON_NSTRUCT}}, {{TAG|PHON_LBOSE}}, {{TAG|PHON_NTLIST}}, {{TAG|PHON_TLIST}}
+
+{{sc|PHON_LMC|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Electron-phonon interactions]][[Category:Phonons]]

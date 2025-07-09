@@ -1,0 +1,21 @@
+{{DISPLAYTITLE:ELPH_SELFEN_STATIC}}
+{{TAGDEF|ELPH_SELFEN_STATIC|[logical]|.FALSE.}}
+
+Description: Activates the adiabatic approximation for the phonon-induced electron self-energy.
+{{Available|6.5.0}}
+
+----
+
+The adiabatic approximation assumes that the electron dynamics are much faster than the phonon dynamics.
+In other words, there is no energy exchange between the electronic and the phononic subsystems.
+Mathematically, this is equivalent to setting the phonon frequencies in the denominator of the Fan-Migdal self-energy to zero.
+{{NB|warning|The adiabatic approximation is ill-suited for polar materials where it may introduce large errors {{cite|ponce:jcp:2015}}.}}
+
+==Related tags and articles==
+* {{TAG|ELPH_RUN}}
+* {{TAG|ELPH_SELFEN_FAN}}
+* {{TAG|ELPH_SELFEN_DELTA}}
+
+[[Category:INCAR tag]][[Category:Electron-phonon_interactions]]
+
+== References ==

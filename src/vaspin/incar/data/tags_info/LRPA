@@ -1,0 +1,24 @@
+{{TAGDEF|LRPA|.TRUE. {{!}} .FALSE.|.FALSE.}}
+
+Description: {{TAG|LRPA}}=.TRUE. includes local field effect on the Hartree level only.
+----
+For {{TAG|LRPA}}=.TRUE. local field effects are included on the Hartree level only. This means that cell periodic microscopic changes of the local potential related to the change of the Hartree potential are included.
+
+For {{TAG|LRPA}}=.FALSE. changes of the Hartree ''and the exchange-correlation potential'' are included. This usually increases the dielectric constants. The final values for the dielectric tensor can be found in the {{TAG|OUTCAR}} file after the lines.
+ MACROSCOPIC STATIC DIELECTRIC TENSOR (including local field effects in RPA (Hartree))
+For {{TAG|LRPA}}=.FALSE. the dielectric tensor is written after the lines:
+ MACROSCOPIC STATIC DIELECTRIC TENSOR (including local field effects in DFT)
+The dielectric tensor ''excluding'' local field effects is always calculated (regardless of {{TAG|LRPA}}). The piezoelectric tensors and the Born effective charges as well as the ionic contributions the to dielectric tensor are only calculated for {{TAG|LRPA}}=.FALSE..
+{{NB|warning|We recommend using the {{TAG|LRPA}} tag only in combination with {{TAG|LEPSILON}} or {{TAG|LCALCEPS}}, where the treatment of the terms beyond RPA is unambiguous. In the [[many-body perturbation theory|MBPT calculations]] various approximations beyond RPA can be used, hence more precise control of the included terms should be used via the tags {{TAG|LHARTREE}}, {{TAG|LADDER}}, and {{TAG|LFXC}}.}}
+
+== Related tags and articles ==
+{{TAG|LEPSILON}},
+{{TAG|LCALCEPS}},
+{{TAG|LHARTREE}},
+{{TAG|LADDER}},
+{{TAG|LFXC}}
+
+{{sc|LRPA|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Linear response]][[Category:Dielectric properties]]

@@ -1,0 +1,13 @@
+{{DISPLAYTITLE:DIMER_DIST}}
+{{TAGDEF|DIMER_DIST|[real]|0.01}}
+
+Description: The flag {{TAG|DIMER_DIST}} defines the step size for the numerical differentiation (in <math>\AA</math>) for the {{TAG|Improved Dimer Method}}.
+
+----
+
+== Related tags and articles ==
+{{TAG|Improved Dimer Method}}
+
+{{sc|DIMER_DIST|Examples|Examples that use this tag}}
+----
+[[Category:INCAR tag]][[Category: Transition states]][[Category:Molecules]]

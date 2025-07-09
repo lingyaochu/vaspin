@@ -1,0 +1,80 @@
+{{TAGDEF|LREAL|.FALSE. {{!}} Auto (or A) {{!}} On (or O) {{!}} .TRUE. |.FALSE.}}
+
+Description: {{TAG|LREAL}} determines whether the projection operators are evaluated in real-space or in reciprocal space.
+----
+{|
+|{{TAG|LREAL}}=.FALSE.  || projection done in reciprocal space
+|-
+|{{TAG|LREAL}}=Auto or A|| projection done in real space, fully automatic optimization of projection operators (little to no user interference required)
+|-
+|{{TAG|LREAL}}=On or O  || projection done in real space, projection operators are re-optimized (not recommended)
+|-
+|{{TAG|LREAL}}=.TRUE.   || projection done in real space, use projectors on file (not recommended)
+|}
+
+
+The nonlocal part of the [[:Category:Pseudopotentials|pseudopotential]] requires the evaluation of an expression:
+
+
+::<math>\sum_{ij}D_{ij}|\beta_j\rangle\langle\beta_i|\tilde{\psi}_{n\mathbf{k}}\rangle</math>.
+
+where the "projected wavefunction character" is defined as:
+
+<span id="cproj">
+::<math>\begin{align}C_{in\mathbf{k}}=\langle\beta_i|\tilde{\psi}_{n\mathbf{k}}\rangle &=\frac{\Omega}{N_{\rm FFT}}\sum_{\mathbf{r}}\langle\beta_i|\mathbf{r}\rangle\langle\mathbf{r}|\tilde{\psi}_{n\mathbf{k}}\rangle=\frac{\Omega}{N_{\rm FFT}}\sum_{\mathbf{r}}\beta(\mathbf{r})\tilde{\psi}_{n\mathbf{k}}(\mathbf{r}) \\ &=\sum_{\mathbf{G}}\langle\beta_i|\mathbf{k}+\mathbf{G}\rangle\langle\mathbf{k}+\mathbf{G}|\tilde{\psi}_{n\mathbf{k}}\rangle=\sum_\mathbf{G}\bar\beta(\mathbf{k}+\mathbf{G}) C_{\mathbf{G}n\mathbf{k}}\end{align}</math>
+</span>
+
+This expression can be evaluated in reciprocal or real space: In reciprocal space (second line), the number of operations scales with the size of the basis set, i.e., number of plane waves. In real space (first line), the projection operators are confined to spheres around each atom. Therefore, the number of operations necessary to evaluate one C<sub>in'''k'''</sub> does not increase with the system size (usually, the number of grid points within the cutoff sphere is between 500 and 2000). One of the major obstacles to the method working in real space is that the projection operators must be optimized, i.e., all high Fourier components must be removed from the projection operators. If this is not done, [[Wrap-around errors|aliasing]] can happen, i.e., the high Fourier components of the projection operators are downfolded to low Fourier components, and random noise is introduced).
+
+Currently, VASP supports three different schemes to remove the high Fourier components from the projectors. {{TAG|LREAL}}=.TRUE. is the simplest one. For {{TAG|LREAL}}=.TRUE., the real-space projectors that the pseudopotential generation code has generated are used. This requires no user interference but is potentially very inaccurate. For the outdated {{TAG|LREAL}}=On, the real space projectors are optimized by VASP using an algorithm proposed by King-Smith et al.{{cite|king-smith:prb:1991}} For the recommended {{TAG|LREAL}}=Auto, an unpublished scheme<ref name="kresse:tobepublished"/> is used which results in simultaneously more accurate and localized projector functions than for the King-Smith et al. method. To fine-tune the optimization procedure, the tag {{TAG|ROPT}} can and should be used, if {{TAG|LREAL}}=Auto (or {{TAG|LREAL}}=On) is used. Specifically, perform first reference calculations using {{TAG|LREAL}}=.False. and decrease {{TAG|ROPT}} until an acceptable accuracy, e.g., 1 meV/atom, is attained. Please also check carefully the documentation for {{TAG|ROPT}}.
+
+We recommend using the real-space projection scheme for systems containing more than about 30 atoms. We also strongly recommend using only {{TAG|LREAL}}=Auto.
+
+For {{TAG|LREAL}}=A (and {{TAG|LREAL}}=O) the projection operators are optimized by VASP on the fly (i.e. on startup). Several tags influence the optimization:
+
+*{{TAG|ENCUT}} (i.e., the energy cutoff), components beyond the energy cutoff are 'removed' from the projection operators.
+
+*{{TAG|PREC}} tag specifies how precise the real-space projectors should be and sets the variables {{TAG|ROPT}} accordingly to the following values:
+
+:For {{TAG|LREAL}}=Auto
+::{|
+|{{TAG|ROPT}}=-5E-4 || if {{TAG|PREC}}=Normal
+|-
+|{{TAG|ROPT}}=-5E-4 || if {{TAG|PREC}}=Single or SingleN
+|-
+|{{TAG|ROPT}}=-2.5E-4 || if {{TAG|PREC}}=Accurate
+|-
+|{{TAG|ROPT}}=-0.01 || if {{TAG|PREC}}=Low
+|-
+|{{TAG|ROPT}}=-0.002 || if {{TAG|PREC}}=Medium
+|-
+|{{TAG|ROPT}}=-4E-4|| if {{TAG|PREC}}=High
+|}
+
+:For {{TAG|LREAL}}=On
+::{|
+|{{TAG|ROPT}}=2/3 || if {{TAG|PREC}}=Low
+|-
+|{{TAG|ROPT}}=1.0 || if {{TAG|PREC}}=Medium
+|-
+|{{TAG|ROPT}}=1.5|| if {{TAG|PREC}}=High
+|}
+
+:These defaults can be superseded by specifying the {{TAG|ROPT}} tag in the {{FILE|INCAR}} file.
+{{NB|mind|
+*Real-space optimization ({{TAG|LREAL}}{{=}}Auto) always results in a small (not necessarily negligible) error. The error is usually a constant energy shift for each atom. If you are interested in energy differences, use only calculations with the same setup (i.e., same {{TAG|ENCUT}}, {{TAG|PREC}}, {{TAG|LREAL}} and {{TAG|ROPT}} setting) for all calculations. For example, if you want to calculate surface or defect energies, recalculate the bulk ground-state energy with exactly the same setting you are using for the surface. Another possibility is to relax the structure using real-space projection and to perform one final total-energy calculation using {{TAG|LREAL}}{{=}}.FALSE. to get exact energies. For {{TAG|PREC}}{{=}}Normal, the errors introduced by the real-space projection are usually of the same order of magnitude as those introduced by the [[Wrap-around errors|wrap-around errors]]. For {{TAG|PREC}}{{=}}Accurate errors are usually less than 1 meV/atom. {{TAG|PREC}}{{=}}Low should be used only for, say, fast [[MD|molecular-dynamics calculations]], if compute resources are really an issue.
+*When the energy cutoff {{TAG|ENCUT}} is increased significantly w.r.t. their defaults, the real-space projection scheme sometimes becomes unreliable, and it might be necessary to decrease {{TAG|ROPT}} to values as small as {{TAG|ROPT}}{{=}}1E-4.}}
+
+== Related tags and articles ==
+{{TAG|ROPT}},
+{{TAG|PREC}}
+
+{{sc|LREAL|Examples|Examples that use this tag}}
+
+== References ==
+<references>
+<ref name="kresse:tobepublished">G. Kresse, Unpublished.</ref>
+</references>
+----
+
+[[Category:INCAR tag]][[Category:Projector-augmented-wave method]]

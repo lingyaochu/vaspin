@@ -1,0 +1,16 @@
+{{DISPLAYTITLE:LVDW_EWALD}}
+{{TAGDEF|LVDW_EWALD|logical|.FALSE.}}
+
+Description: {{TAG|LVDW_EWALD}} decides whether the lattice summation in <math>E_{disp}</math> expression by means of Ewald's summation is computed.
+----
+{{TAG|LVDW_EWALD}} decides whether the lattice summation in <math>E_{disp}</math> expression by means of Ewald's summation is computed in the pairwise van der Waals corrections schemes [[DFT-D2]], [[DFT-ulg]] and [[Tkatchenko-Scheffler_method|Tkatchenko-Scheffler method]].
+
+== Related tags and articles ==
+[[DFT-D2]],
+[[DFT-ulg]],
+[[Tkatchenko-Scheffler_method|Tkatchenko-Scheffler method]]
+
+{{sc|LVDW_EWALD|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category: van der Waals functionals]]

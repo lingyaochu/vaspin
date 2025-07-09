@@ -1,0 +1,279 @@
+{{TAGDEF|MDALGO|0 {{!}} 1 {{!}} 2 {{!}} 3 {{!}} 4 {{!}} 5 {{!}} 11 {{!}} 21 {{!}} 13  |0}}
+
+Description: {{TAG|MDALGO}} specifies the molecular-dynamics-simulation protocol (in case {{TAG|IBRION}}=0 and VASP was compiled with [[Precompiler options#-Dtbdyn|-Dtbdyn]]).
+----
+
+== {{TAG|MDALGO}}=0: Standard molecular dynamics ==
+Should provide the same results as {{TAG|MDALGO}}=2 ({{TAG|Nose-Hoover thermostat}}). The difference is that it is a different implementation and works also without the precompiler flag [[Precompiler_flags|-Dtbdyn]].
+
+=== NVE ensemble ===
+
+*To perform a calculation in the NVE ensemble:
+#Set the standard MD-related tags: {{TAG|IBRION}}=0, {{TAG|TEBEG}}, {{TAG|POTIM}}, and {{TAG|NSW}}.
+#Set {{TAG|MDALGO}}=0 and set {{TAG|SMASS}}=-3.
+
+== {{TAG|MDALGO}}=1: Andersen thermostat ==
+
+For the description of the Andersen thermostat see: {{TAG|Andersen thermostat}}.
+
+The Andersen thermostat is only available for the NVT ensemble.
+
+=== Standard molecular dynamics in ===
+
+*For a standard molecular dynamics run with Anderson thermostat, one has to:
+#Set the standard MD-related tags: {{TAG|IBRION}}=0, {{TAG|TEBEG}}, {{TAG|POTIM}}, and {{TAG|NSW}}.
+#Set {{TAG|MDALGO}}=1, and choose an appropriate setting for {{TAG|ANDERSEN_PROB}}
+
+=== Constrained molecular dynamics ===
+For a description of constrained molecular dynamics see {{TAG|Constrained molecular dynamics}}.
+
+* For a constrained molecular dynamics run with Andersen thermostat, one has to:
+#Set the standard MD-related tags: {{TAG|IBRION}}=0, {{TAG|TEBEG}}, {{TAG|POTIM}}, and {{TAG|NSW}}
+#Set {{TAG|MDALGO}}=1, and choose an appropriate setting for {{TAG|ANDERSEN_PROB}}
+#Define geometric constraints in the {{FILE|ICONST}}-file, and set the STATUS parameter for the constrained coordinates to 0
+#When the free-energy gradient is to be computed, set {{TAG|LBLUEOUT}}=.TRUE.
+
+=== Slow-growth approach ===
+For a description of slow-growth approach see {{TAG|Slow-growth approach}}.
+* For a slow-growth simulation, one has to perform a calcualtion very similar to {{TAG|Constrained molecular dynamics}} but additionally the transformation velocity-related {{TAG|INCREM}}-tag for each geometric parameter with <tt>STATUS=0</tt> has to be specified:
+#Set the standard MD-related tags: {{TAG|IBRION}}=0, {{TAG|TEBEG}}, {{TAG|POTIM}}, and {{TAG|NSW}}
+#Set {{TAG|MDALGO}}=1, and choose an appropriate setting for {{TAG|ANDERSEN_PROB}}
+#Define geometric constraints in the {{FILE|ICONST}}-file, and set the STATUS parameter for the constrained coordinates to 0
+#When the free-energy gradient is to be computed, set {{TAG|LBLUEOUT}}=.TRUE.
+
+<ol start="5">
+<li>Specify the transformation velocity-related {{TAG|INCREM}}-tag for each geometric parameter with <tt>STATUS=0</tt>.</li>
+</ol>
+
+=== Monitoring geometric parameters ===
+Geometric parameters with <tt>STATUS = 7</tt> in the {{FILE|ICONST}}-file are monitored during the MD simulation.
+The corresponding values are written onto the {{FILE|REPORT}}-file, for each MD step, after the lines following the string <tt>Monit_coord</tt>.
+
+Sometimes it is desirable to terminate the simulation if all values of monitored parameters get larger that some predefined upper and/or lower limits. These limits can be set by the user by means of the {{TAG|VALUE_MAX}} and {{TAG|VALUE_MIN}}-tags.
+
+*To monitor geometric parameters during an MD run:
+#Set the standard MD-related tags: {{TAG|IBRION}}=0, {{TAG|TEBEG}}, {{TAG|POTIM}}, and {{TAG|NSW}}.
+#Set {{TAG|MDALGO}}=1, and choose an appropriate setting for {{TAG|ANDERSEN_PROB}}.
+#Define geometric constraints in the {{FILE|ICONST}}-file, and set the <tt>STATUS</tt> parameter for the constrained coordinates to 7.
+#Optionally, set the upper and/or lower limits for the coordinates, by means of the {{TAG|VALUE_MAX}} and {{TAG|VALUE_MIN}}-tags, respectively.
+
+=== Metadynamics ===
+For a description of metadynamics see {{TAG|Metadynamics}}.
+
+* For a metadynamics run with Andersen thermostat, one has to:
+#Set the standard MD-related tags: {{TAG|IBRION}}=0, {{TAG|TEBEG}}, {{TAG|POTIM}}, and {{TAG|NSW}}.
+#Set {{TAG|MDALGO}}=1 (or {{TAG|MDALGO}}=11 in VASP 5.x), and choose an appropriate setting for {{TAG|ANDERSEN_PROB}}.
+#Set the parameters {{TAG|HILLS_H}}, {{TAG|HILLS_W}}, and {{TAG|HILLS_BIN}}.
+#Define collective variables in the {{FILE|ICONST}}-file, and set the {{TAG|STATUS}} parameter for the collective variables to 5.
+#If needed, define the bias potential in the {{FILE|PENALTYPOT}}-file.
+
+The actual time-dependent bias potential is written to the {{FILE|HILLSPOT}}-file, which is updated after adding a new Gaussian. At the beginning of the simulation, VASP attempts to read the initial bias potential from the {{FILE|PENALTYPOT}}-file. For the continuation of a metadynamics run, copy {{FILE|HILLSPOT}} to {{FILE|PENALTYPOT}}. The values of all collective variables for each MD step are listed in {{FILE|REPORT}}-file, check the lines after the string <tt>Metadynamics</tt>.
+
+=== Biased molecular dynamics ===
+
+For a description of biased molecular dynamics see {{TAG|Biased molecular dynamics}}.
+
+* For a biased molecular dynamics run with Andersen thermostat, one has to:
+#Set the standard MD-related tags: {{TAG|IBRION}}=0, {{TAG|TEBEG}}, {{TAG|POTIM}}, and {{TAG|NSW}}.
+#Set {{TAG|MDALGO}}=1 (or {{TAG|MDALGO}}=11 in VASP 5.x), and choose an appropriate setting for {{TAG|ANDERSEN_PROB}}.
+#In order to avoid updating of the bias potential, set {{TAG|HILLS_BIN}}={{TAG|NSW}}.
+#Define collective variables in the {{FILE|ICONST}}-file, and set the <tt>STATUS</tt> parameter for the collective variables to 5.
+#Define the bias potential in the {{FILE|PENALTYPOT}}-file if necessary.
+
+The values of all collective variables for each MD step are listed in the {{FILE|REPORT}}-file, check the lines after the string <tt>Metadynamics</tt>.
+
+=== Special case: NVE ensemble ===
+
+NVE ensemble calculations can be also run by selecting the Anderson thermostat and setting the update collision probability ({{TAG|ANDERSEN_PROB}}) to zero.
+*To run an NVE ensemble:
+#Set the standard MD-related tags: {{TAG|IBRION}}=0, {{TAG|TEBEG}}, {{TAG|POTIM}}, and {{TAG|NSW}}.
+#Set {{TAG|MDALGO}}=1 and {{TAG|ANDERSEN_PROB}}=0.0.
+
+== {{TAG|MDALGO}}=2: Nose-Hoover thermostat==
+
+For the description of the Nose-Hoover thermostat see: {{TAG|Nose-Hoover thermostat}}.
+
+The Nose-Hoover thermostat is currently only available for the NVT ensemble.
+
+=== Standard molecular dynamics ===
+
+* For a standard molecular dynamics run with Nose-Hoover thermostat, one has to:
+#Set the standard MD-related tags: {{TAG|IBRION}}=0, {{TAG|TEBEG}}, {{TAG|POTIM}}, and {{TAG|NSW}}.
+#Set {{TAG|MDALGO}}=2, and choose an appropriate setting for {{TAG|SMASS}}.
+
+=== Constrained molecular dynamics ===
+For a description of constrained molecular dynamics see {{TAG|Constrained molecular dynamics}}.
+
+* For a constrained molecular dynamics run with Nose-Hoover thermostat, one has to:
+#Set the standard MD-related tags: {{TAG|IBRION}}=0, {{TAG|TEBEG}}, {{TAG|POTIM}}, and {{TAG|NSW}}.
+#Set {{TAG|MDALGO}}=2, and choose an appropriate setting for {{TAG|SMASS}}.
+#Define geometric constraints in the {{FILE|ICONST}}-file, and set the STATUS parameter for the constrained coordinates to 0.
+#When the free-energy gradient is to be computed, set {{TAG|LBLUEOUT}}=.TRUE.
+
+=== Slow-growth approach ===
+
+For a description of slow-growth approach see {{TAG|Slow-growth approach}}.
+
+* For a slow-growth approach run with Nose-Hoover thermostat, one has to:
+#Set the standard MD-related tags: {{TAG|IBRION}}=0, {{TAG|TEBEG}}, {{TAG|POTIM}}, and {{TAG|NSW}}
+#Set {{TAG|MDALGO}}=2, and choose an appropriate setting for {{TAG|SMASS}}
+#Define geometric constraints in the {{FILE|ICONST}}-file, and set the <tt>STATUS</tt> parameter for the constrained coordinates to 0
+#When the free-energy gradient is to be computed, set {{TAG|LBLUEOUT}}=.TRUE.
+<ol start="5">
+<li>Specify the transformation velocity-related {{TAG|INCREM}}-tag for each geometric parameter with <tt>STATUS=0</tt></li>
+</ol>
+
+=== Monitoring geometric parameters ===
+Geometric parameters with <tt>STATUS = 7</tt> in the {{FILE|ICONST}}-file are monitored during the MD simulation.
+The corresponding values are written onto the {{FILE|REPORT}}-file, for each MD step, after the lines following the string <tt>Monit_coord</tt>.
+
+Sometimes it is desirable to terminate the simulation if all values of monitored parameters get larger that some predefined upper and/or lower limits. These limits can be set by the user by means of the {{TAG|VALUE_MAX}} and {{TAG|VALUE_MIN}}-tags.
+
+To monitor geometric parameters during an MD run:
+#Set the standard MD-related tags: {{TAG|IBRION}}=0, {{TAG|TEBEG}}, {{TAG|POTIM}}, and {{TAG|NSW}}
+#Set {{TAG|MDALGO}}=2, and choose an appropriate setting for {{TAG|SMASS}}
+#Define geometric constraints in the {{FILE|ICONST}}-file, and set the <tt>STATUS</tt> parameter for the constrained coordinates to 7
+#Optionally, set the upper and/or lower limits for the coordinates, by means of the {{TAG|VALUE_MAX}} and {{TAG|VALUE_MIN}}-tags, respectively.
+<div id="Langevin"></div>
+
+=== Metadynamics ===
+For a description of metadynamics see {{TAG|Metadynamics}}.
+
+* For a metadynamics run with Nose-Hoover thermostat, one has to:
+#Set the standard MD-related tags: {{TAG|IBRION}}=0, {{TAG|TEBEG}}, {{TAG|POTIM}}, and {{TAG|NSW}}.
+#Set {{TAG|MDALGO}}=2 (or {{TAG|MDALGO}}=21 in VASP 5.x), and choose an appropriate setting for {{TAG|SMASS}}.
+#Set the parameters {{TAG|HILLS_H}}, {{TAG|HILLS_W}}, and {{TAG|HILLS_BIN}}.
+#Define collective variables in the {{FILE|ICONST}}-file, and set the <tt>STATUS</tt> parameter for the collective variables to 5.
+#If needed, define the bias potential in the {{FILE|PENALTYPOT}}-file.
+
+The actual time-dependent bias potential is written to the {{FILE|HILLSPOT}}-file, which is updated after adding a new Gaussian. At the beginning of the simulation, VASP attempts to read the initial bias potential from the {{FILE|PENALTYPOT}}-file. For the continuation of a metadynamics run, copy {{FILE|HILLSPOT}} to {{FILE|PENALTYPOT}}. The values of all collective variables for each MD step are listed in {{FILE|REPORT}}-file, check the lines after the string <tt>Metadynamics</tt>.
+
+=== Biased molecular dynamics ===
+
+For a description of biased molecular dynamics see {{TAG|Biased molecular dynamics}}.
+
+* For a biased molecular dynamics run with Nose-Hoover thermostat, one has to:
+#Set the standard MD-related tags: {{TAG|IBRION}}=0, {{TAG|TEBEG}}, {{TAG|POTIM}}, and {{TAG|NSW}}.
+#Set {{TAG|MDALGO}}=2 (or {{TAG|MDALGO}}=21 in VASP 5.x), and choose an appropriate setting for {{TAG|SMASS}}.
+#In order to avoid updating of the bias potential, set {{TAG|HILLS_BIN}}={{TAG|NSW}}.
+#Define collective variables in the {{FILE|ICONST}}-file, and set the <tt>STATUS</tt> parameter for the collective variables to 5.
+#Define the bias potential in the {{FILE|PENALTYPOT}}-file.
+
+The values of all collective variables for each MD step are listed in the {{FILE|REPORT}}-file, check the lines after the string <tt>Metadynamics</tt>.
+
+== {{TAG|MDALGO}}=3: Langevin thermostat ==
+
+For the description of the Langevin thermostat see: {{TAG|Langevin thermostat}}.
+
+The Langevin thermostat is available for [[NVT ensemble|NVT]] and [[NpT ensemble|NpT]] ensembles.
+
+=== ''NVT''-simulation with Langevin thermostat ===
+
+*To run an ''NVT''-simulation with a Langevin thermostat, one has to:
+{{Template:NVT_Langevin_thermostat_recipe}}
+
+=== ''NpT''-simulation with Langevin thermostat ===
+The Langevin dynamics in the isobaric-isothermal ensemble is calculated by the method of Parrinello and Rahman{{cite|parrinello:prl:1980}}{{cite|parrinello:jap:1981}} (see {{TAG|NpT ensemble}} for more descriptions) combined with a {{TAG|Langevin thermostat}}.
+
+*To run an NpT-simulation (Parinello-Rahman dynamics) with a Langevin thermostat, one has to:
+{{Template:NpT_Langevin_thermostat_recipe}}
+
+Note that the advanced simulation protocols, such metadynamics, or geometric constraints and restraints are available within the {{TAG|MDALGO}}=3 setting.
+
+=== Stochastic boundary conditions ===
+In some cases it is desirable to study approach of initially non-equilibrium system to equilibrium. Examples of such simulations include the impact problems when a particle with large kinetic energy hits a surface or calculation of friction force between two surfaces sliding with respect to each other. As shown by Toton ''et al.''<ref name="Toton10"/>, this type of problems can be studied using the stochastic boundary conditions (SBC) derived from the generalized Langevin equation by Kantorovich and Rompotis.<ref name="Kantorovich08"/> In this approach, the system of interest is divided into three regions: (a) fixed atoms, (b) the internal (Newtonian) atoms moving according to Newtonian dynamics, and (c) a buffer region of Langevin atoms (''i.e.'', atoms governed by [[#LangevinEOM|Langevin equations of motion]]) located between (a) and (b).
+
+The role of the Langevin atoms is to dissipate heat, while the fixed atoms are needed solely to create the correct potential well for the Langevin atoms to move in. The Newtonian region should include all atoms relevant to the process under study: in the case of the impact problem, for instance, the Newtonian region should contain atoms of the molecule hitting the surface and several uppermost layers of the material forming the surface. Performing molecular dynamics with such a setup guarantees that the system (possibly out of equilibrium initially) arrives at the appropriate canonical distribution.
+
+*To run a simulation with stochastic boundary conditions, one has to:
+#Set the standard MD-related tags: {{TAG|IBRION}}=0, {{TAG|TEBEG}}, {{TAG|POTIM}}, and {{TAG|NSW}}
+#Set {{TAG|ISIF}}=2
+#Set {{TAG|MDALGO}}=3 to invoke the Langevin thermostat
+#Prepare the {{FILE|POSCAR}} file in such a way that the Newtonian and Langevin atoms are treated as different species (even if they are chemically identical). In your {{FILE|POSCAR}}, use "selective dynamics" and the corresponding logical flags to define the frozen and moveable atoms.
+#Specify friction coefficients &gamma;, for all species in the {{FILE|POSCAR}} file, by means of the {{TAG|LANGEVIN_GAMMA}}-tag: set the friction coefficients to 0 for all fixed and Newtonian atoms, and choose a proper &gamma; for the Langevin atoms.
+
+==== Practical example ====
+
+Consider a system consisting of 16 hydrogen and 48 silicon atoms. Suppose that eight silicon atoms are considered to be Langevin atoms and the remaining 32 Si atoms are either fixed or Newtonian atoms. The Langevin and Newtonian (or fixed) atoms should be considered as different species, ''i.e.'', the {{FILE|POSCAR}}-file should contain the line like this:
+
+ Si H Si
+ 40 16 8
+
+As only the final eight Si atoms are considered to be Langevin atoms, the {{FILE|INCAR}}-file should contain the following line defining the friction coefficients:
+
+ LANGEVIN_GAMMA = 0.0   0.0   10.0
+
+''i.e.'', for all non-Langevin atoms, &gamma; should be set to zero.
+
+<div id="multiAnderson"></div>
+
+== {{TAG|MDALGO}}=4: Nose Hoover chains thermostat ==
+For a description of Nose Hoover chains theromastat, see {{TAG|NHC thermostat}}.
+*To run an ''NVT''-simulation with a Nose Hoover chains thermostat, one has to:
+#Set the standard MD-related tags: {{TAG|IBRION}}=0, {{TAG|TEBEG}}, {{TAG|POTIM}}, and {{TAG|NSW}}
+#Set {{TAG|ISIF}}=2
+#Set {{TAG|MDALGO}}=4 to invoke the thermostat, select the number of thermostats in chain via {{TAG|NHC_NCHAINS}} and choose an appropriate setting for the thermostat parameter {{TAG|NHC_PERIOD}}.
+Note that the advanced simulation protocols, such metadynamics, or geometric constraints and restraints are available within the {{TAG|MDALGO}}=4 setting.
+
+== {{TAG|MDALGO}}=5: Canonical sampling through velocity-rescaling (CSVR thermostat) ==
+{{NB|mind|This option is available as of VASP 6.4.3.}}
+
+For a description of CSVR theromastat, see {{TAG|CSVR thermostat}}.
+*To run an ''NVT''-simulation with a CSVR thermostat, one has to:
+#Set the standard MD-related tags: {{TAG|IBRION}}=0, {{TAG|TEBEG}}, {{TAG|POTIM}}, and {{TAG|NSW}}
+#Set {{TAG|ISIF}}=2
+#Set {{TAG|MDALGO}}=5 to invoke the thermostat and choose an appropriate setting for the thermostat parameter {{TAG|CSVR_PERIOD}}.
+Note that the advanced simulation protocols, such metadynamics, or geometric constraints and restraints are available within the {{TAG|MDALGO}}=5 setting.
+
+== {{TAG|MDALGO}}=13: Multiple Andersen thermostats ==
+Up to three user-defined atomic subsystems may be coupled with independent Andersen thermostats<ref name="Andersen80"/> (see remarks under {{TAG|MDALGO}}=1 as well).
+The {{FILE|POSCAR}} file must be organized such that the positions of atoms of subsystem ''i+1'' are defined after those for the subsystem ''i'', and the following flags must be set by the user:
+*{{TAG|NSUBSYS}}=[int array]
+:Define the last atom for each subsystem (two or three values must be supplied). For instance, if total of 20 atoms is defined in the {{FILE|POSCAR}} file, and the initial 10 atoms belong to the subsystem 1, the next 7 atoms to the subsystem 2, and the last 3 atoms to the subsystem 3, {{TAG|NSUBSYS}} should be defined as follows:
+
+:{{TAG|NSUBSYS}}= 10 17 20
+
+:Note that the last number in the previous example is actually redundant (clearly the last three atoms belong to the last subsystem) and does not have to be user-supplied.
+
+*{{TAG|TSUBSYS}}=[real array]
+:Simulation temperature for each subsystem
+*{{TAG|PSUBSYS}}=[real array]
+:Collision probability for atoms in each subsystem. Only the values 0&le;{{TAG|PSUBSYS}}&le;1 are allowed.
+
+== Related Tags and Sections ==
+{{TAG|IBRION}},
+{{TAG|ISIF}},
+{{TAG|SMASS}},
+{{TAG|ANDERSEN_PROB}},
+{{TAG|RANDOM_SEED}},
+{{TAG|LBLUEOUT}},
+{{TAG|SHAKETOL}},
+{{TAG|SHAKEMAXITER}},
+{{TAG|HILLS_H}},
+{{TAG|HILLS_W}},
+{{TAG|HILLS_BIN}},
+{{TAG|INCREM}},
+{{TAG|VALUE_MIN}},
+{{TAG|VALUE_MAX}},
+{{TAG|LANGEVIN_GAMMA}},
+{{TAG|LANGEVIN_GAMMA_L}},
+{{TAG|PMASS}},
+{{TAG|NSUBSYS}},
+{{TAG|TSUBSYS}},
+{{TAG|PSUBSYS}},
+{{FILE|ICONST}},
+{{FILE|PENALTYPOT}},
+{{FILE|HILLSPOT}},
+{{FILE|REPORT}}
+
+{{sc|MDALGO|Examples|Examples that use this tag}}
+
+== References ==
+<references>
+<ref name="Andersen80">[http://dx.doi.org/10.1063/1.439486 H. C. Andersen, J. Chem. Phys. 72, 2384 (1980).]</ref>
+<ref name="Toton10">[http://dx.doi.org/10.1088/0953-8984/22/7/074205 D. Toton, C. D. Lorenz, N. Rompotis, N. Martsinovich, and L. Kantorovich, J. Phys.: Condens. Matter 22, 074205 (2010).]</ref>
+<ref name="Kantorovich08">[http://dx.doi.org/10.1103/PhysRevB.78.094305 L. Kantorovich and N. Rompotis, Phys. Rev. B 78, 094305 (2008).]</ref>
+</references>
+----
+
+[[Category:INCAR tag]][[Category:Molecular dynamics]][[Category:Advanced molecular-dynamics sampling]][[Category:Howto]]

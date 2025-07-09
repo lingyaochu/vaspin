@@ -1,0 +1,14 @@
+{{TAGDEF|LSCSGRAD|.TRUE. {{!}} .FALSE.|.TRUE.}}
+
+Description: {{TAGDEF|LSCSGRAD}} decides whether to compute gradients in the calculation of the MBD dispersion energy or the SCS contribution.
+----
+
+== Related tags and articles ==
+{{TAG|IVDW}},
+{{TAG|Many-body dispersion energy}},
+{{TAG|Self-consistent screening in Tkatchenko-Scheffler method}},
+{{TAG|LVDWEXPANSION}}
+
+{{sc|LVDWEXPANSION|Examples|Examples that use this tag}}
+----
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:van der Waals functionals]]

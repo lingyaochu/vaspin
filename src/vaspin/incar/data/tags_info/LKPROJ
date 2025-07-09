@@ -1,0 +1,37 @@
+{{TAGDEF|LKPROJ|.TRUE. {{!}} .FALSE. | .FALSE.}}
+
+Description: switches on the '''k'''-point projection scheme.
+----
+For {{TAG|LKPROJ}}=.TRUE., VASP will project the orbitals onto the reciprocal space of an alternative unit cell.
+This unit cell has to be supplied in the file {{FILE|POSCAR.prim}}, in the usual {{FILE|POSCAR}} format.
+
+As a first step, the '''k'''-projection scheme determines the set {'''k&prime;'''}, of '''k'''-points in the irreducible part of the first Brillouin zone of the structure given in {{FILE|POSCAR.prim}}, for which
+
+:<math>
+\langle \mathbf{k}'+\mathbf{G}' | \mathbf{k}+\mathbf{G}\rangle \neq 0
+</math>
+
+where '''G''' and '''G&prime;''' are reciprocal space vectors in the reciprocal spaces of the structures specified in {{FILE|POSCAR}} and {{FILE|POSCAR.prim}}, respectively. As usual, the set of points {'''k'''} is specified in the {{FILE|KPOINTS}} file.
+The set {'''k&prime;'''} is written to the {{FILE|OUTCAR}} file. Look at the part of the {{FILE|OUTCAR}} following <tt>NKPTS_PRIM</tt>.
+
+Once the set {'''k&prime;'''} has been determined VASP will compute the following
+
+:<math>
+\Kappa_{n\mathbf{k}\sigma\mathbf{k}'}=\sum_{\mathbf{GG}'}
+|\langle \mathbf{k}'+\mathbf{G}'| \mathbf{k}+\mathbf{G}\rangle
+\langle \mathbf{k}+\mathbf{G} | \psi_{n\mathbf{k}\sigma}\rangle |^2
+</math>
+and writes this information onto the {{FILE|PRJCAR}} and {{FILE|vasprun.xml}} files.
+
+K<sub>n'''k'''&sigma;'''k&prime;'''</sub> provides a measure of how strongly the orbital <math>\Psi</math><sub>n'''k'''&sigma;</sub> contributes at the point '''k&prime;''' in the reciprocal space of structure {{FILE|POSCAR.prim}}.
+
+One may, for instance, use this scheme to project the orbitals of a supercell onto the reciprocal space of a generating primitive cell.
+{{NB|warning| At the moment the '''k'''-point projection only works with {{TAG|NPAR}}{{=}}1.}}
+{{NB|mind| Available as of VASP version 6.0.0.}}
+
+== Related tags and articles ==
+{{FILE|PRJCAR}}
+
+{{sc|LKPROJ|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Crystal momentum]]

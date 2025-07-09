@@ -1,0 +1,15 @@
+{{TAGDEF|LVGVAPPL|.TRUE. {{!}} .FALSE. | .FALSE.}}
+
+Description: {{TAG|LVGVAPPL}} determines whether the ''vGv'' orbital magnetic susceptibility is applied in the calculation of the CSA tensor.
+
+{{TAG|LVGVAPPL}} is available as of VASP.6.4.0.
+----
+When performing a chemical shift calculation the standard ''pGv'' susceptibility is used to calculate the <math>\mathbf{G=0}</math> contribution to the CSA tensor by default.
+This can be overruled with {{TAG|LVGVAPPL}}.
+In case {{TAG|LVGVAPPL}} is true, the ''vGv'' susceptibility is applied for the calculation of the <math>\mathbf{G=0}</math> contribution to the CSA tensor. For details see {{TAG|LVGVCALC}}.
+
+== Related tags and articles ==
+{{TAG|LCHIMAG}}, {{TAG|LVGVCALC}}
+----
+
+[[Category:INCAR tag]][[Category:NMR]]

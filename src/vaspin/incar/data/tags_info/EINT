@@ -1,0 +1,31 @@
+{{TAGDEF|EINT| [real1] [real2] {{!}} [real1] | not set}}
+
+Description: {{TAG|EINT}} sets the energy interval for bands contributing to the calculation of the [[Band-decomposed charge densities|partial charge density]] in eV.
+----
+*{{TAG|EINT}}= [real1] [real2]:
+:If two values are given, the energy interval between those values is used.
+*{{TAG|EINT}}= [real1]:
+:If only one value is given, the Fermi energy <math>\epsilon_f</math> is used as the other limit [real2] of the interval.
+----
+{{NB| important | The energies passed in {{TAG|EINT}} are used as set if {{TAG|NBMOD}} {{=}} -2, but will be added to the Fermi energy (<math>\epsilon_f</math> + real1 and <math>\epsilon_f</math> + real2) if {{TAG|NBMOD}} {{=}} -3.}}
+If [real1] is larger than [real2], the two values will be flipped internally, so a meaningful energy interval is used.
+
+If {{TAG|EINT}} is set, but {{TAG|NBMOD}} is not, it will be internally set to {{TAG|NBMOD}} = -2, and the input values of {{TAG|EINT}} will be treated as absolute energies.
+
+{{TAG|EINT}} can be conveniently used in combination with {{TAG|NBMOD}} = -3 to mimic the bias-voltage for [[STM_of_graphene|simulating a scanning-tunneling-microscope image]].
+== Related tags and articles ==
+{{TAG|LPARD}},
+{{TAG|NBMOD}},
+{{TAG|IBAND}},
+{{TAG|KPUSE}},
+{{TAG|LSEPB}},
+{{TAG|LSEPK}},
+{{TAG|LPARDH5}},
+{{FILE|PARCHG}},
+{{FILE|vaspout.h5}},
+[[Band-decomposed charge densities]]
+
+{{sc|EINT|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Charge density]]

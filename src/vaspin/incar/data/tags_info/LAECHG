@@ -1,0 +1,44 @@
+{{TAGDEF|LAECHG|.TRUE. {{!}} .FALSE. |.FALSE.}}
+
+Description: when {{TAG|LAECHG}}=.TRUE. the ''all-electron'' charge density will be reconstructed explicitly and written to files.
+----
+If {{TAG|LAECHG}}=.TRUE. is set VASP will reconstruct the ''all-electron'' charge density on the so-called "fine" FFT-grid.
+This "fine" FFT-grid consists of {{TAG|NGXF}}&times;{{TAG|NGYF}}&times;{{TAG|NGZF}} points in real space (''i.e.'', the grid that is used to represent the augmented pseudo charge densities of the USPP and PAW methods).
+
+In fact, for {{TAG|LAECHG}}=.TRUE., VASP will reconstruct three distinct ''all-electron'' densities:
+
+# the core density.
+# the proto-atomic valence density (overlapping atomic charge densities).
+# the self-consistent valence density.
+
+These are written to the files {{FILE|AECCAR0}}, {{FILE|AECCAR1}}, and {{FILE|AECCAR2}}, respectively.
+The first two of these files are written at the start of the run, whereas the last is written at the end after self-consistency has been reached.
+
+'''N.B.:''' In the language of the [[Projector-augmented-wave_formalism|PAW method]] an "all-electron" density does '''not''' refer to the ''density of all electrons'', instead it denotes a density that includes all the nodal features near the nucleus associated with the ''true'' (as opposed to the ''pseudized'') one-electron orbitals.
+Within the PAW method, the ''all-electron'' density arising from the one-electron pseudo orbitals <math>\{ \widetilde{\psi}_{n\mathbf{k}} \}</math> is given by:
+:<math>
+n(\mathbf{r})=
+\sum_{n{\mathbf{k}}} f_{n{\mathbf{k}}}
+\langle \widetilde{\psi}_{n\mathbf{k}}| \mathbf{r}\rangle\langle  \mathbf{r}| \widetilde{\psi}_{n\mathbf{k}} \rangle +
+\sum_{\alpha, \beta}
+(
+  \phi^\ast_\alpha(\mathbf{r})
+  \phi_\beta (\mathbf{r})
+ -
+  \widetilde{\phi}^\ast_\alpha(\mathbf{r})
+  \widetilde{\phi}_\beta (\mathbf{r})
+)
+\sum_{n{\mathbf{k}}} f_{n{\mathbf{k}}}
+\langle\widetilde{\psi}_{n\mathbf{k}}|\widetilde{p}_\alpha\rangle
+\langle\widetilde{p}_\beta| \widetilde{\psi}_{n\mathbf{k}}\rangle
+</math>
+
+Normally one does not attempt to reconstruct ''all-electron'' densities explicitly since the second term on the right-hand side varies rapidly near the nuclei and is too costly to expand in-plane waves (see the bit about [[Projector-augmented-wave_formalism|augmentation and compensation charges]]). For {{TAG|LAECHG}}=.TRUE., however, this reconstruction is exactly the thing that is done.
+
+== Related tags and articles ==
+{{FILE|AECCAR0}}, {{FILE|AECCAR1}}, {{FILE|AECCAR2}}
+
+{{sc|LAECHG|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Projector-augmented-wave method]][[Category: Charge density]]

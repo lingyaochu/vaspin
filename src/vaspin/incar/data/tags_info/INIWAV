@@ -1,0 +1,18 @@
+{{TAGDEF|INIWAV|0 {{!}} 1}}
+{{DEF|INIWAV|1|}}
+
+Description: Specifies how to set up the initial orbitals in case {{TAG|ISTART}}=0.
+----
+*{{TAG|INIWAV}}=0
+:Take 'jellium orbitals', i.e., fill the Kohn-Sham&ndash;orbital arrays with plane waves of lowest kinetic energy = lowest eigenvectors for a constant potential ('jellium').
+{{NB|important| 'jellium' calculations require a specific {{FILE|POTCAR}} file, not included in the standard potential database.|:}}
+
+*{{TAG|INIWAV}}=1
+:Fill the Kohn-Sham&ndash;orbital arrays with random numbers. It is definitely the safest fool-proof switch.
+{{NB|tip|Use {{TAG|INIWAV}}{{=}}1 whenever possible.|:}}
+{{NB|mind|The {{TAG|INIWAV}} tag is only used for jobs that start from scratch ({{TAG|ISTART}}{{=}}0) and has no meaning otherwise.}}
+
+== Related tags and sections ==
+{{TAG|ISTART}}
+
+[[Category:INCAR tag]][[Category:Electronic minimization]]

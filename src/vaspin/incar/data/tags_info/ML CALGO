@@ -1,0 +1,18 @@
+{{DISPLAYTITLE:ML_CALGO}}
+{{TAGDEF|ML_CALGO|[integer]|0}}
+
+Description: Chooses error estimation type for on-the-fly training or reselection of local referenc configurations.
+----
+
+This tag chooes which algorithm is employed for the error estimation in {{TAG|ML_MODE}}=''TRAIN'' or ''SELECT''. The following two choices are available:
+*{{TAG|ML_CALGO}}=0: Bayesian error estimation. Constant or variable threshold. Default.
+*{{TAG|ML_CALGO}}=1: Spilling factor. Constant threhold.
+
+In both modes an ab-initio calculation is carried out if the value of the error estimate is above a threshold specified by {{TAG|ML_CTIFOR}}. In both algorithms the estimators have different units, values and hence defaults for this threshold.
+In contrast to the Bayesian error estimation which can be run in many different modes for the threhold update (see {{TAG|ML_ICRITERIA}}), the spilling factor can only be used with a constant threshold ({{TAG|ML_ICRITERIA}}=0).
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_MODE}}, {{TAG|ML_ICRITERIA}}, {{TAG|ML_CTIFOR}}
+----
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

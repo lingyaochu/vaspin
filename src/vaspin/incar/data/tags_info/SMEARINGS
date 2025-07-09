@@ -1,0 +1,24 @@
+{{TAGDEF|SMEARINGS|[real array of length (2 * {{TAG|NSW}})]|not set}}
+
+Description: {{TAG|SMEARINGS}} defines the smearing parameters for {{TAGO|ISMEAR|-3}} in the calculation of the partial occupancies.
+
+----
+
+{{TAGO|ISMEAR|-3}} performs a loop over smearing-parameters supplied in the {{TAG|INCAR}} file. With the tag {{TAG|SMEARINGS}}, you select which smearings are used
+ {{TAG|SMEARINGS}} = ismear1 sigma1  ismear2 sigma2  ...
+{{NB|mind|You must set {{TAG|NSW}} to the number of different smearings.}}
+VASP will then read the provided smearings and conduct ({{TAG|NSW}} + 1) calculations with the different smearings.
+For the first calculation, VASP uses tetrahedron smearing {{TAGO|ISMEAR|-5}} to ensure that the tetrahedron information is present in case any of the selected smearings uses a tetrahedron method.
+Since VASP uses the relaxation engine to loop over the different smearings you cannot combine {{TAG|SMEARINGS}} with other relaxation methods {{TAG|IBRION}}.
+
+== Related tags and articles ==
+
+{{TAG|ISMEAR}},
+{{TAG|SIGMA}},
+{{TAG|NSW}},
+{{TAG|IBRION}},
+[[Smearing technique]]
+
+{{sc|SMEARINGS|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Electronic occupancy]]

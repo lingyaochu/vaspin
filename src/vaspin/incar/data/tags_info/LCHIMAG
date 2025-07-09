@@ -1,0 +1,197 @@
+{{TAGDEF|LCHIMAG|.TRUE. {{!}} .FALSE. | .FALSE.}}
+
+Description: Calculate the chemical shifts and magnetic susceptibility within linear response theory.
+----
+For {{TAGO|LCHIMAG|True}}, the chemical shift tensors and magnetic susceptibility is computed. The implementation{{Cite|dewijs:laskowski:jcp:2017}} is based on linear response theory using the gauge-invariant PAW method of Yates, Pickard, and Mauri {{Cite|pickard:prb:2001}}{{Cite|yates:prb:2007}}, that is an extension to the standard [[PAW method]] to account for the effects of a vector gauge field <math>A</math>. The NMR response currents are computed and the induced B field is calculated based on the Biot-Savart law.
+<!--
+See also {{TAG|WRT_NMRCUR}} to write the currents and {{TAG|NUCIND}} to compute the nucleus-independent chemical shielding (NICS).
+{{NB|warning|This method only works for non-metallic systems, i.e., that have a finite bandgap.}}-->
+
+Follow these guides for [[Calculating the chemical shieldings|calculating the chemical shieldings]] and [[Calculating the magnetic susceptibility|calculating the magnetic susceptibility]].
+
+== Definitions ==
+
+The chemical shielding tensor is defined as:
+:<math>
+\sigma_{ij}(\mathbf{R}) = - \frac{ \partial B^{\mathrm{in}}_i(\mathbf{R})}{ \partial B^{\mathrm{ext}}_j}
+</math>
+
+Here <math>\mathbf{R}</math> denotes the atomic nuclear site, <math>i</math> and <math>j</math> denote Cartesian indices, <math>\mathbf{B}^{\mathrm{ext}}</math> an applied DC external magnetic field and <math>\mathbf{B}^{\mathrm{in}}(\mathbf{R})</math> the induced magnetic field at the nucleus.
+
+NMR experiments yield information on the shielding relative to a reference compound:
+:<math>
+\delta_{ij}(\mathbf{R}) = \sigma_{ij}^{\mathrm{ref}} - \sigma_{ij}(\mathbf{R})
+</math>
+Here, <math>\sigma_{ij}^{\mathrm{ref}}</math> is the isotropic shielding of the nucleus in the reference compound.  <math>\delta_{ij}(\mathbf{R})</math> is the chemical shift tensor. In order to compare numerical results with the experimental data, one usually considers a series of compounds and references them to the experimental series.
+<!--{{NB|mind|If VASP reports the chemical shift ({{TAGO|LNMRSHIELD|False}}) it is simply the negative shielding, <math>\delta_{ij}(\mathbf{R})= - \sigma_{ij}(\mathbf{R})</math>. The reference must still be added in the postprocessing to analyze the data.}}-->
+
+VASP calculates chemical "shifts" for non-metallic crystalline systems using the linear response method of Yates, Pickard, and Mauri {{Cite|pickard:prb:2001}}{{Cite|yates:prb:2007}}.
+
+The isotropic chemical "shift" <math>\sigma_{iso}</math>, span <math>\Omega</math>, and skew <math>\kappa</math> are also reported, according to the following  Herzfeld-Berger convention {{Cite|mason:ssn:1993}}:
+
+:<math>
+\sigma_{iso} = (\sigma_{11} + \sigma_{22} + \sigma_{33})/3
+</math>
+
+:<math>
+\Omega = \sigma_{33} - \sigma_{11}
+</math>
+
+:<math>
+\kappa = 3(\sigma_{iso} - \sigma_{22})/\Omega.
+</math>
+
+The orbital magnetic susceptibility <math>\chi</math> is calculated according to a finite-differences approach:
+
+:<math>
+\chi_{\textrm{bare}} = \lim_{q\to0} \frac{F(q) 2F(q) + F(-q)}{q^2}
+</math>
+
+where <math>F_{ij}(q)=(2-\delta_{ij})Q_{ij}(q)</math>.
+
+''Q<sub>ij</sub>'' is approximated in two ways. The so-called ''pGv''-approximation is used by default {{Cite|yates:prb:2007}}, where ''p'' is momentum, ''v'' is velocity, and ''G'' is a Green's function. An alternative approach, the ''vGv''-approximation is also used to calculate an alternative susceptibility since VASP 6.4.0 {{Cite|avezac:prb:2007}}. ''Q'' is defined for the ''pGv''-approximation as:
+
+:<math>
+Q(q) = - \frac{1}{c^2 N_k V_c} \sum_{i=x,y,z} \sum_{o,\textbf{k}} \textrm{Re}[\langle \bar{u}^{(0)}_{o,\textbf{k}} | \hat{\textbf{u}}_i \times (-i \nabla + \textbf{k})  \times \mathcal{G}_{\textbf{k} + \textbf{q}_i}(\epsilon_{o,\textbf{k}}) \hat{\textbf{u}}_i \times \textbf{v}_{\textbf{k} + \textbf{q}_i, \textbf{k}}(\epsilon_{o,\textbf{k}}) | \bar{u}^{(0)}_{o,\textbf{k}} \rangle]
+</math>
+
+and for the ''vGv''-approximation as:
+
+:<math>
+Q(q) = - \frac{1}{c^2 N_k V_c} \sum_{i=x,y,z} \sum_{o,\textbf{k}} \textrm{Re}[\langle \bar{u}^{(0)}_{o,\textbf{k}} | \hat{\textbf{u}}_i \times \textbf{v}_{\textbf{k} + \textbf{q}_i, \textbf{k}}(\epsilon_{o,\textbf{k}})  \times \mathcal{G}_{\textbf{k} + \textbf{q}_i}(\epsilon_{o,\textbf{k}}) \hat{\textbf{u}}_i \times \textbf{v}_{\textbf{k} + \textbf{q}_i, \textbf{k}}(\epsilon_{o,\textbf{k}}) | \bar{u}^{(0)}_{o,\textbf{k}} \rangle]
+</math>.
+
+== Output ==
+The isotropic chemical shieldings are printed towards the end of the {{FILE|OUTCAR}} file, after the self-consistent calculation has finished. The chemical shift tensors both before and after space group symmetrization. These are the absolute tensors for the infinite lattice, excluding core contributions. They can be searched for under the <code>UNSYMMETRIZED TENSORS</code> and <code>SYMMETRIZED TENSORS</code> after <code>Absolute Chemical Shift tensors</code>. Additionally, the magnetic susceptibility is printed shortly after and found under <code>ORBITAL MAGNETIC SUSCEPTIBILITY</code>.
+
+===Magnetic susceptibility===
+The magnetic susceptibility is found at the start of the <code>ORBITAL MAGNETIC SUSCEPTIBILITY, excluding core contribution</code>. The magnetic susceptibility is split into that obtained by the ''pGv''-approximation and obtained by the ''vGv''-approximation:
+
+<pre>
+-------------------------------------------------------------
+  ORBITAL MAGNETIC SUSCEPTIBILITY, excluding core contribution
+ -------------------------------------------------------------
+  Approximate magnetic susceptibility, pGv (10^-6 cm^3/mole)
+     1        -70.928534         -0.000000          0.000000
+     2         -0.000000        -70.928534          0.000000
+     3          0.000000          0.000000        -70.928534
+ -------------------------------------------------------------
+  Approximate magnetic susceptibility, vGv (10^-6 cm^3/mole)
+     1        -63.412095         -0.000000          0.000000
+     2         -0.000000        -63.412095          0.000000
+     3          0.000000          0.000000        -63.412095
+
+         principal value                      axis
+       (10^-6 cm^3/mole)           x,          y,          z
+      --------------------------------------------------------
+              -63.412095      0.1652     -0.9863      0.0000
+              -63.412095     -0.9863     -0.1652      0.0000
+              -63.412095      0.0000      0.0000      1.0000
+ -------------------------------------------------------------
+</pre>
+
+===Chemical shielding===
+To obtain the full absolute tensors requires adding both the <math>\mathbf{G=0}</math> contribution (cf. <code>G=0 CONTRIBUTION TO CHEMICAL SHIFT</code>) and the contributions due to the core electrons. The latter consists of contributions for each chemical species separately (depending on {{TAG|POTCAR}}) and a global <math>\mathbf{G=0}</math> susceptibility contribution.
+
+The reference shift experienced by the core is given first:
+
+<pre>
+  Core NMR properties
+
+  typ  El   Core shift (ppm)
+ ----------------------------
+    1  C     -200.5098801
+ ----------------------------
+
+  Core contribution to magnetic susceptibility:     -0.31  10^-6 cm^3/mole
+ --------------------------------------------------------------------------
+</pre>
+{{NB|important|The isotropic chemical shift <math>\delta_{\mathrm{iso}}\mathrm{[VASP]}</math> (ISO_SHIFT) is the negative of the isotropic shielding. To make it a ''real shift'' one should add the reference shielding.}}
+
+Next, the tensor is processed and its chemical shielding anisotropy (CSA) characteristics are printed in the {{FILE|OUTCAR}}. The tensor is symmetrized (<math>\sigma_{ij} = \sigma_{ji}</math> is enforced) and diagonalized. From the three diagonal values the isotropic chemical "shift" <math>\delta_{\mathrm{iso}}\mathrm{[VASP]}</math>, span <math>\Omega</math>, and skew <math>\kappa</math> are calculated and printed see Ref. {{Cite|mason:ssn:1993}} for unambiguous definitions. Note that <math>\kappa</math> is ill-defined if <math>\Omega = 0</math>. Units are ppm, except for the skew. A typical output is given below:
+
+<pre>
+   ---------------------------------------------------------------------------------
+    CSA tensor (J. Mason, Solid State Nucl. Magn. Reson. 2, 285 (1993))
+   ---------------------------------------------------------------------------------
+               EXCLUDING G=0 CONTRIBUTION             INCLUDING G=0 CONTRIBUTION
+           -----------------------------------   -----------------------------------
+    ATOM    ISO_SHIFT        SPAN        SKEW     ISO_SHIFT        SPAN        SKEW
+   ---------------------------------------------------------------------------------
+    (absolute, valence only)
+       1    4598.8125      0.0000      0.0000     4589.9696      0.0000      0.0000
+       2     291.5486      0.0000      0.0000      282.7058      0.0000      0.0000
+       3     736.5979    344.8803      1.0000      727.7550    344.8803      1.0000
+       4     736.5979    344.8803      1.0000      727.7550    344.8803      1.0000
+       5     736.5979    344.8803      1.0000      727.7550    344.8803      1.0000
+   ---------------------------------------------------------------------------------
+    (absolute, valence and core)
+       1   -6536.1417      0.0000      0.0000    -6547.9848      0.0000      0.0000
+       2   -5706.3864      0.0000      0.0000    -5718.2296      0.0000      0.0000
+       3   -2369.4015    344.8803      1.0000    -2381.2446    344.8803      1.0000
+       4   -2369.4015    344.8803      1.0000    -2381.2446    344.8803      1.0000
+       5   -2369.4015    344.8803      1.0000    -2381.2446    344.8803      1.0000
+   ---------------------------------------------------------------------------------
+    IF SPAN.EQ.0, THEN SKEW IS ILL-DEFINED
+   ---------------------------------------------------------------------------------
+</pre>
+
+The isotropic chemical shielding for each atom, excluding and including G=0 contributions, as well as the span and skew (descriptions of asymmetry), follow. Finally, core contributions are taken into account for the <code>ISO_SHIFT</code>, <code>SPAN</code>, and <code>SKEW</code>.
+{{NB|important|
+*The columns excluding the <math>\mathbf{G=0}</math> contribution are useful for supercell calculations on molecules.
+*The columns including the <math>\mathbf{G=0}</math> contribution are for crystals.
+*The upper block gives the shielding due to only the electrons included in the SCF calculation.
+*The lower block has the contributions due to the frozen PAW cores added. These core contributions are rigid  {{Cite|gregor:jcp:1999}}. They depend on {{FILE|POTCAR}} and are isotropic, i.e. affect neither SPAN nor SKEW.}}
+<!--
+As of VASP.6.5.2 on OUTCAR also a summary of the tensors per ion is printed. This is done both excluding and including the '''G'''=0 contribution.
+The summary starts with, for each ion, its number, the isotropic shielding, the shielding tensor and the symmetrized shielding tensor.
+Next the principal components and the principal axes are printed (from the symmetrized tensor).
+They are ordered following Mason {{Cite|mason:ssn:1993}}, i.e. σ<sub>11</sub> < σ<sub>22</sub> < σ<sub>33</sub>.
+Finally a line is printed with (again) the isotropic shielding σ<sub>iso</sub>, the span Ω & skew κ (Herzfeld-Berger, Mason sections 2.2 and 2.3) and the shielding anisotropy Δ & asymmetry η (Haeberlen, Mason section 2.6).
+<pre>
+ ---------------------------------------------------------------------------------------
+  CSA tensor (J. Mason, Solid State Nucl. Magn. Reson. 2, 285 (1993))
+  for chemical shielding  (including the isotropic core contribution)
+
+  BDIR labels direction of applied magnetic field (i.e. B0)
+  For BDIR==1, B0 along x-axis, etc.
+  Induced field listed along cartesian directions for each BDIR
+ ---------------------------------------------------------------------------------------
+                 EXCLUDING G=0 CONTRIBUTION             INCLUDING G=0 CONTRIBUTION
+            ------------------------------------   ------------------------------------
+  ion  BDIR            X           Y           Z              X           Y           Z
+          (   iso_shield        span        skew) (  iso_shield        span        skew)
+ ---------------------------------------------------------------------------------------
+    1     1     142.5256     -0.0000      0.0000       229.8645     -0.0000      0.0000
+          2      -0.0000    142.5256      0.0000        -0.0000    229.8645     -0.0000
+          3      -0.0000      0.0000    142.5256        -0.0000      0.0000    229.8645
+          (     142.5256      0.0000      0.0000) (    229.8645      0.0000      0.0000)
+
+    2     1     142.5256     -0.0000      0.0000       229.8645     -0.0000      0.0000
+          2      -0.0000    142.5256      0.0000        -0.0000    229.8645     -0.0000
+          3      -0.0000      0.0000    142.5256        -0.0000      0.0000    229.8645
+          (     142.5256      0.0000      0.0000) (    229.8645      0.0000      0.0000)
+ ---------------------------------------------------------------------------------------
+  IF SPAN.EQ.0, THEN SKEW IS ILL-DEFINED
+ ---------------------------------------------------------------------------------------
+</pre>
+-->
+
+== Related tags and articles ==
+{{TAG|DQ}},
+{{TAG|ICHIBARE}},
+{{TAG|LNMR_SYM_RED}},
+{{TAG|NLSPLINE}},
+{{TAG|LLRAUG}},
+{{TAG|LBONE}},
+{{TAG|LVGVCALC}},
+{{TAG|LVGVAPPL}},
+{{TAG|NUCIND}}
+
+[[Calculating the chemical shieldings]], [[Calculating the magnetic susceptibility]]
+
+{{sc|LCHIMAG|Examples|Examples that use this tag}}
+
+== References ==
+
+[[Category:INCAR tag]][[Category:NMR]]

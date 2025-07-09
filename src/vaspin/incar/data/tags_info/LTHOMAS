@@ -1,0 +1,24 @@
+{{TAGDEF|LTHOMAS|.TRUE. {{!}} .FALSE.|.FALSE.}}
+
+Description: {{TAG|LTHOMAS}} selects a decomposition of the exchange functional based on Thomas-Fermi exponential screening.
+----
+If {{TAG|LTHOMAS}}=.TRUE. the decomposition of the exchange operator (in a [[Hybrid functionals: formalism|range-separated hybrid functional]]) into a short range and a long range part will be based on Thomas-Fermi exponential screening.
+The Thomas-Fermi screening length ''k''<sub>TF</sub> is specified by means of the {{TAG|HFSCREEN}} tag.
+
+For typical semiconductors, a Thomas-Fermi screening length of about 1.8 &Aring;<sup>-1</sup> yields reasonable band gaps. In principle, however, the Thomas-Fermi screening length depends on the valence electron density; VASP determines this parameter from the number of valence electrons (read from the {{FILE|POTCAR}} file) and the volume and writes the corresponding value to the {{FILE|OUTCAR}} file:
+  Thomas-Fermi vector in A             =   2.00000
+{{NB|mind|If {{TAG|LTHOMAS}}{{=}}.TRUE., then {{TAG|LHFCALC}}{{=}}.TRUE. is automatically set.}}
+Since, VASP counts the semi-core states and ''d''-states as valence electrons, although these states do not contribute to the screening, the values reported by VASP are often incorrect.
+
+== Related tags and articles ==
+{{TAG|LHFCALC}},
+{{TAG|HFSCREEN}},
+{{TAG|LRHFCALC}},
+[[Hybrid functionals: formalism#Thomas-Fermi exponential screening with short-range Hartree-Fock exchange|Thomas-Fermi screening]],
+[[list_of_hybrid_functionals|List of hybrid functionals]],
+[[Hybrid_functionals:_formalism|Hybrid functionals: formalism]]
+
+{{sc|LTHOMAS|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:Hybrid_functionals]]

@@ -1,0 +1,23 @@
+{{TAGDEF|LRHFCALC|.TRUE. {{!}} .FALSE. |.FALSE.}}
+
+Description: Switch on the decomposition of the exchange functional for the [[Hybrid_functionals:_formalism#Error_function_screening_with_long-range_Hartree-Fock_exchange|range-separated hybrid RSHXLDA or RSHXPBE functionals]].
+----
+If {{TAG|LRHFCALC}}=.TRUE. the exchange functional is decomposed into short-range LDA (or PBE) and long-range Hartree-Fock for calculations with the range-separated hybrid RSHXLDA or RSHXPBE functionals.{{cite|iikura:jcp:2001}}{{cite|gerber:cpl:2005}}{{cite|gerber:jcp:2007}} The screening parameter is specified by means of the {{TAG|HFSCREEN}} tag.
+
+The setting of the RSHXLDA and RSHXPBE functionals is shown on the [[list_of_hybrid_functionals|page listing the hybrid functionals]].
+{{NB|mind|
+*If {{TAG|LRHFCALC}}{{=}}.TRUE., then {{TAG|LHFCALC}}{{=}}.TRUE. is automatically set.
+*If {{TAG|LRHFCALC}}{{=}}.TRUE., then {{TAG|AEXX}}{{=}}1 is automatically set, but {{TAG|AEXX}} can be set to another value.}}
+
+== Related tags and articles ==
+{{TAG|LHFCALC}},
+{{TAG|HFSCREEN}},
+{{TAG|AEXX}},
+{{TAG|LTHOMAS}},
+[[list_of_hybrid_functionals|list of hybrid functionals]],
+[[Hybrid_functionals:_formalism|Hybrid functionals: formalism]]
+
+{{sc|LRHFCALC|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:Hybrid_functionals]]

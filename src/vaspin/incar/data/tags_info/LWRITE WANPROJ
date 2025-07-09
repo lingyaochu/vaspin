@@ -1,0 +1,16 @@
+{{DISPLAYTITLE:LWRITE_WANPROJ}}
+{{TAGDEF|LWRITE_WANPROJ|[logical]|.FALSE.}}
+
+Description: {{TAG|LWRITE_WANPROJ}} determines whether the Wannier projection file {{TAG|WANPROJ}} is written.
+----
+If {{TAG|WANPROJ}} is present, VASP skips the Wannier projection and reads the effective projectors U<sub>nk</sub> from the {{TAG|WANPROJ}} file for each k point.
+
+== Related tags and articles ==
+{{TAG|LWANNIER90}},
+{{TAG|LWANNIER90_RUN}},
+{{TAG|LDOWNSAMPLE}}
+
+{{sc|LWRITE_WANPROJ|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Wannier functions]][[Category:Constrained-random-phase approximation]]

@@ -1,0 +1,11 @@
+{{TAGDEF|PTHRESHOLD|[real]}}
+
+Description: Control flag for the output of the profiling routines.
+----
+
+If specified all routines with less execution time than {{TAG|PTHRESHOLD}}=''time'' are not printed out in the {{FILE|OUTCAR}} file.
+
+{{sc|PTHRESHOLD|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Performance]]

@@ -1,0 +1,15 @@
+{{DISPLAYTITLE:ML_LUSE_NAMES}}
+{{TAGDEF|ML_LUSE_NAMES|[logical]|.FALSE.}}
+
+Description: Decides whether training structures are additionally subdivided into groups internally due to their structure name.
+----
+This tag is important if the normalization via averages over subset standard deviations ({{TAG|ML_IWEIGHT}}=3) is employed.
+By default ({{TAG|ML_LUSE_NAMES}}=''.FALSE.'') the division into subsets is based on the atom types and number of atoms per type. If two systems contain the same atom types and the same number of atoms per type then they are considered to be in the same subset. To further divide them into subsets set {{TAG|ML_LUSE_NAMES}}=''.TRUE.'' and choose different system names in the first line of the {{TAG|POSCAR}} file. This can be useful if training is performed for widely different materials, for instance, different phases with widely different energies. Without the finer subset assignment, the overall energy standard deviation might become large, reducing the weight of the energies too much of given subsets.
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_WTOTEN}}, {{TAG|ML_WTIFOR}}, {{TAG|ML_WTSIF}}, {{TAG|ML_IWEIGHT}}
+
+{{sc|ML_IWEIGHT|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

@@ -1,0 +1,14 @@
+{{TAGDEF|LKPOINTS_WAN|.TRUE.{{!}} .FALSE.}}
+{{DEF|LKPOINTS_WAN|.TRUE.|if {{FILE|KPOINTS_WAN}} file is present.}}
+
+Description: {{TAG| LKPOINTS_WAN}} controlls whether VASP reads the {{FILE|KPOINTS_WAN}} file.
+----
+
+To avoid reading the {{FILE|KPOINTS_WAN}} file without removing it from the working directory, the {{TAG|LKPOINTS_WAN}} tag can be set to <code>.FALSE.</code> in the {{FILE|INCAR}} file.
+
+== Related tags and articles==
+{{FILE|KPOINTS_WAN}}
+
+{{sc|LKPOINTS_WAN|Examples|Examples that use this tag}}
+----
+[[Category:INCAR tag]][[Category:Wannier functions]]

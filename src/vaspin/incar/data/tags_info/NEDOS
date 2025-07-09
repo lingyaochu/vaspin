@@ -1,0 +1,18 @@
+{{TAGDEF|NEDOS|[integer]|<math>301</math>}}
+
+Description: Number of grid points for the electronic [[density of states]] (DOS) and [[dielectric function]].
+----
+The energy range between {{TAG|EMIN}} and {{TAG|EMAX}} is divided into
+{{TAG|NEDOS}} intervals to obtain the grid points. The DOS for the corresponding energy is written in the {{FILE|DOSCAR}} file.
+{{NB|tip|Compare the DOS to the integrated DOS (also written on {{FILE|DOSCAR}}) to check if the default {{TAG|NEDOS}} is too small to resolve narrow peaks properly. At least one peak should show up at every step of the integrated DOS.}}
+The smallest peak widths from the dispersion of the respective bands can be estimated by having a look at the Kohn-Sham eigenvalues written in {{FILE|OUTCAR}}. {{TAG|NEDOS}} has to be chosen sufficiently large to resolve this dispersion. In addition, the
+energy interval defined by {{TAG|EMIN}} and {{TAG|EMAX}} can be modified.
+
+{{TAG|NEDOS}} is also used to set the total number of frequency points when calculating the [[dielectric function]].
+== Related tags and articles ==
+{{TAG|EMIN}}, {{TAG|EMAX}},
+{{FILE|DOSCAR}}
+
+{{sc|NEDOS|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Density of states]][[Category:Dielectric properties]]

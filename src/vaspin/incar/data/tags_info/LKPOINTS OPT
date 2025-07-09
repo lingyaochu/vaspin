@@ -1,0 +1,16 @@
+{{DISPLAYTITLE:LKPOINTS_OPT}}
+{{TAGDEF|LKPOINTS_OPT|.TRUE.{{!}} .FALSE.}}
+{{DEF|LKPOINTS_OPT|.TRUE.|if {{FILE|KPOINTS_OPT}} file is present.}}
+
+Description: {{TAG| LKPOINTS_OPT}} controls whether VASP reads the {{FILE|KPOINTS_OPT}} file.
+----
+
+To avoid reading the {{FILE|KPOINTS_OPT}} file without removing it from the working directory, the {{TAG|LKPOINTS_OPT}} tag can be set to <code>.FALSE.</code> in the {{FILE|INCAR}} file.
+
+== Related tags and articles==
+{{FILE|KPOINTS_OPT}}, {{FILE|PROCAR_OPT}}
+
+{{sc|LKPOINTS_OPT|Examples|Examples that use this tag}}
+----
+
+[[Category:VASP]][[Category:INCAR tag]]

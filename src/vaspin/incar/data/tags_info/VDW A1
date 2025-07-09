@@ -1,0 +1,15 @@
+{{DISPLAYTITLE:VDW_A1}}
+{{TAGDEF|VDW_A1|[real]}}
+{{DEF|VDW_A1|1.0|for [[DFT-D3]] with the BJ damping function}}
+
+Description: {{TAG|VDW_A1}} defines the damping function parameter <math>a_{1}</math>.
+----
+{{TAG|VDW_A1}} sets the damping function parameter <math>a_{1}</math> for the [[DFT-D3]] (BJ damping function) and [[DFT-D4]] methods.
+
+== Related tags and articles ==
+[[DFT-D3]],[[DFT-D4]]
+
+{{sc|VDW_A1|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:van der Waals functionals]]

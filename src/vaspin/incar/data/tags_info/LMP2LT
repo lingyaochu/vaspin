@@ -1,0 +1,20 @@
+{{TAGDEF|LMP2LT|.FALSE. {{!}} .TRUE.}}
+{{DEF|LMP2LT|.FALSE.|}}
+
+Description: {{TAG|LMP2LT}} selects a Laplace transformed MP2 algorithm.
+----
+
+If {{TAG|LMP2LT}}=.TRUE. and {{TAG|ALGO}}=ACFTDRK is set, a quartic scaling Laplace transformed MP2 algorithm is selected.{{cite|schaefer:JCP2017}}
+
+This tag should be used in combination with {{TAG|KPAR}} to tweak parallelization as described in this [[LTMP2_-_Tutorial#Parallelization|tutorial]].
+
+== Related tags and articles ==
+{{TAG|NOMEGA}},
+{{TAG|ALGO}},
+{{TAG|LSMP2LT}},
+{{TAG|KPAR}}
+
+{{sc|LMP2LT|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Many-body perturbation theory]][[Category:MP2]]

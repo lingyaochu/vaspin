@@ -1,0 +1,109 @@
+{{TAGDEF|IBRION|-1 {{!}} 0 {{!}} 1 {{!}} 2 {{!}} 3 {{!}} 5 {{!}} 6 {{!}} 7 {{!}} 8 {{!}} 11 {{!}} 12 {{!}} 40 {{!}} 44}}
+{{DEF|IBRION|-1|for {{TAG|NSW}}{{=}}&minus;1 or 0|0|else}}
+
+Description: determines how the crystal structure changes during the calculation:
+:::* no update
+:::** {{TAG|IBRION}}=-1 (Avoid setting {{TAG|IBRION}}=-1 with {{TAG|NSW}}>0 to prevent recomputing the same structure {{TAG|NSW}} times).
+
+:::* [[#Molecular dynamics|Molecular dynamics]]
+:::** {{TAG|IBRION}}=0
+
+:::* [[#Structure optimization|Structure optimization]]
+:::** {{TAG|IBRION}}=1 RMM-DIIS
+:::** {{TAG|IBRION}}=2 conjugate gradient
+:::** {{TAG|IBRION}}=3 damped molecular dynamics
+
+:::* [[#Computing the phonon modes|Computing phonon modes]]
+:::** {{TAG|IBRION}}=5 finite differences without symmetry
+:::** {{TAG|IBRION}}=6 finite differences with symmetry
+:::** {{TAG|IBRION}}=7 perturbation theory without symmetry
+:::** {{TAG|IBRION}}=8 perturbation theory with symmetry
+
+:::* [[#Analyzing transition states|Analyzing transition states]]
+:::** {{TAG|IBRION}}=40 [[IRC calculations|intrinsic-reaction-coordinate calculations]]
+:::** {{TAG|IBRION}}=44 [[improved dimer method]]
+
+:::* [[#Interactively supplied positions and lattice vectors|User-supplied interactive changes]]
+:::** {{TAG|IBRION}}=11 from standard input
+:::** {{TAG|IBRION}}=12 from Python plugin
+
+----
+
+== Molecular dynamics ==
+
+In [[:Category:Molecular dynamics|molecular-dynamics (MD) simulations]] the positions of the ions are updated using a classical equation of motion for the ions. There are several algorithms for the [[time-propagation algorithms in molecular dynamics|time propagation in MD]] controlled by selecting {{TAG|MDALGO}} and the choice of the [[thermostats]]. The MD run performs {{TAG|NSW}} timesteps of length {{TAG|POTIM}}.
+
+Frequently, performing an [[electronic minimization|ab-initio calculations]] in every step of an MD simulation is too expensive so that [[:Category:Machine-learned_force_fields|machine-learned force fields]] are needed.
+{{NB|tip|In order to limit the output of the MD simulation, control the verbosity by setting {{TAG|NWRITE}}{{=}}0,1, or reduce the frequency of output using {{TAG|ML_OUTBLOCK}}, {{TAG|NBLOCK}}, or {{TAG|KBLOCK}}.}}
+
+== Structure optimization ==
+
+VASP optimizes the structure based on the degrees of freedom selected with the {{TAG|ISIF}} tag and (if used) the selective dynamics {{FILE|POSCAR}} file.
+Generally, the larger the number of degrees of freedom, the harder it is to find the optimal solution.
+To find the solution, VASP provides multiple algorithms:
+
+* RMM-DIIS ({{TAG|IBRION}}=1) reduces the forces by linear combination of previous positions. It is the method of choice for larger systems (>20 degrees of freedom) that are reasonably close to the ground-state structure.
+* Conjugate gradient ({{TAG|IBRION}}=2) finds the optimal step size along a search direction. It is a robust default choice but may need more iterations than RMM-DIIS.
+* Damped molecular dynamics ({{TAG|IBRION}}=3) runs a MD simulation with decreasing velocity of the ions. Use this for large systems far away from the minimum to get to a better starting point for the other algorithms.
+
+Consult the [[structure optimization]] page for advise on how to choose the optimization algorithm.
+
+== Computing the phonon modes ==
+
+The second-order derivatives of the total energy <math>E</math> with respect to ionic positions <math>R_{\alpha i}</math> of ion <math>\alpha</math> in the direction <math>i</math>, is computed using a first-order derivative of the [[forces]] <math>F_{\beta j}</math>. Then, the dynamical matrix <math>D_{\alpha i \beta j}</math> is constructed, diagonalized, and the phonon modes and frequencies of the system are reported in the {{FILE|OUTCAR}} file and {{FILE|vaspout.h5}}. Also see [[Phonons: Theory|theory on phonons]].
+{{NB|tip|It may be necessary to set {{TAGO|EDIFF|<= 1E-6}} because the default ({{TAGO|EDIFF|1E-4}}) often results in unacceptably large errors.}}
+VASP implements two different methods to compute the phonon modes and can use symmetry to reduce the number of computed displacements:
+
+* {{TAGO|IBRION|5}} [[Phonons from finite differences|finite differences]] '''without''' symmetry
+* {{TAGO|IBRION|6}} [[Phonons from finite differences|finite differences]] '''with''' symmetry
+* {{TAGO|IBRION|7}} [[Phonons_from_density-functional-perturbation_theory|density-functional-perturbation theory]] '''without''' symmetry
+* {{TAGO|IBRION|8}} [[Phonons_from_density-functional-perturbation_theory|density-functional-perturbation theory]] '''with''' symmetry
+
+For finite differences, the elastic tensors and internal strain tensors is computed for {{TAG|ISIF}}>=3.
+Compute Born-effective charges, piezoelectric constants, and the ionic contribution to the dielectric tensor by specifying {{TAGO|LEPSILON|.TRUE.}} ([[Linear response|linear response theory]]) or {{TAGO|LCALCEPS|.TRUE.}} (finite external field).
+
+Also see [[computing the phonon dispersion and DOS]].
+
+== Analyzing transition states ==
+
+To study the kinetics of chemical reactions, one may want to construct [[transition states]] or follow the reaction path.
+For the analysis of transition states the following methods are available:
+
+* Setting {{TAGO|IBRION|40}}, you can start from a transition state and monitor the energy along an intrinsic-reaction coordinate (IRC). The [[IRC calculations]] section describes this method.
+* With the [[improved dimer method]] ({{TAGO|IBRION|44}}), you can search for a the transition state starting from an arbitrary structure in the investigated phase space.
+* The [[nudged elastic bands]] method finds an approximate reaction path based on the initial and final structure, i.e., reactant and product.
+
+== Interactively supplied positions and lattice vectors ==
+
+Occasionally, you may want to run VASP for related structures where the overhead of restarting VASP is significant.
+In these scenarios, VASP provides the following alternatives
+
+* With {{TAGO|IBRION|11}}, you can provide new structures via the standard input. For {{TAG|ISIF}}>=3, a complete {{FILE|POSCAR}} file is read, otherwise just the positions in fractional coordinates.
+
+* If you [[Makefile.include#Plugins_(optional)|linked VASP with Python]], you can [[Plugins|write a Python plugin]] to modify the structure. Set {{TAGO|IBRION|12}} or {{TAGO|PLUGINS/STRUCTURE|T}} to activate it.
+
+== Related tags and articles ==
+
+Related tags: {{TAG|NSW}},
+{{TAG|POTIM}},
+{{TAG|MDALGO}},
+{{TAG|SMASS}},
+{{TAG|NFREE}},
+{{TAG|ISIF}},
+{{TAG|LEPSILON}},
+{{TAG|LCALCEPS}}
+
+Related files: {{FILE|POSCAR}}, {{FILE|CONTCAR}}, {{FILE|XDATCAR}}, {{FILE|vaspout.h5}}
+
+Related topics and how-to pages:  [[Time-propagation algorithms in molecular dynamics]],
+[[Structure optimization]],
+[[POSCAR#Full_format_specification|Selective dynamics]],
+[[Computing the phonon dispersion and DOS]],
+[[Transition states]],
+[[IRC calculations]],
+[[Improved Dimer Method]],
+[[Plugins|Writing a Python plugin]]
+
+{{sc|IBRION|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Ionic minimization]][[Category:Molecular dynamics]][[Category:Phonons]][[Category:Transition states]]

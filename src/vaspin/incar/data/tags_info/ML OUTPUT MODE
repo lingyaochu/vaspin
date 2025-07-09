@@ -1,0 +1,19 @@
+{{DISPLAYTITLE:ML_OUTPUT_MODE}}
+{{DEF|ML_OUTPUT_MODE|0|if {{TAGO|ML_MODE|run}}|1|else}}
+
+Description: This tag allows to disable certain file output which helps to increase performance in molecular-dynamics simulations with machine-learned force fields in prediction-only mode ({{TAGO|ML_MODE|run}}).
+{{NB|mind|This tag is only available as of VASP.6.4.0.}}
+----
+This tag is useful in combination with {{TAG|ML_OUTBLOCK}} to further reduce per-time-step calculations and file output. The following options exist for this tag:
+*{{TAGO|ML_OUTPUT_MODE|1}}: '''Normal operation''', output is written as usual in ab-initio molecular-dynamics simulations.
+*{{TAGO|ML_OUTPUT_MODE|0}}: '''Reduced file output mode''', in contrast to normal operation the following changes apply:
+** Pair-correlation functions are not computed.
+** No output to {{FILE|PCDAT}} file.
+** No <code>pair_correlation</code> output section in {{FILE|vaspout.h5}}.
+** No <code>structure</code>, <code>varray name="forces"</code> and <code>varray name="stress"</code> output sections in {{FILE|vasprun.xml}}.
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_MODE}}, {{TAG|ML_LFAST}}, {{TAG|ML_IERR}}, {{TAG|ML_OUTBLOCK}}
+----
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

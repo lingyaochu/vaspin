@@ -1,0 +1,24 @@
+{{TAGDEF|AMIX|[real]}}
+{{DEF|AMIX|0.8|if {{TAG|ISPIN}}{{=}}1 and one uses US-PPs|0.4|if {{TAG|ISPIN}}{{=}}2 and one uses US-PPs|0.4|if one uses PAW datasets}}
+
+Description: {{TAG|AMIX}} specifies the linear mixing parameter.
+----
+In VASP the eigenvalue spectrum of the charge dielectric matrix is calculated and written to the {{FILE|OUTCAR}} file at each electronic step. This allows a rather easy optimization of the mixing parameters, if required. Search in the {{FILE|OUTCAR}} file for
+ eigenvalues of (default mixing * dielectric matrix)
+The parameters for the mixing are optimal if the mean eigenvalue &Gamma;<sub>mean</sub>=1, and if the width of the eigenvalue spectrum is minimal. For an initial linear mixing ({{TAG|BMIX}}&asymp;0) an optimal setting for {{TAG|AMIX}} can be found easily by setting {{TAG|AMIX}}<sub>optimal</sub>={{TAG|AMIX}}<sub>current</sub>*&Gamma;<sub>mean</sub>. For the Kerker scheme ({{TAG|IMIX}}=1) either {{TAG|AMIX}} or {{TAG|BMIX}} can be optimized, but we recommend to change only {{TAG|BMIX}} and keep {{TAG|AMIX}} fixed (you must decrease {{TAG|BMIX}} if the mean eigenvalue is larger than one, and increase {{TAG|BMIX}} if the mean eigenvalue &Gamma;<sub>mean</sub><1).
+However, the optimal {{TAGBL|AMIX}} depends very much on the system, for metals this parameter usually has to be rather small, e.g. AMIX= 0.02.
+
+== Related tags and articles ==
+{{TAG|IMIX}},
+{{TAG|INIMIX}},
+{{TAG|MAXMIX}},
+{{TAG|BMIX}},
+{{TAG|AMIX_MAG}},
+{{TAG|BMIX_MAG}},
+{{TAG|AMIN}},
+{{TAG|MIXPRE}},
+{{TAG|WC}}
+
+{{sc|AMIX|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Density mixing]]
