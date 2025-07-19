@@ -123,7 +123,7 @@ def write_poscar(
     Returns:
         None
     """
-    from ..utils.utils import clean
+    from ..utils.utils import createdir
 
     # Convert lattice data to string
     lattice_str = ""
@@ -154,7 +154,7 @@ def write_poscar(
         number_str += f" {atoms_list.count(atom)}"
 
     # Write to file
-    clean(directory)
+    createdir(directory)
     with open(directory + f"/{name}", "w") as f:
         f.write(comment + "\n")
         f.write(" 1.0\n")

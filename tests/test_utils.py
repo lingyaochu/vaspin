@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from vaspin.utils.utils import clean, find_rotation, wrap_frac
+from vaspin.utils.utils import createdir, find_rotation, wrap_frac
 
 
 class TestClean:
@@ -13,7 +13,7 @@ class TestClean:
         """Test clean creates a new directory if it does not exist"""
         new_dir = tmp_path / "new_dir"
         # tmp_path is empty by default, so no need to assert not exists
-        clean(str(new_dir))
+        createdir(str(new_dir))
 
         assert new_dir.exists(), "clean do not create the directory"
         assert new_dir.is_dir(), "clean creates a file instead of a directory"
@@ -21,7 +21,7 @@ class TestClean:
     def test_existing_directory_empty(self, tmp_path):
         """Test clean does nothing if the directory already exists"""
         # tmp_path fixture provides an existing empty directory
-        clean(str(tmp_path))
+        createdir(str(tmp_path))
 
         assert tmp_path.exists(), "clean should not remove the existing directory"
         assert tmp_path.is_dir(), "clean should not change the existing directory"
@@ -33,7 +33,7 @@ class TestClean:
             "No subfiles or directory should exist"
         )
 
-        clean(str(nested_dir))
+        createdir(str(nested_dir))
         assert nested_dir.exists(), "clean do not create the nested directories"
         assert nested_dir.is_dir(), "clean creates a file instead of a directory"
 

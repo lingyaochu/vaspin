@@ -8,7 +8,7 @@ import numpy as np
 from vaspin.types.array import FloatArray
 
 
-def clean(target_dir: str) -> None:
+def createdir(target_dir: str) -> None:
     """Create the target directory if it does not exist.
 
     Args:
@@ -18,9 +18,9 @@ def clean(target_dir: str) -> None:
         None
     """
     if os.path.exists(target_dir):
-        pass
-    else:
-        os.makedirs(target_dir)
+        return
+
+    os.makedirs(target_dir)
     return None
 
 
