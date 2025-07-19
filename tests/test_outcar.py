@@ -262,6 +262,12 @@ class TestOutcarErrorHandling:
         with pytest.raises(TypeError, match="The OUTCAR path must be a string."):
             VaspOutcarParser(123)  # type: ignore[arg-type]
 
+    def test_parser_initialization_with_nonexistent_file(self, tmp_path):
+        """Test that VaspOutcarParser raises FileNotFoundError for non-existent file."""
+        outcar_file = tmp_path / "OUTCAR"
+        with pytest.raises(FileNotFoundError, match=f"File not found: {outcar_file}"):
+            VaspOutcarParser(str(outcar_file))
+
     def test_set_handlers_with_empty_list(self, tmp_path):
         """Test that set_handlers raises ValueError for an empty list."""
         outcar_file = tmp_path / "OUTCAR"

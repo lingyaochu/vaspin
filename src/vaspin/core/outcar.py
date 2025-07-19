@@ -1,5 +1,6 @@
 """Module to parse VASP OUTCAR files."""
 
+import os
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Type
 
@@ -415,6 +416,9 @@ class VaspOutcarParser:
         """Initialize the parser with the path to the OUTCAR file."""
         if not isinstance(outcar_path, str):
             raise TypeError("The OUTCAR path must be a string.")
+
+        if not os.path.isfile(outcar_path):
+            raise FileNotFoundError(f"File not found: {outcar_path}")
 
         self.outcar_path: str = outcar_path
         self.data: Dict[str, Any] = {}
