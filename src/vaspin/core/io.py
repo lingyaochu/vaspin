@@ -194,3 +194,69 @@ def phonon_to_json(filepath: str) -> str:
     phonon_dict = pho_parser.phonon
 
     return dumps(phonon_dict, indent=None)
+
+
+def read_incar(incarfile: str) -> dict[str, Any]:
+    """Read INCAR file or JSON file
+
+    Args:
+        incarfile: Path to INCAR file or JSON file
+
+    Returns:
+        Dictionary containing INCAR data
+    """
+    return read_file(incarfile, incar_to_json)
+
+
+def incar_to_json(filepath: str | Path) -> str:
+    """Convert INCAR file to JSON string format
+
+    Args:
+        filepath: Path to INCAR file
+
+    Returns:
+        JSON formatted string
+    """
+    try:
+        with open(filepath, "r") as f:
+            incar_lines = f.readlines()
+    except (IOError, ValueError) as e:
+        raise ValueError(f"Cannot parse INCAR file {filepath}: {e}") from e
+
+    incar_dict = {}
+    for line in incar_lines:
+        line = line.strip()
+        if not line or line.startswith("#") or line.startswith("!"):
+            continue
+        if "=" not in line:
+            raise ValueError(f"Invalid INCAR line:{line}")
+        key_and_value = re.split("[#!]", line, maxsplit=1)[0]
+        key, value = key_and_value.split("=")
+        key = key.strip()
+        value = _value_convert(value.strip())
+        incar_dict[key] = value
+    return dumps(incar_dict, indent=None)
+
+
+def _value_convert(value: str) -> str | float | int | bool:
+    """Convert string value to appropriate type.
+
+    Args:
+        value: The string value to convert.
+
+    Returns:
+        The converted value as str, float, int, or bool.
+    """
+    ture_prefix = ("T", ".T", "t", ".t")
+    false_prefix = ("F", ".F", "f", ".f")
+    if value.startswith(ture_prefix):
+        return True
+    elif value.startswith(false_prefix):
+        return False
+
+    for converter in (int, float):
+        try:
+            return converter(value)
+        except ValueError:
+            continue
+    return value
