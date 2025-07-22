@@ -3,15 +3,22 @@
 Contains functionality for reading and writing VASP files.
 """
 
+from __future__ import annotations
+
 import re
 from json import JSONDecodeError, dumps, load, loads
 from pathlib import Path
-from typing import Any, Callable, List
+from typing import TYPE_CHECKING, Any, Callable, List
 
 import numpy as np
 
 from vaspin.core.outcar import VaspOutcarParser
 from vaspin.types.array import FloatArray, StrArray
+
+if TYPE_CHECKING:
+    from vaspin.incar.tags import Tag
+
+from ..utils.utils import clean
 
 
 def read_file(filepath: str, fallback: Callable[[str], str]) -> dict[str, Any]:
@@ -123,8 +130,6 @@ def write_poscar(
     Returns:
         None
     """
-    from ..utils.utils import clean
-
     # Convert lattice data to string
     lattice_str = ""
     for i in range(3):
@@ -260,3 +265,19 @@ def _value_convert(value: str) -> str | float | int | bool:
         except ValueError:
             continue
     return value
+
+
+def write_incar(tags: list[Tag], directory: str = ".", name: str = "INCAR") -> None:
+    """Write INCAR tags to a file.
+
+    Args:
+        tags: List of Tag objects to write to the INCAR file.
+        directory: Directory to write the INCAR file to, defaults to current directory.
+        name: Name of the INCAR file, defaults to "INCAR".
+    """
+    file_path = Path(directory) / name
+    clean(directory)
+
+    incar_string = "\n".join(str(tag) for tag in tags)
+    with open(file_path, "w") as f:
+        f.write(incar_string)

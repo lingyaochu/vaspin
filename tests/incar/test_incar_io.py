@@ -4,7 +4,8 @@ import json
 
 import pytest
 
-from vaspin.core.io import incar_to_json, read_incar
+from vaspin.core.io import incar_to_json, read_incar, write_incar
+from vaspin.incar.tags import Tag
 
 
 class TestReadIncar:
@@ -39,3 +40,31 @@ class TestReadIncar:
         invalid_incar_path = data_path_incar / "INCAR_invalid"
         with pytest.raises(ValueError, match="Invalid INCAR line:LHYPERFINE"):
             read_incar(invalid_incar_path.as_posix())
+
+
+class TestWriteIncar:
+    """Test cases for writing INCAR files."""
+
+    @pytest.fixture(scope="class")
+    def tags(self, data_path_incar):
+        """The tags to be written to INCAR"""
+        with open(data_path_incar / "incar.json", "r") as f:
+            data = json.load(f)
+        tags = [Tag(name=tag, value=value) for tag, value in data.items()]
+        return tags
+
+    @pytest.fixture(scope="class")
+    def incar_content(self, data_path_incar):
+        """The expected content of the INCAR file"""
+        with open(data_path_incar / "INCAR_written", "r") as f:
+            incar_string = f.read()
+        return incar_string
+
+    def test_write_incar(self, tmp_path, tags, incar_content):
+        """Test writing INCAR file"""
+        write_incar(tags=tags, directory=tmp_path, name="INCAR_test")
+        with open(tmp_path / "INCAR_test", "r") as f:
+            content = f.read()
+        assert content == incar_content, (
+            "Written INCAR content does not match expected content."
+        )
