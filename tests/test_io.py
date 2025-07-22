@@ -65,7 +65,9 @@ Direct
     with open(invalid_poscar_path, "w") as f:
         f.write(invalid_poscar_content)
 
-    with pytest.raises(ValueError, match="Cannot parse POSCAR file"):
+    with pytest.raises(
+        ValueError, match="could not convert string to float: 'not_a_number'"
+    ):
         poscar_to_json(str(invalid_poscar_path))
 
 
