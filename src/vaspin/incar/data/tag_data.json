@@ -1,0 +1,1010 @@
+{
+    "ADDGRID":{
+        "type": "bool",
+        "default": "False",
+        "description": "Determines whether an additional support grid is used for the evaluation of the augmentation charges."
+    },
+    "AEXX":{
+        "type": "float",
+        "description": "Specifies the fraction of exact exchange in a Hartree-Fock-type/hybrid-functional calculation.",
+        "related_tags": ["LHFCALC"],
+        "default_rule": "0.25 if {LHFCALC} else 0"
+    },
+    "AGGAC":{
+        "type": "float",
+        "description": "Is a parameter that multiplies the gradient correction in the GGA correlation functional.",
+        "related_tags": ["LHFCALC", "AEXX"],
+        "default_rule": "1.00 if ({LHFCALC} is False or {AEXX} != 1.0) else 0.0"
+    },
+    "AGGAX":{
+        "type": "float",
+        "description": "Is a parameter that multiplies the gradient correction in the GGA exchange functional.",
+        "related_tags": ["LHFCALC", "AEXX"],
+        "default_rule": "1.0 - {AEXX} if {LHFCALC} else 1.0"
+    },
+    "ALDAC":{
+        "type": "float",
+        "description": "Is a parameter that multiplies the LDA correlation functional or the LDA part of the GGA correlation functional.",
+        "related_tags": ["LHFCALC", "AEXX"],
+        "default_rule": "1.00 if ({LHFCALC} is False or {AEXX} != 1.0) else 0.0"
+    },
+    "ALDAX":{
+        "type": "float",
+        "description": "Is a parameter that multiplies the LDA exchange functional or the LDA part of the GGA exchange functional.",
+        "related_tags": ["LHFCALC", "AEXX"],
+        "default_rule": "1.0 - {AEXX} if {LHFCALC} else 1.0"
+    },
+    "ALGO":{
+        "type": "Enum:str",
+        "valid_values": ["Normal", "VeryFast", "Fast", "Conjugate", "All", "Damped", "Subrot", "Eigenval", "Exact", "None", "Nothing", "CHI", "G0W0", "GW0", "GW", "scGW0", "scGW", "G0W0R", "GW0R", "GWR", "scGW0R", "scGWR", "ACFDT", "RPA",  "ACFDTR", "RPAR", "BSE", "TDHF"],
+        "description": "Is a convenient option to specify the electronic minimization algorithm (as of VASP.4.5) and/or to select the type of GW calculations.",
+        "default": "Normal"
+    },
+    "ALPHA_VDW":{
+        "type": "float"
+    },
+    "AMIN": {
+        "type": "float",
+        "description": "specifies the minimal mixing parameter in Kerker's initial approximation to the charge-dielectric function used in the Broyden/Pulay mixing scheme (IMIX=4, INIMIX=1).",
+        "related_tags": ["AMIX", "AMIX_MAG"],
+        "default_rule": "min(0.1, {AMIX}, {AMIX_MAG})"
+    },
+    "AMIX": {
+        "type": "float",
+        "description": "specifies the linear mixing parameter.",
+        "related_tags": ["ISPIN"],
+        "default_rule": "0.8 if {ISPIN} == 1 else 0.4"
+    },
+    "AMIX_MAG": {
+        "type": "float",
+        "description": "Linear mixing parameter for the magnetization density.",
+        "default": 1.6
+    },
+    "ANDERSEN_PROB": {
+        "type": "float",
+        "description": "Sets the collision probability in Andersen thermostat.",
+        "valid_values": {
+            "min": 0.0,
+            "max": 1.0
+        },
+        "default": 0.0
+    },
+    "ANTIRES": {
+        "type": "Enum:int",
+        "valid_values": [0, 1, 2],
+        "description": "determines whether the Tamm-Dancoff approximation is used or not.",
+        "default": 0
+    },
+    "AMGGAC": {
+        "type": "float",
+        "description": "is a parameter that multiplies the meta-GGA correlation functional (available as of VASP.6.4.0).",
+        "related_tags": ["LHFCALC", "AEXX"],
+        "default_rule": "1.0 if ({LHFCALC} is False or {AEXX} != 1.0) else 0.0"
+    },
+    "AMGGAX": {
+        "type": "float",
+        "description": "is a parameter that multiplies the meta-GGA exchange functional (available as of VASP.6.4.0).",
+        "related_tags": ["AEXX", "LHFCALC"],
+        "default_rule": "1.0 - {AEXX} if {LHFCALC} else 1.0"
+    },
+    "APACO": {
+        "type": "float",
+        "description": "sets the maximum distance in the evaluation of the pair-correlation function (in Å).",
+        "default": 10.0
+    },
+    "BANDGAP": {
+        "type": "Enum:str",
+        "valid_values": ["COMPACT", "WEIGHT", "KPOINT"],
+        "description": "determines the verbosity for reporting the bandgap to the OUTCAR file. Only the first character is significant.",
+        "default": "COMPACT"
+    },
+    "BEXT": {
+        "type": "list[float]",
+        "description": "Specifies an external magnetic field in eV. A single value for ISPIN=2, or three values for LNONCOLLINEAR=.TRUE.",
+        "related_tags": ["ISPIN", "LNONCOLLINEAR"],
+        "default_rule": "[0.0, 0.0, 0.0] if {LNONCOLLINEAR} else 0.0"
+    },
+    "BMIX": {
+        "type": "float",
+        "description": "sets the cutoff wave vector for Kerker mixing scheme (IMIX=1 and/or INIMIX=1).",
+        "default": 1.0
+    },
+    "BMIX_MAG": {
+        "type": "float",
+        "description": "sets the cutoff wave vector for Kerker mixing scheme for the magnetization density (IMIX=1 and/or INIMIX=1).",
+        "default": 1.0
+    },
+    "BPARAM": {
+        "type": "float",
+        "description": "The tag BPARAM specifies the value of the parameter b in the kernel of the nonlocal rVV10 correlation functional.",
+        "default": 6.3
+    },
+    "BSEELECTRON": {
+        "type": "list[float]",
+        "description": "sets the coordinates of the fixed electron of the exciton wavefunction"
+    },
+    "BSEHOLE": {
+        "type": "list[float]",
+        "description": "sets the coordinates of the fixed hole of the exciton wavefunction"
+    },
+    "BSEPREC": {
+        "type": "Enum:str",
+        "valid_values": ["Low", "Medium", "High", "Accurate"],
+        "default": "Medium",
+        "description": "determines the precision of the time-evolution algorithm for solving the Bethe-Salpeter or Casida equations, i.e., the timestep and the number of steps."
+    },
+    "CH_AMPLIFICATION": {
+        "type": "float",
+        "default": 1.0,
+        "description": "This tag is used to scale (amplify) the calculated dielectric function within the supercell core-hole method and the BSE+GW method for core electrons."
+    },
+    "CH_LSPEC": {
+        "type": "bool",
+        "default": false,
+        "description": "This flag controls whether the dielecectric function using the supercell core-hole method is calculated or not."
+    },
+    "CH_NEDOS": {
+        "type": "int",
+        "default": 1000,
+        "description": "This tag specifies the number of frequency (energy) grid points on the x-axis in the calculation of the dielectric function in the supercell core-hole method."
+    },
+    "CH_SIGMA": {
+        "type": "float",
+        "default": 0.3,
+        "description": "This tag specifies the width of the Gaussian broadening in eV of the imaginary dielectric function within the supercell core-hole method."
+    },
+    "CLL": {
+        "type": "int",
+        "default": 0,
+        "description": "selects the angular quantum number l of the excited core electron when using ICORELEVEL>0."
+    },
+    "CLN": {
+        "type": "int",
+        "default": 1,
+        "description": "selects the main quantum number n of the excited core electron when using ICORELEVEL>0."
+    },
+    "CLNT": {
+        "type": "int",
+        "default": 1,
+        "description": "selects the type of the excited atoms in XAS calculations with ICORELEVEL>0."
+    },
+    "CLZ": {
+        "type": "float",
+        "default": 0.0,
+        "description": "selects a fractional or the full electron charge for the core hole in the core-excitation calculations with ICORELEVEL=2."
+    },
+    "CMBJ": {
+        "type": "list[float]",
+        "default": "calculated self-consistently",
+        "description": "defines the c parameter in the MBJ potential."
+    },
+    "CMBJA": {
+        "type": "float",
+        "description": "sets the \u03B1 parameter in the MBJ and LMBJ potentials.",
+        "related_tags": ["METAGGA"],
+        "default_rule": "-0.012 if {METAGGA} == \"MBJ\" else 0.488"
+    },
+    "CMBJB": {
+        "type": "float",
+        "description": "sets the ",
+        "related_tags": ["METAGGA"],
+        "default_rule": "1.023 if {METAGGA} == \"MBJ\" else 0.5"
+    },
+    "CMBJE": {
+        "type": "float",
+        "default": 0.5,
+        "description": "sets the e parameter in the MBJ and local MBJ potentials."
+    },
+    "CPARAM": {
+        "type": "float",
+        "default": 0.0093,
+        "description": "The tag CPARAM allows to specify the value of the parameter C in the kernel of the nonlocal rVV10 correlation functional."
+    },
+    "CSHIFT": {
+        "type": "float",
+        "description": "sets a Lorentzian broadening in eV of the dielectric tensor via the complex shift ",
+        "related_tags": ["LOPTICS", "OMEGAMAX", "NOMEGA"],
+        "default_rule": "0.1 if {LOPTICS} else {OMEGAMAX} * 1.3 / max({NOMEGA}, 40) if \"GW calculations\" else 0.1"
+    },
+    "CUTOFF_MU": {
+        "type": "list[float]",
+        "description": "specifies the energy cutoff ",
+        "related_tags": ["NUM_WANN"],
+        "default_rule": "0.8 * Fermi level of a system with {NUM_WANN} orbitals occupied"
+    },
+    "CUTOFF_SIGMA": {
+        "type": "list[float]",
+        "default": 0.1,
+        "description": "specifies the broadening ",
+        "related_tags": ["CUTOFF_TYPE"],
+        "default_rule": "0.1 if {CUTOFF_TYPE} == \"erfc\" else 0.1"
+    },
+    "CUTOFF_TYPE": {
+        "type": "Enum:str",
+        "valid_values": ["erfc", "gaussian", "fermi", "num_wann"],
+        "default": "erfc",
+        "description": "chooses the type of cutoff function to be used before performing the singular-value decomposition (SVD) of the initial projections matrix."
+    },
+    "DEPER": {
+        "type": "float",
+        "default": 0.3,
+        "description": "specifies a relative stopping criterion for the optimization of an eigenvalue."
+    },
+    "DIMER_DIST": {
+        "type": "float",
+        "default": 0.01,
+        "description": "The flag DIMER_DIST defines the step size for the numerical differentiation (in ",
+        "related_tags": ["DIMER_METHOD"],
+        "default_rule": "0.01 if {DIMER_METHOD} == \"Improved Dimer Method\" else 0.01"
+    },
+    "DIPOL": {
+        "type": "list[float]",
+        "description": "specifies the center of the cell in direct lattice coordinates with respect to which the total dipole-moment in the cell is calculated."
+    },
+    "DQ": {
+        "type": "float",
+        "default": 0.001,
+        "description": "step size for the finite difference k-space derivative in the linear response calculation of chemical shifts."
+    },
+    "EBREAK": {
+        "type": "float",
+        "description": "specifies an absolute stopping criterion for the optimization of an eigenvalue.",
+        "related_tags": ["EDIFF", "NBANDS"],
+        "default_rule": "{EDIFF} / {NBANDS} / 4"
+    },
+    "EDIFF": {
+        "type": "float",
+        "default": 1e-4,
+        "description": "specifies the global break condition for the electronic SC-loop. EDIFF is specified in units of eV."
+    },
+    "EDIFFG": {
+        "type": "float",
+        "description": "defines the break condition for the ionic relaxation loop.",
+        "related_tags": ["EDIFF"],
+        "default_rule": "{EDIFF} * 10"
+    },
+    "EFERMI": {
+        "type": "Enum:str",
+        "valid_values": ["MIDGAP", "LEGACY"],
+        "default": "LEGACY",
+        "description": "Defines how the Fermi energy is calculated in VASP. It is recommended to use EFERMI = MIDGAP."
+    },
+    "EFIELD": {
+        "type": "float",
+        "description": "controls the magnitude of the applied electric force field."
+    },
+    "EFIELD_PEAD": {
+        "type": "list[float]",
+        "description": "specifies the homogeneous electric force field in the electric enthalpy functional used to compute the self-consistent response to finite electric fields. EFIELD_PEAD is specified in units of eV/",
+        "related_tags": ["LCALCEPS"],
+        "default_rule": "[0.01, 0.01, 0.01] if {LCALCEPS} else [0.0, 0.0, 0.0]"
+    },
+    "EFOR": {
+        "type": "list[float]",
+        "description": "sets external forces in eV/",
+        "default": "3 * NIONS * 0.0"
+    },
+    "EINT": {
+        "type": "list[float]",
+        "description": "The EINT tag allows specifying an energy range for which the partial charge density is calculated."
+    },
+    "ELPH_DECOMPOSE": {
+        "type": "bool",
+        "default": false,
+        "description": "The ELPH_DECOMPOSE tag determines whether the contributions to the electron self-energy from different phonon branches are computed separately."
+    },
+    "ELPH_DRIVER": {
+        "type": "Enum:str",
+        "valid_values": [
+            "el",
+            "mels"
+        ],
+        "default": "el",
+        "description": "Chooses which driver to use for electron-phonon calculations."
+    },
+    "ELPH_IGNORE_IMAG_PHONONS": {
+        "type": "bool",
+        "default": false,
+        "description": "The ELPH_IGNORE_IMAG_PHONONS tag determines how imaginary phonon modes are treated in the calculation of electron-phonon coupling and related properties."
+    },
+    "ELPH_ISMEAR": {
+        "type": "int",
+        "default": -1,
+        "description": "The ELPH_ISMEAR tag specifies the smearing method used for the electronic occupations in the electron-phonon coupling calculations."
+    },
+    "ELPH_KSPACING": {
+        "type": "float",
+        "default": 0.5,
+        "description": "The tag ELPH_KSPACING determines the k point mesh if the KPOINTS_ELPH file is not present."
+    },
+    "ELPH_LR": {
+        "type": "int",
+        "default": 1,
+        "description": "Controls the treatment of the long-range part of the electron-phonon potential."
+    },
+    "ELPH_MODE": {
+        "type": "str",
+        "description": "Meta tag that selects reasonable defaults for electron-phonon calculations"
+    },
+    "ELPH_NBANDS": {
+        "type": "int",
+        "description": "Number of bands to compute on the dense k point grid for the electron-phonon driver",
+        "related_tags": [
+            "NELECT",
+            "NIONS"
+        ],
+        "default_rule": "max({NELECT}/2 + {NIONS}/2, {NELECT}*0.6)"
+    },
+    "ELPH_NBANDS_SUM": {
+        "type": "list[int]",
+        "description": "Number of intermediate states to include in the computation of the phonon-induced electron self-energy.",
+        "related_tags": [
+            "ELPH_NBANDS"
+        ],
+        "default_rule": "{ELPH_NBANDS}"
+    },
+    "ELPH_POT_FFT_MESH": {
+        "type": "list[float]",
+        "description": "Specifies the FFT mesh for mapping the electron-phonon potential to the primitive cell."
+    },
+    "ELPH_POT_GENERATE": {
+        "type": "bool",
+        "description": "Calculates the electron-phonon potential from finite atomic displacements.",
+        "default": false
+    },
+    "ELPH_POT_LATTICE": {
+        "type": "list[list[float]]",
+        "description": "Allows specifying an alternative primitive cell for the mapping of the electron-phonon potential."
+    },
+    "ELPH_RUN": {
+        "type": "bool",
+        "description": "Select whether to run and electron-phonon calculation.",
+        "default": false
+    },
+    "ELPH_SCATTERING_APPROX": {
+        "type": "str",
+        "description": "Select which type of approximation is used to compute the electron scattering lifetimes due to electron-phonon coupling"
+    },
+    "ELPH_SELFEN_BAND_START": {
+        "type": "float",
+        "description": "Compute the electron self-energy due to electron-phonon coupling only for bands with indices starting from ELPH_SELFEN_BAND_START.",
+        "default": 1.0
+    },
+    "ELPH_SELFEN_BAND_STOP": {
+        "type": "float",
+        "description": "Compute the electron self-energy due to electron-phonon coupling only for bands with indices until ELPH_SELFEN_BAND_STOP.",
+        "related_tags": [
+            "ELPH_NBANDS"
+        ],
+        "default_rule": "{ELPH_NBANDS}"
+    },
+    "ELPH_SELFEN_CARRIER_DEN": {
+        "type": "list[float]",
+        "description": "List of additional carrier densities in units of cm^{-3} at which to compute the phonon-mediated electron self-energy and transport coefficients.",
+        "default": [
+            0.0
+        ]
+    },
+    "ELPH_SELFEN_CARRIER_PER_CELL": {
+        "type": "list[float]",
+        "description": "List of additional number of carriers for which to compute the phonon-mediated electron self-energy and transport coefficients.",
+        "default": [
+            0.0
+        ]
+    },
+    "ELPH_SELFEN_DELTA": {
+        "type": "list[float]",
+        "description": "Complex imaginary shift to use when computing the self-energy due to electron-phonon coupling.",
+        "default": [
+            0.01
+        ]
+    },
+    "ELPH_SELFEN_DW": {
+        "type": "bool",
+        "default": false,
+        "description": "Controls whether the Debye-Waller contribution is included in the calculation of the phonon-induced electron self-energy."
+    },
+    "ELPH_SELFEN_FAN": {
+        "type": "bool",
+        "default": false,
+        "description": "Controls whether the Fan-Migdal contribution is included in the calculation of the phonon-induced electron self-energy."
+    },
+    "ELPH_SELFEN_GAPS": {
+        "type": "bool",
+        "default": false,
+        "description": "Find the direct and indirect gaps and the valence and conduction Kohn-Sham states that form it and select to compute their self-energy due to electron-phonon coupling."
+    },
+    "ELPH_SELFEN_IKPT": {
+        "type": "list[float]",
+        "default": "All k-points",
+        "description": "Compute the electron self-energy due to electron-phonon for a list of k-points specified by their index in the irreducible Brillouin zone generated from KPOINTS_ELPH."
+    },
+    "ELPH_SELFEN_KPTS": {
+        "type": "list[float]",
+        "default": "All k-points",
+        "description": "Computes the electron self-energy due to electron-phonon for a list of k-points specified by their fractional coordinates."
+    },
+    "ELPH_SELFEN_MU": {
+        "type": "list[float]",
+        "default": [
+            0.0
+        ],
+        "description": "List of chemical potentials at which to compute the phonon-mediated electron self-energy and transport coefficients."
+    },
+    "ELPH_SELFEN_NW": {
+        "type": "int",
+        "default": 1,
+        "description": "Number of energies to use when computing the phonon-induced electron self-energy."
+    },
+    "ELPH_SELFEN_STATIC": {
+        "type": "bool",
+        "default": false,
+        "description": "Activates the adiabatic approximation for the phonon-induced electron self-energy."
+    },
+    "ELPH_SELFEN_TEMPS": {
+        "type": "list[float]",
+        "default": [
+            0,
+            100,
+            200,
+            300,
+            400,
+            500
+        ],
+        "description": "List of temperatures for which to compute the electron self-energy due to electron-phonon coupling."
+    },
+    "ELPH_SELFEN_WRANGE": {
+        "type": "float",
+        "default": 0.0,
+        "description": "Together with ELPH_SELFEN_NW specifies the energy window in which to evaluate the phonon-induced electron self-energy."
+    },
+    "ELPH_TRANSPORT": {
+        "type": "bool",
+        "default": false,
+        "description": "Activates transport calculation involving electron-phonon coupling"
+    },
+    "ELPH_TRANSPORT_DFERMI_TOL": {
+        "type": "float",
+        "default": 1e-06,
+        "description": "choose the percentage of the integral of the derivative of the Fermi-dirac distribution with respect to the energy that is excluded from the integral that yields the Onsager coefficients."
+    },
+    "ELPH_TRANSPORT_DRIVER": {
+        "type": "int",
+        "description": "choose method to compute the Onsager coefficients, which are then used to compute the transport coefficients."
+    },
+    "ELPH_TRANSPORT_EMAX": {
+        "type": "float",
+        "description": "Upper bound of the energy window in which states are considered for transport calculations."
+    },
+    "ELPH_TRANSPORT_EMIN": {
+        "type": "float",
+        "description": "Lower bound of the energy window in which states are considered for transport calculations."
+    },
+    "ELPH_USEBLAS": {
+        "type": "bool",
+        "default": true,
+        "description": "Toggles the use of BLAS routines for computing electron-phonon matrix elements."
+    },
+    "EMAX": {
+        "type": "float",
+        "description": "specifies the upper boundary of the energy range for the evaluation of the electronic density of states (DOS)."
+    },
+    "EMIN": {
+        "type": "float",
+        "description": "specifies the lower boundary of the energy range for the evaluation of the electronic density of states (DOS)."
+    },
+    "ENAUG": {
+        "type": "float",
+        "description": "Specifies the cutoff energy of the plane-wave representation of the augmentation charges in eV."
+    },
+    "ENCUT": {
+        "type": "float",
+        "description": "specifies the energy cutoff for the plane-wave basis set in eV."
+    },
+    "ENCUTFOCK": {
+        "type": "float",
+        "description": "The ENCUTFOCK tag sets the energy cutoff that determines the FFT grids used by the Hartree-Fock routines."
+    },
+    "ENCUTGW": {
+        "type": "float",
+        "description": "The tag ENCUTGW sets the energy cutoff for the response function.",
+        "default_rule": "2/3 * {ENCUT}"
+    },
+    "ENCUTGWSOFT": {
+        "type": "float",
+        "description": "The flag ENCUTGWSOFT sets the energy cutoff for the response function, such that it allows to truncate the Coulomb kernel slowly between the energy specified by ENCUTGWSOFT and ENCUTGW using a cosine window function."
+    },
+    "ENCUTLR": {
+        "type": "float",
+        "default": 50.0,
+        "description": "Reciprocal space cutoff for the treatment of the long-range contribution."
+    },
+    "ENINI": {
+        "type": "float",
+        "description": "controls the cutoff during the initial (steepest descent) phase for IALGO=48.",
+        "default_rule": "{ENCUT}"
+    },
+    "EPSILON": {
+        "type": "float",
+        "default": 1.0,
+        "description": "sets the dielectric constant of the medium."
+    },
+    "ESTOP": {
+        "type": "float",
+        "default": 0.05,
+        "description": "specifies the stop condition for stochastic MP2."
+    },
+    "EVENONLY": {
+        "type": "bool",
+        "default": false,
+        "description": "selects a subset of '''k'''-points for the representation of the Fock exchange potential, with ''C''<sub>1</sub>=''C''<sub>2</sub>=''C''<sub>3</sub>=1, and ''n''<sub>1</sub>+''n''<sub>2</sub>+''n''<sub>3</sub> even."
+    },
+    "EVENONLYGW": {
+        "type": "bool",
+        "default": false,
+        "description": "allows to restrict the k-points in the evaluation of response functions (in GW calculations) to even values."
+    },
+    "FBIAS_A": {
+        "type": "list[float]",
+        "description": "Defines the step height for the bias potential in <math>eV</math>."
+    },
+    "FBIAS_D": {
+        "type": "list[float]",
+        "description": "Sets the slope of the bias potential."
+    },
+    "FBIAS_R0": {
+        "type": "list[float]",
+        "description": "Defines the half-step position for the bias potential."
+    },
+    "FERDO": {
+        "type": "list[float]",
+        "description": "sets the occupancies of the states in the down-spin channel for ISMEAR=-2 and ISPIN=2."
+    },
+    "FERWE": {
+        "type": "list[float]",
+        "description": "sets the occupancies of the states for ISMEAR=-2."
+    },
+    "FINDIFF": {
+        "type": "int",
+        "default": 1,
+        "description": "Defines whether a forward (FINDIFF=1) or a central (FINDIFF=2) difference formula for the numerical differentiation to compute the curvature along the dimer direction is used in the improved dimer method."
+    },
+    "FMP_ACTIVE": {
+        "type": "list[bool]",
+        "description": "Select which atom types in the POSCAR-file participate in swapping within the Müller-Plathe method."
+    },
+    "FMP_DIRECTION": {
+        "type": "int",
+        "default": 3,
+        "description": "Index of the lattice vector a_i along which the temperature gradient is created in the (Müller-Plathe method)."
+    },
+    "FMP_PERIOD": {
+        "type": "int",
+        "default": 10,
+        "description": "Number of time steps between two swapping events in the Müller-Plathe method."
+    },
+    "FMP_SNUMBER": {
+        "type": "int",
+        "default": 10,
+        "description": "Number of slabs perpendicular to the temperature gradient in the Müller-Plathe method."
+    },
+    "FMP_SWAPNUM": {
+        "type": "int",
+        "default": 1,
+        "description": "Number of pairs that are exchanged in a single swapping event in the Müller-Plathe method."
+    },
+    "FOCKCORR": {
+        "type": "int",
+        "description": "The tag FOCKCORR determines how the Coulomb convergence corrections are applied."
+    },
+    "GAMMA_VDW": {
+        "type": "float",
+        "description": "Specify gamma in vdW-DF3-opt1/vdW-DF3-opt2."
+    },
+    "GGA": {
+        "type": "Enum:str",
+        "valid_values": [
+            "PE",
+            "RP",
+            "PS",
+            "AM",
+            "LIBXC"
+        ],
+        "description": "Selects a LDA or GGA exchange-correlation functional."
+    },
+    "GGA_COMPAT": {
+        "type": "bool",
+        "default": true,
+        "description": "If set to GGA_COMPAT = .FALSE., this tag restores the full lattice symmetry for gradient-corrected functionals."
+    },
+    "HFALPHA": {
+        "type": "float",
+        "description": "sets the decay constant used in the method of Massida, Posternak, and Baldereschi, which is activated by HFRCUT=0."
+    },
+    "HFLMAX": {
+        "type": "int",
+        "default": 4,
+        "description": "To be compatible w.r.t. old releases, VASP also reads the flag HFLMAX to the same effect as LMAXFOCK."
+    },
+    "HFRCUT": {
+        "type": "float",
+        "default": 0.0,
+        "description": "specifies how the Coulomb kernel is approximated at G=0 when the Fock energy and the exchange potential are evaluated."
+    },
+    "HFSCREEN": {
+        "type": "float",
+        "default": 0.0,
+        "description": "specifies the range-separation parameter in range-separated hybrid functionals."
+    },
+    "HILLS_BIN": {
+        "type": "int",
+        "description": "sets the number of steps after which the bias potential is updated in a metadynamics run (in case VASP was compiled with -Dtbdyn).",
+        "default_rule": "{NSW}"
+    },
+    "HILLS_H": {
+        "type": "float",
+        "default": 0.001,
+        "description": "specifies the height of the Gaussian hill (in eV) used in metadynamics (in case VASP was compiled with -Dtbdyn)."
+    },
+    "HILLS_W": {
+        "type": "float",
+        "default": 0.001,
+        "description": "specifies the width of the Gaussian hill (in units of the corresponding collective variable) used in metadynamics (in case VASP was compiled with -Dtbdyn)."
+    },
+    "HITOLER": {
+        "type": "float",
+        "default": 5e-05,
+        "description": "specifies the convergence parameter for the iterative Hirschfeld partitioning in the Tkatchenko-Scheffler method."
+    },
+    "I_CONSTRAINED_M": {
+        "type": "int",
+        "description": "switches on the constrained local moments approach."
+    },
+    "IALGO": {
+        "type": "Enum:int",
+        "valid_values": [-1, 2, 3, 4, 5, 6, 7, 8, 15, 16, 17, 18, 28, 38, 44, 45, 46, 47, 48, 53, 54, 55, 56, 57, 58],
+        "default": 38,
+        "description": "selects the algorithm to optimize the orbitals."
+    },
+    "IALL_IN_ONE": {
+        "type": "int",
+        "description": "enables the all-in-one mode for many-body perturbation theory calculations, i.e., ALGO=ACFDT[R], [EV]GW0[R], GWR."
+    },
+    "IBAND": {
+        "type": "list[int]",
+        "description": "sets a list of bands that contribute to calculating the partial charge density."
+    },
+    "IBRION": {
+        "type": "Enum:int",
+        "valid_values": [-1, 0, 1, 2, 3, 5, 6, 7, 8, 11, 12, 40, 44],
+        "description": "determines how the crystal structure changes during the calculation:",
+        "default_rule": "-1 if {NSW} <= 0 else 0"
+    },
+    "IBSE": {
+        "type": "Enum:int",
+        "valid_values": [0, 1, 2, 3],
+        "default": 2,
+        "description": "can be used to select the algorithm for solving the Bethe-Salpeter or Casida equation."
+    },
+    "ICHARG": {
+        "type": "Enum:int",
+        "valid_values": [0, 1, 2, 4, 5],
+        "description": "determines how VASP constructs the initial charge density.",
+        "default_rule": "2 if {ISTART} == 0 else 0"
+    },
+    "ICHIBARE": {
+        "type": "Enum:int",
+        "valid_values": [1, 2, 3],
+        "default": 1,
+        "description": "determines the order of the finite difference stencil used to calculate the magnetic susceptibility."
+    },
+    "ICORELEVEL": {
+        "type": "Enum:int",
+        "valid_values": [0, 1, 2],
+        "default": 0,
+        "description": "controls whether the core energies are explicitly calculated or not and how they are calculated."
+    },
+    "IDIPOL": {
+        "type": "Enum:int",
+        "valid_values": [1, 2, 3, 4],
+        "description": "switches on monopole/dipole and quadrupole corrections to the total energy in a specific direction (1-3) or all directions (4)"
+    },
+    "IEPSILON": {
+        "type": "Enum:int",
+        "valid_values": [1, 2, 3, 4],
+        "description": "determines along which Cartesian direction the E field is applied."
+    },
+    "IFC_ASR": {
+        "type": "int",
+        "default": 1,
+        "description": "If positive, enforces the acoustic sum rule on the interatomic force constants during an electron-phonon calculation."
+    },
+    "IFC_LR": {
+        "type": "int",
+        "default": 1,
+        "description": "Controls the treatment of the long-range part of the interatomic force constants during electron-phonon calculations."
+    },
+    "IPEAD":{
+        "type": "Enum:int",
+        "description": "Specify the order of the finite difference stencil used to compute the derivative of the cell-periodic part of the orbitals",
+        "valid_values": [1,2,3,4],
+        "default": 4
+    },
+    "ISIF":{
+        "type": "Enum:int",
+        "valid_values": [0,1,2,3,4,5,6,7,8],
+        "description": "Determines if the stress tensor is calculated and which ionic degrees of freedom are varied.",
+        "default_rule": "0 if ({IBRION} == 0 or {LHFCALC}) else 2"
+    },
+    "ISMEAR":{
+        "type": "Enum:int",
+        "valid_values": {
+            "min": 1,
+            "additional": [-15, -14, -5, -4, -3, -2, -1, 0]},
+        "description": "determines how the partial occupancies fnk are set for each orbital.",
+        "default": 1
+    },
+    "ISPIN":{
+        "type": "Enum:int",
+        "valid_values": [1, 2],
+        "description": "Specifies spin polarization",
+        "default": 1
+    },
+    "ISTART":{
+        "type": "Enum:int",
+        "valid_values": [0, 1, 2, 3],
+        "description": "Determines whether or not to read the WAVECAR file.",
+        "default_rule": "1 if Path('WAVECAR').exists() else 0"
+    },
+    "ISYM":{
+        "type": "Enum:int",
+        "valid_values": [-1, 0, 1, 2, 3],
+        "default_rule": "3 if {LHFCALC} else 2"
+    },
+    "IVDW":{
+        "type": "Enum:int",
+        "valid_values": [0, 1, 10, 11, 12, 13, 3, 4, 2, 20, 21, 202, 263 ,14],
+        "default": 0,
+        "description": "specifies a vdW dispersion term of the atom-pairwise or many-body type"
+    },
+    "KPAR":{
+        "type": "int",
+        "default": 1,
+        "description": "sets the number of k-points that are to be treated in parallel"
+    },
+    "KPUSE":{
+        "type": "list[int]",
+        "description": "sets a list of k points that contribute to calculating the partial charge density"
+    },
+    "LASPH":{
+        "type": "bool",
+        "default": false,
+        "description": "Include non-spherical contributions related to the gradient of the density in the PAW spheres."
+    },
+    "LATTICE_CONSTRAINTS":{
+        "type": "list[bool]",
+        "description": "Sets three boolean to selectively allow changes in the lattice vectors."
+    },
+    "LCHARG":{
+        "type": "bool",
+        "default_rule": "not {LH5}",
+        "description": "determines whether the charge densities (files CHGCAR and CHG) are written"
+    },
+    "LCHARGH5":{
+        "type": "bool",
+        "default_rule": "{LH5}",
+        "description": "determines whether the charge densities are written to vaspwave.h5"
+    },
+    "LDAU":{
+        "type": "bool",
+        "default": false,
+        "description": "The main control tag to switch on DFT+U"
+    },
+    "LDAUJ":{
+        "type": "list[float]",
+        "description": "Sets the effective on-site exchange interactions (eV).",
+        "default": "{NTYP}*[0.0]"
+    },
+    "LDAUL":{
+        "type": "list[int]",
+        "description": "specifies the l-quantum number for which the on-site interaction is added.",
+        "default": "{NTYP}*[2]"
+    },
+    "LDAUTYPE":{
+        "type": "Enum:int",
+        "valid_values": [1,2,4],
+        "default": 2
+    },
+    "LDAUU":{
+        "type": "list[float]",
+        "description": "Sets the effective on-site Coulomb interactions (eV).",
+        "default": "{NTYP}*[0.0]"
+    },
+    "LDIAG":{
+        "type": "bool",
+        "default": "true",
+        "description": "Determines whether a subspace diagonalization is performed within the algorithm selected by ALGO or IALGO"
+    },
+    "LDMATRIX":{
+        "type": "bool",
+        "default": "false",
+        "description": "Computes the zero-field splitting (ZFS) matrix."
+    },
+    "LEFG":{
+        "type": "bool",
+        "default": "false",
+        "description": "Computes the electric field gradient (EFG) at positions of the atomic nuclei."
+    },
+    "LEPSILON": {
+        "type": "bool",
+        "default": "false",
+        "description": "Determines the static dielectric matrix, ion-clamped piezoelectric tensor, and the Born effective charges using density functional perturbation theory."
+    },
+    "LH5":{
+        "type": "bool",
+        "default": "false",
+        "description": "determines whether the output is written to the legacy files (CHGCAR, CHG, WAVECAR) or the vaspwave.h5 file"
+    },
+    "LHARTREE":{
+        "type": "bool",
+        "default": "true",
+        "description": "Controls whether the bubble diagrams are included in the BSE calculation."
+    },
+    "LHFCALC":{
+        "type": "bool",
+        "default": "false",
+        "description": "Specifies whether a Hartree-Fock/DFT hybrid functional type calculation is performed"
+    },
+    "LHYPERFINE":{
+        "type": "bool",
+        "default": "false",
+        "description": "Compute the hyperfine tensors at the atomic sites (available as of vasp.5.3.2)."
+    },
+    "LOPTICS":{
+        "type": "bool",
+        "default": "false",
+        "description": "Calculates the frequency dependent dielectric matrix after the electronic ground state has been determined."
+    },
+    "LORBIT":{
+        "type": "Enum:int",
+        "valid_values": [0, 1, 2, 5, 10, 11, 12],
+        "default": 0,
+        "description": "Selects a projection method onto local quantum numbers (lm) and writes PROCAR/PROOUT file."
+    },
+    "LPARD":{
+        "type": "bool",
+        "default": "false",
+        "description": "Determines whether partial (band and/or k-point-decomposed) charge densities are evaluated."
+    },
+    "LPARDH5":{
+        "type": "bool",
+        "default": "false",
+        "description": "Determines whether the partial charges are written to PARCHG or vaspout.h5."
+    },
+    "LPEAD":{
+        "type": "bool",
+        "default": "false",
+        "description": "whether to calculate the derivative of the cell-periodic part of the orbitals"
+    },
+    "LREAL":{
+        "type": "Enum:str",
+        "valid_values": ["Auto", "On", "false", "true"],
+        "default": "false",
+        "description": "Determines whether the projection operators are evaluated in real-space or in reciprocal space."
+    },
+    "LVHAR":{
+        "type": "bool",
+        "default": "false",
+        "description": "Determines whether the local potential V_ion + V_hartree (in eV) is written to the LOCPOT file."
+    },
+    "LVTOT":{
+        "type": "bool",
+        "default": "false",
+        "description": "Determines whether the total local potential V_locpot (in eV) is written to the LOCPOT file."
+    },
+    "LWAVE":{
+        "type": "bool",
+        "default_rule": "not {LH5}",
+        "description": "Determines whether the wavefunctions are written to the WAVECAR file at the end of a run."
+    },
+    "LWAVEH5":{
+        "type": "bool",
+        "related_tags": ["LH5"],
+        "default_rule": "{LH5}",
+        "description": "Determines whether the wavefunctions are written to vaspwave.h5 file at the end of a run."
+    },
+    "MAGMOM":{
+        "type": "list[float]",
+        "description": "Initial magnetic moment for each atom if no magnetization density is present. Considered when symmetry is determined.",
+        "default_rule": "{NIONS} * [1.0] if {ISPIN} == 2 else 3 * {NIONS} * [1.0] if {LNONCOLLINEAR} else {NIONS} * [0.0]"
+    },
+    "METAGGA":{
+        "type": "Enum:str",
+        "valid_values": ["LIBXC", "TPSS", "TPSS_X", "TPSS_C", "RTPSS", "RTPSS_X", "RTPSS_C", "M06L", "M06L_X", "M06L_C", "MS0", "MS0_X", "MS0_C", "MS1", "MS1_X", "MS1_C", "MS2", "MS2_X", "MS2_C", "SCAN", "SCAN_X", "SCAN_C", "RSCAN", "RSCAN_X", "RSCAN_C", "R2SCAN", "R2SCAN_X", "R2SCAN_C", "SREGTM1", "SREGTM2", "SREGTM3", "TASK_X", "LAK", "LAK_X", "LAK_C", "MSPBEL", "MSRPBEL", "MSB86BL", "RMSPBEL", "RMSRPBEL", "RMSB86BL", "SCANL", "RSCANL", "R2SCANL", "OFR2", "SREGTM2L", "MBJ", "LMBJ"],
+        "description": "Selects a meta-GGA exchange-correlation functional."
+    },
+    "NBANDS":{
+        "type": "int",
+        "default_rule": "max({}NELECT}/2 + {NIONS}/2, {NELECT}*0.6)",
+        "description": "Specifies the total number of KS or QP orbitals in the calculation."
+    },
+    "NCORE":{
+        "type": "int",
+        "default": 1,
+        "description": "Determines the number of compute cores that work on an individual orbital"
+    },
+    "NELECT":{
+        "type": "float",
+        "description": "sets the number of electrons"
+    },
+    "NELM":{
+        "type": "int",
+        "default": 60,
+        "description": "Sets the maximum number of electronic SC (self-consistency) steps."
+    },
+    "NELMIN":{
+        "type":"int",
+        "default": 2,
+        "description": "Specifies the minimum number of electronic self-consistency steps."
+    },
+    "NFREE":{
+        "type": "int",
+        "default_rule": "1 if {IBRION} == 2 else 0",
+        "description": "Specifies the number of remembered steps in the history of ionic convergence runs, or the number of ionic displacements in frozen phonon calculations."
+    },
+    "NPAR":{
+        "type": "int",
+        "description": "Determines the number of bands that are treated in parallel."
+    },
+    "NSIM":{
+        "type": "int",
+        "default": 4,
+        "description": "Sets the number of bands that are optimized simultaneously by the RMM-DIIS algorithm"
+    },
+    "NSW":{
+        "type": "int",
+        "default": 0,
+        "description": "Sets the maximum number of ionic steps"
+    },
+    "NUPDOWN":{
+        "type": "float",
+        "description": "Sets the difference between the number of electrons in the up and down spin components."
+    },
+    "NWRITE":{
+        "type": "Enum:int",
+        "default": 2,
+        "valid_values": [0, 1, 2, 3, 4],
+        "description": "This tag determines how much will be written to the file OUTCAR ('verbosity tag')."
+    },
+    "POTIM":{
+        "type": "float",
+        "default_rule": "0.5 if {IBRION} in [1,2,3,5] else 0.015 if {IBRION} in [5,6]",
+        "description": "Sets the time step in molecular dynamics or the step width in ionic relaxations."
+    },
+    "PREC":{
+        "type": "Enum:str",
+        "valid_values": ["Normal", "Single", "SingleN", "Accurate", "Low", "Medium", "High"],
+        "default": "Normal",
+        "description": "Specifies the 'precision' mode"
+    },
+    "QUAD_EFG":{
+        "type": "list[float]",
+        "default_rule": "{NTYP} * [1.0]",
+        "description": "nuclear quadrupole moment (in millbarn) for the atomic types on the POTCAR file."
+    },
+    "SIGMA":{
+        "type": "float",
+        "default": 0.2,
+        "description": "Specifies the width of the smearing in eV."
+    },
+    "SYSTEM":{
+        "type": "str",
+        "description": "The 'title string' defined by SYSTEM is for the user only and should help the user to identify what he/she wants to do with this specific input file.",
+        "default": "unknown system"
+    },
+    "TIME":{
+        "type": "float",
+        "default": 0.4,
+        "description": "Controls the time step for IALGO=5X and for the initial (steepest descent) phase of IALGO=4X."
+    }
+}
