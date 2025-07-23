@@ -8,7 +8,8 @@ from typing import Any, Iterator, Optional, Self
 from vaspin.core.io import read_incar, write_incar
 
 from .tags import Tag
-from .validator import IncarCheckResult, IncarValidator
+
+# from .validator import IncarCheckResult, IncarValidator
 
 
 class Incar:
@@ -49,7 +50,10 @@ class Incar:
 
     def get(self, key: str, default: Any = None) -> Any:
         """Get item by key, with a default value if not found."""
-        return self._tags.get(key.upper(), default)
+        if key.upper() in self._tags:
+            return self._tags[key.upper()].value
+        else:
+            return default
 
     @classmethod
     def from_file(cls, filepath: str | Path) -> Self:
@@ -78,16 +82,16 @@ class Incar:
         """
         write_incar(list(self._tags.values()), directory, name)
 
-    def check(self, poscar=None, potcar=None, kpoints=None) -> IncarCheckResult:
-        """Check the compatibility of INCAR tags using the validator."""
-        validator = IncarValidator()
-        return validator.validate(self, poscar, potcar, kpoints)
+    # def check(self, poscar=None, potcar=None, kpoints=None) -> IncarCheckResult:
+    #     """Check the compatibility of INCAR tags using the validator."""
+    #     validator = IncarValidator()
+    #     return validator.validate(self, poscar, potcar, kpoints)
 
-    def judge(self) -> str:
-        """Judge the calculation type."""
-        raise NotImplementedError
+    # def judge(self) -> str:
+    #     """Judge the calculation type."""
+    #     raise NotImplementedError
 
-    @classmethod
-    def from_preset(cls, name: str) -> Self:
-        """Create INCAR from a preset."""
-        raise NotImplementedError
+    # @classmethod
+    # def from_preset(cls, name: str) -> Self:
+    #     """Create INCAR from a preset."""
+    #     raise NotImplementedError

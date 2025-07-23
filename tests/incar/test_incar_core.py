@@ -6,13 +6,12 @@ import json
 import pytest
 
 from vaspin import Incar
-from vaspin.incar.tags import Tag
 
 
 class TestIncarCore:
     """Tests for the Incar class functionality."""
 
-    @pytest.fixture(scope="class")
+    @pytest.fixture(scope="function")
     def incar_instance(self):
         """Fixture to create an instance of Incar."""
         return Incar({"ENCUT": 520, "ISMEAR": 0})
@@ -24,8 +23,8 @@ class TestIncarCore:
         assert "ISMEAR" in incar_instance
         assert incar_instance["ENCUT"] == 520
         assert incar_instance["ISMEAR"] == 0
-        assert incar_instance.get("ENCUT") == Tag(name="ENCUT", value=520)
-        assert incar_instance.get("ISMEAR") == Tag(name="ISMEAR", value=0)
+        assert incar_instance.get("ENCUT") == 520
+        assert incar_instance.get("ISMEAR") == 0
         assert incar_instance.get("NON_EXISTENT") is None
         assert len(incar_instance) == 2
 
@@ -84,5 +83,5 @@ class TestIncarCore:
         assert written_file.exists()
         with open(written_file, "r") as f:
             content = f.read()
-            assert "ENCUT = 520" in content
-            assert "ISMEAR = 0" in content
+        assert "ENCUT = 520" in content
+        assert "ISMEAR = 0" in content
