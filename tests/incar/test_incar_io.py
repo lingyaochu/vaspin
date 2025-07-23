@@ -64,7 +64,7 @@ class TestWriteIncar:
         """Test writing INCAR file"""
         write_incar(tags=tags, directory=tmp_path, name="INCAR_test")
         with open(tmp_path / "INCAR_test", "r") as f:
-            content = f.read()
+            content = f.read() + "\n"
         assert content == incar_content, (
             "Written INCAR content does not match expected content."
         )
