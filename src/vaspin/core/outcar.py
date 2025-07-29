@@ -4,6 +4,8 @@ import os
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Type
 
+import ahocorasick
+
 from vaspin.utils.datatype import SymTensor
 
 
@@ -471,10 +473,20 @@ class VaspOutcarParser:
 
         return matches
 
+    def _build_automation(self):
+        self._handler_map = {}
+        self._automation = ahocorasick.Automaton()
+        for handler in self._handlers:
+            header = handler.HEADER
+            self._handler_map[header] = handler
+            self._automation.add_word(header, header)
+            self._automation.make_automaton()
+
     def parse(self, verbose: bool = False):
         """Parses the OUTCAR file using the registered handlers."""
         self.data = {"_parse_log": []}
         self._state = ParserState()
+        self._build_automation()
 
         self._log(f"Starting parsing of '{self.outcar_path}'")
 
@@ -483,20 +495,29 @@ class VaspOutcarParser:
             lines = f.readlines()
         self._log(f"File content loaded, {len(lines)} lines")
 
-        # Find all handler matches
-        matches = self._find_handler_matches(lines)
-        self._log(f"Found {len(matches)} handler matches")
+        line_idx = 0
+        num_lines = len(lines)
+        while line_idx < num_lines:
+            line = lines[line_idx]
 
-        # Process each match
-        for handler, line_idx in matches:
+            match_iterator = self._automation.iter(line)
             try:
-                handler.parse(lines, line_idx, self.data, self._state)
-            except Exception as e:
-                self._log(f"Error in {handler.__class__.__name__}: {e!s}")
-                if verbose:
-                    import traceback
+                _end_index, header_str = next(match_iterator)
 
-                    traceback.print_exc()
+                handler = self._handler_map[header_str]
+
+                try:
+                    line_idx = handler.parse(lines, line_idx, self.data, self._state)
+                except Exception as e:
+                    self._log(f"Error in {handler.__class__.__name__}: {e!s}")
+                    if verbose:
+                        import traceback
+
+                        traceback.print_exc()
+                    line_idx += 1
+
+            except StopIteration:
+                line_idx += 1
 
         self._log("Finished parsing file.")
         if verbose:
