@@ -481,10 +481,6 @@ class VaspOutcarParser:
         # Read the entire file content into memory as lines
         with open(self.outcar_path, "r") as f:
             lines = f.readlines()
-
-        # Strip newlines from each line
-        lines = [line.rstrip("\n\r") for line in lines]
-
         self._log(f"File content loaded, {len(lines)} lines")
 
         # Find all handler matches
