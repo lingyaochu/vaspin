@@ -458,21 +458,6 @@ class VaspOutcarParser:
 
         self._handlers = handlers
 
-    def _find_handler_matches(self, lines: List[str]) -> List[tuple[InfoHandler, int]]:
-        """Find all matches for registered handlers in the content."""
-        matches = []
-
-        for line_idx, line in enumerate(lines):
-            if not line.strip():
-                continue
-
-            for handler in self._handlers:
-                if handler.matches(line):
-                    matches.append((handler, line_idx))
-                    break  # Only match the first handler for each line
-
-        return matches
-
     def _build_automation(self):
         self._handler_map = {}
         self._automation = ahocorasick.Automaton()
