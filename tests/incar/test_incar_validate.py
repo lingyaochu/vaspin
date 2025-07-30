@@ -3,9 +3,8 @@
 import pytest
 
 from vaspin import Incar
-from vaspin.incar.validator import (
-    IncarValidator,
-    ValidationRuleRegistry,
+from vaspin.incar import IncarValidator, ValidationRuleRegistry
+from vaspin.incar.rules import (
     encut_not_set,
     hse_sym,
     no_hse_opt,
