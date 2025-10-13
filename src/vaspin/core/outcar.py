@@ -330,6 +330,7 @@ class HyperfineFermiHandler(InfoHandler):
         A_ps = []
         A_ae = []
         A_c = []
+        A_tot = []
         for _ in range(state.num_atoms):
             current_idx += 1
             line = lines[current_idx]
@@ -338,8 +339,15 @@ class HyperfineFermiHandler(InfoHandler):
             A_ps.append(float(line_parts[2]))
             A_ae.append(float(line_parts[3]))
             A_c.append(float(line_parts[4]))
+            A_tot.append(float(line_parts[5]))
 
-        data["hyperfine_fermi"] = {"A_pw": A_pw, "A_ps": A_ps, "A_ae": A_ae, "A_c": A_c}
+        data["hyperfine_fermi"] = {
+            "A_pw": A_pw,
+            "A_ps": A_ps,
+            "A_ae": A_ae,
+            "A_c": A_c,
+            "A_tot": A_tot,
+        }
         return current_idx + 1
 
 
