@@ -24,14 +24,14 @@ parser.add_argument(
     "--length",
     default=0.0,
     type=float,
-    help="the length of random displacement, only for job=distort",
+    help="the length of random displacement, only for job=disp",
 )
 parser.add_argument(
     "-m",
     "--method",
     default="cate",
     choices=["cate", "sphere"],
-    help="the method to distort the structure, only for job=distort",
+    help="the method to distort the structure, only for job=disp",
 )
 args = parser.parse_args()
 
