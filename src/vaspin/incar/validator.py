@@ -5,15 +5,15 @@ from __future__ import annotations
 from typing import NamedTuple, Optional
 
 from .core import Incar
-from .rules import ValidationLevel, ValidationRuleRegistry
+from .rules import ValidationLevel, ValidationResult, ValidationRuleRegistry
 
 
 class IncarCheckResult(NamedTuple):
     """A data class to store the results of an INCAR check."""
 
-    warnings: list[str]
-    errors: list[str]
-    suggestions: list[str]
+    warnings: list[ValidationResult]
+    errors: list[ValidationResult]
+    suggestions: list[ValidationResult]
 
 
 class IncarValidator:
@@ -51,9 +51,9 @@ class IncarValidator:
         The poscar, potcar, and kpoints arguments are not used in the base
         implementation but are kept for future rules that might need them.
         """
-        errors: list[str] = []
-        warnings: list[str] = []
-        suggestions: list[str] = []
+        errors: list[ValidationResult] = []
+        warnings: list[ValidationResult] = []
+        suggestions: list[ValidationResult] = []
 
         for rule in self._rules:
             result = rule(incar)
@@ -61,13 +61,11 @@ class IncarValidator:
                 continue
             match result.level:
                 case ValidationLevel.ERROR:
-                    errors.append(f"{result.name}: {result.message}")
+                    errors.append(result)
                 case ValidationLevel.WARNING:
-                    warnings.append(f"{result.name}: {result.message}")
+                    warnings.append(result)
                 case ValidationLevel.SUGGESTION:
-                    suggestions.append(f"{result.name}: {result.message}")
-                case _:  # pragma: no cover
-                    raise ValueError(f"Unknown validation level: {result.level}")
+                    suggestions.append(result)
 
         return IncarCheckResult(
             warnings=warnings, errors=errors, suggestions=suggestions

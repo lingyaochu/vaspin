@@ -3,7 +3,12 @@
 import pytest
 
 from vaspin import Incar
-from vaspin.incar import IncarValidator, ValidationRuleRegistry
+from vaspin.incar import (
+    IncarValidator,
+    ValidationLevel,
+    ValidationResult,
+    ValidationRuleRegistry,
+)
 from vaspin.incar.rules import (
     encut_not_set,
     hse_sym,
@@ -37,11 +42,12 @@ class TestIncarRulesSingle:
         incar = Incar({"ISMEAR": 0})
         validator = IncarValidator(include_rules=["encut-not-set"])
         result = validator.validate(incar)
-        expected_output = (
-            "encut-not-set: ENCUT is not set. "
-            "You'd better set it to get consistent results"
+        expected_result = ValidationResult(
+            level=ValidationLevel.ERROR,
+            message="ENCUT is not set. You'd better set it to get consistent results",
+            name="encut-not-set",
         )
-        assert result.errors == [expected_output]
+        assert result.errors == [expected_result]
 
         incar["ENCUT"] = 520
         result = validator.validate(incar)
@@ -52,11 +58,14 @@ class TestIncarRulesSingle:
         incar = Incar({"ENCUT": 520})
         validator = IncarValidator(include_rules=["parallel-settings-missing"])
         result = validator.validate(incar)
-        expected_output = (
-            "parallel-settings-missing: NCORE or NSIM is not set. "
-            "Setting them can save your time and money."
+        expected_result = ValidationResult(
+            level=ValidationLevel.SUGGESTION,
+            message=(
+                "NCORE or NSIM is not set. Setting them can save your time and money."
+            ),
+            name="parallel-settings-missing",
         )
-        assert result.suggestions == [expected_output]
+        assert result.suggestions == [expected_result]
 
         incar["NCORE"] = 4
         incar["NSIM"] = 16
@@ -68,12 +77,15 @@ class TestIncarRulesSingle:
         incar = Incar({"IBRION": 2, "ENCUT": 520, "LHFCALC": True})
         validator = IncarValidator(include_rules=["hse-with-optimization"])
         result = validator.validate(incar)
-        expected_output = (
-            "hse-with-optimization: "
-            "Do not run ionic optimization with HSE functionals. "
-            "You have no such time and money to waste."
+        expected_result = ValidationResult(
+            level=ValidationLevel.WARNING,
+            message=(
+                "Do not run ionic optimization with HSE functionals. "
+                "You have no such time and money to waste."
+            ),
+            name="hse-with-optimization",
         )
-        assert result.warnings == [expected_output]
+        assert result.warnings == [expected_result]
         incar["LHFCALC"] = False
         result = validator.validate(incar)
         assert result.warnings == []
@@ -84,11 +96,14 @@ class TestIncarRulesSingle:
         incar = Incar({"LHFCALC": True, "ISYM": isym})
         validator = IncarValidator(include_rules=["hse-symmetry-incompatible"])
         result = validator.validate(incar)
-        expected_output = (
-            "hse-symmetry-incompatible: "
-            "With hybrid functionals (LHFCALC=True), ISYM should be -1, 0, or 3"
+        expected_result = ValidationResult(
+            level=ValidationLevel.ERROR,
+            message=(
+                "With hybrid functionals (LHFCALC=True), ISYM should be -1, 0, or 3"
+            ),
+            name="hse-symmetry-incompatible",
         )
-        assert result.errors == [expected_output]
+        assert result.errors == [expected_result]
 
         incar["ISYM"] = 0
         result = validator.validate(incar)
@@ -96,14 +111,19 @@ class TestIncarRulesSingle:
 
     def test_potim_too_large(self):
         """Test the 'potim-too-large' validation rule."""
+        potim, ibrion = (1.0, 2)
         incar = Incar({"IBRION": 2, "POTIM": 1.0})
         validator = IncarValidator(include_rules=["potim-too-large"])
         result = validator.validate(incar)
-        expected_output = (
-            "potim-too-large: POTIM is set to 1.0 for IBRION = 2. "
-            "It is recommended to use POTIM <= 0.5 for stable ionic relaxation."
+        expected_result = ValidationResult(
+            level=ValidationLevel.WARNING,
+            message=(
+                f"POTIM is set to {potim} for IBRION = {ibrion}. "
+                "It is recommended to use POTIM <= 0.5 for stable ionic relaxation."
+            ),
+            name="potim-too-large",
         )
-        assert result.warnings == [expected_output]
+        assert result.warnings == [expected_result]
 
         incar["POTIM"] = 0.4
         result = validator.validate(incar)
@@ -114,10 +134,12 @@ class TestIncarRulesSingle:
         incar = Incar({"IBRION": 5, "LREAL": "true"})
         validator = IncarValidator(include_rules=["phonon-lreal"])
         result = validator.validate(incar)
-        expected_output = (
-            "phonon-lreal: When doing Phonon calculation, LREAL should be False"
+        expected_result = ValidationResult(
+            level=ValidationLevel.WARNING,
+            message="When doing Phonon calculation, LREAL should be False",
+            name="phonon-lreal",
         )
-        assert result.warnings == [expected_output]
+        assert result.warnings == [expected_result]
 
         incar["LREAL"] = "false"
         result = validator.validate(incar)
@@ -129,12 +151,15 @@ class TestIncarRulesSingle:
         incar = Incar({"IBRION": 5, "NFREE": nfree})
         validator = IncarValidator(include_rules=["phonon-nfree"])
         result = validator.validate(incar)
-        expected_output = (
-            "phonon-nfree: "
-            "When doing phonon calculation with finite difference method, "
-            "you'd better set NFREE to 4 to make your results robust."
+        expected_result = ValidationResult(
+            level=ValidationLevel.SUGGESTION,
+            message=(
+                "When doing phonon calculation with finite difference method, "
+                "you'd better set NFREE to 4 to make your results robust."
+            ),
+            name="phonon-nfree",
         )
-        assert result.suggestions == [expected_output]
+        assert result.suggestions == [expected_result]
 
         incar["NFREE"] = 4
         result = validator.validate(incar)
