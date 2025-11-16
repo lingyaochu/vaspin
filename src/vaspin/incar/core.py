@@ -81,17 +81,3 @@ class Incar:
             name: Name of the INCAR file.
         """
         write_incar(list(self._tags.values()), directory, name)
-
-    # def check(self, poscar=None, potcar=None, kpoints=None) -> IncarCheckResult:
-    #     """Check the compatibility of INCAR tags using the validator."""
-    #     validator = IncarValidator()
-    #     return validator.validate(self, poscar, potcar, kpoints)
-
-    # def judge(self) -> str:
-    #     """Judge the calculation type."""
-    #     raise NotImplementedError
-
-    # @classmethod
-    # def from_preset(cls, name: str) -> Self:
-    #     """Create INCAR from a preset."""
-    #     raise NotImplementedError

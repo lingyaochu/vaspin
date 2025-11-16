@@ -28,19 +28,6 @@ class IncarType(Enum):
     NONE = 7
 
 
-class IncarCategory(Enum):
-    """Enumeration for INCAR tag categories."""
-
-    START = "The start tags"
-    ELECTONIC = "The electronic tags"
-    IONIC = "The ionic tags"
-    OUTPUT = "The tags for output control"
-    FUNCTIONAL = "The tags for functional control"
-    RESPONSE = "The tags for response calculation"
-    PRECISION = "The tags for general precision control"
-    SPECIFIC = "The tags for specific calculation"
-
-
 class TagDefinition:
     """Holds the schema and validation logic for a specific INCAR tag."""
 
