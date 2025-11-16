@@ -1,0 +1,28 @@
+{{TAGDEF|LDAU|.TRUE. {{!}} .FALSE.|.FALSE.}}
+
+Description: {{TAG|LDAU}}=.TRUE. switches on DFT+U.
+----
+
+{{TAG|LDAU}} is the main control tag to switch on DFT+U. Check {{TAG|LDAUTYPE}} for an overview of the available methods. A typical setup in the INCAR file may include
+
+  {{TAGBL|LDAU}}      = .TRUE.
+  {{TAGBL|LDAUTYPE}}  = 2
+  {{TAGBL|LDAUL}}     = 2 -1      # l quantum number where U is added for each atom; -1 is no U added
+  {{TAGBL|LDAUU}}     = 7.00 0.00 # on-site Coulomb interaction (in eV) for each atom
+  {{TAGBL|LDAUJ}}     = 1.00 0.00 # on-site exchange interaction (in eV) for each atom
+  {{TAGBL|LMAXMIX}}   = 4
+
+'''Note on band-structure calculation''': The {{FILE|CHGCAR}} file contains only information up to angular momentum quantum number <math>l</math>={{TAG|LMAXMIX}} for the [[LDAUTYPE#occmat|on-site PAW occupancy matrices]]. When the {{FILE|CHGCAR}} file is read and kept fixed in the course of the calculations ({{TAG|ICHARG}}=11), the results will necessarily be not identical to a self-consistent run. The deviations are often large for DFT+U calculations. For the calculation of band structures within the DFT+U approach, it is hence strictly required to increase {{TAG|LMAXMIX}} to 4 (<math>d</math> elements) and 6 (<math>f</math> elements).
+
+== Related tags and articles ==
+{{TAG|LDAUTYPE}},
+{{TAG|LDAUL}},
+{{TAG|LDAUU}},
+{{TAG|LDAUJ}},
+{{TAG|LDAUPRINT}},
+{{TAG|LMAXMIX}}
+
+{{sc|LDAU|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:DFT+U]]

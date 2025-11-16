@@ -1,0 +1,18 @@
+{{TAGDEF|ICHIBARE| 1 {{!}} 2 {{!}} 3 | 1}}
+
+Description: determines the order of the finite difference stencil used to calculate the magnetic susceptibility.
+----
+
+{{TAG|ICHIBARE}} specifies the order of the finite difference stencil used to calculate the magnetic susceptibility (second order derivative in Eq. 47 of Yates ''et al.''{{Cite|yates:prb:2007}}). {{TAG|ICHIBARE}} may be set to 1, 2, or 3. Often the default ({{TAG|ICHIBARE}}=1) is sufficient. A higher {{TAG|ICHIBARE}} results in a substantial increase of the computational load.
+
+== Related tags and articles ==
+{{TAG|LCHIMAG}},
+{{TAG|DQ}},
+{{TAG|LNMR_SYM_RED}},
+{{TAG|NLSPLINE}}
+
+{{sc|ICHIBARE|Examples|Examples that use this tag}}
+
+== References ==
+
+[[Category:INCAR tag]][[Category:NMR]]

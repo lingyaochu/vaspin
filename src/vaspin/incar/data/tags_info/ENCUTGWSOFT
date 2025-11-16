@@ -1,0 +1,43 @@
+{{TAGDEF|ENCUTGWSOFT|[real]}}
+{{DEF|ENCUTGWSOFT|{{TAG|ENCUTGW}}<math>\times 0.8</math>| for {{TAG|ALGO}}{{=}}''ACFDT''|{{TAG|ENCUTGW}}<math>\times 0.8</math>| as of VASP.6.3 | {{TAG|ENCUTGW}}|else}}
+{{NB|important|For vasp.6.3 and later releases {{TAG|ENCUTGWSOFT}} always defaults to {{TAG|ENCUTGW}}<math>\times 0.8</math>.}}
+Descprition: The flag {{TAG|ENCUTGWSOFT}} sets the energy cutoff for the response function, such that it allows to truncate the Coulomb kernel slowly between the energy
+specified by {{TAG|ENCUTGWSOFT}} and {{TAG|ENCUTGW}} using a cosine window function.
+----
+RPA/ACFDT correlation energies converge very slowly with respect to <math>\mathbf{G}_{\rm max }</math>.
+Thus VASP automatically extrapolates to the infinite basis set limit using a linear regression to the equation: {{cite|harl:2008}}{{cite|harl:2010}}{{cite|klimes:2014}}
+
+<math>E_{\mathrm{c}}({\mathbf{G}})=E_{\mathrm{c}}(\infty)+\frac{A}{{\mathbf{G}}^3}</math>.
+
+This  usually leads to much smoother energy-volume curves in {{TAG|ACFDT calculations}} and {{TAG|MP2 calculations}}.
+The modified Coulomb kernel is in this case:
+<math>v_{G} = \frac{4 \pi e^2} {G^2} \frac{1}{2} \left( 1 + \cos \left( \pi \, \frac{ \frac{\hbar^{2} G^2 }{2 m_e} - \mathrm{ ENCUTGWSOFT} }{ \mathrm{ENCUTGW} -  \mathrm{ENCUTGWSOFT}} \right) \right)
+\qquad \mbox{for} \quad  \frac{\hbar^2 G^2 }{2 m_e} >  \mathrm{ENCUTGWSOFT}</math>
+
+If {{TAG|LSCK}} is set to .TRUE., the squeezed Coulomb kernel is used instead of the cosine window:{{cite|riemelmoser:jcp:2020}}
+
+<math>v_{G} = 4 \pi e^2 \frac{
+(G_{max}-G_{min})(G_{max}-G)
+}{
+(G_{min}^2 - G(2G_{min}-G_{max}))^2
+}
+\qquad \mbox{for} \quad  \mathrm{ENCUTGWSOFT}=\frac{\hbar^2G_{min}^2}{2m_e}<\frac{\hbar^2 G^2}{2m_e}<\frac{\hbar^2G_{max}^2}{2m_e}=\mathrm{ENCUTGW}</math>
+
+This kernel ''squeezes'' contributions from large wave vectors <math>G>G_{max}</math> into the window given by {{TAGBL|ENCUTGWSOFT}}.
+For GW type calculations the squeezed Coulomb kernel was the default (when {{TAGBL|ENCUTGWSOFT}} was set in the INCAR file) before version vasp.6.3, but
+in newer releases the code always defaults to a smoothed Coulomb kernel (both for GW and RPA type calculations). If one desires to recover the behavior
+of vasp.6.2 and older versions, {{TAG|LSCK}}=.TRUE. must be set in the INCAR file for GW type calculations if {{TAGBL|ENCUTGWSOFT}} is set in the INCAR file.
+
+
+{{NB|mind|The infinite basis set limit extrapolation for RPA/ACFDT is described in more detail [[ACFDT/RPA_calculations#Basis_set_convergence|here]].}}
+== Related tags and articles ==
+{{TAG|PRECFOCK}},
+{{TAG|ENCUT}},
+{{TAG|ENCUTGW}},
+{{TAG|GW calculations}},
+{{TAG|LSCK}},
+[[ACFDT/RPA_calculations#Basis_set_convergence|RPA/ACFDT basis set convergence]],
+{{sc|ENCUTGWSOFT|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Many-body perturbation theory]][[Category:GW]]

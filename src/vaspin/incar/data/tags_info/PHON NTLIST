@@ -1,0 +1,14 @@
+{{DISPLAYTITLE:PHON_NTLIST}}
+{{TAGDEF|PHON_NTLIST|[integer]|none}}
+
+Description: Sets the number of temperatures for the [[:Category:Electron-phonon_interactions#Stochastic_displacements_approach|stochastic approach to electron-phonon interactions]].
+----
+
+{{TAG|PHON_NTLIST}} corresponds to the number of entries read from the list of temperatures defined by {{TAG|PHON_TLIST}}.
+For a how-to on the [[:Category:Electron-phonon_interactions#Stochastic_displacements_approach|stochastic approach to electron-phonon interactions]] see  [[Electron-phonon interactions from Monte-Carlo sampling]].
+{{NB|mind|This feature is available for VASP >{{=}} 6.0.}}
+== Related tags and articles ==
+[[Electron-phonon interactions from Monte-Carlo sampling]], {{TAG|PHON_LMC}}, {{TAG|PHON_NSTRUCT}}, {{TAG|PHON_TLIST}}, {{TAG|PHON_LBOSE}}
+
+
+[[Category:INCAR tag]][[Category:Electron-phonon interactions]][[Category:Phonons]]

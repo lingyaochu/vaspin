@@ -1,0 +1,10 @@
+{{TAGDEF|PMASS|[logical]}}
+
+Description: Control flag for the output of the profiling routines.
+----
+If specified as {{TAG|PMASS}}=''.TRUE.'', only the flat profile is printed out in the {{FILE|OUTCAR}}.
+
+{{sc|PFLAT|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Performance]]

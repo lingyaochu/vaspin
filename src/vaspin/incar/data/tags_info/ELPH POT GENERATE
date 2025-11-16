@@ -1,0 +1,52 @@
+{{DISPLAYTITLE:ELPH_POT_GENERATE}}
+{{TAGDEF|ELPH_POT_GENERATE|[logical]|False}}
+
+Description: Calculates the electron-phonon potential from finite atomic displacements.
+{{Available|6.5.0}}
+----
+
+Performing electron-phonon calculations using [[:Category:Electron-phonon_interactions#Many-body_perturbation_theory | many-body perturbation theory]] requires as input a {{FILE|phelel_params.hdf5}} file.
+Setting {{TAGO|ELPH_POT_GENERATE|True}} provides a way to generate the {{FILE|phelel_params.hdf5}} file directly in VASP by [[Electron-phonon_potential_from_supercells | computing the electron-phonon potential]].
+This is accomplished by using finite atomic displacements in a supercell.
+Therefore, in addition to setting {{TAGO|ELPH_POT_GENERATE|True}}, it is necessary to set {{TAGO|IBRION|6}} to activate the finite-difference routines.
+{{NB|mind|We currently do not support all symmetry operations when considering the atomic displacements for {{TAGO|ELPH_POT_GENERATE|True}}. Therefore, more atomic displacements are generated compared to typical finite-difference calculations using {{TAGO|IBRION|6}}.}}
+
+When {{TAGO|ELPH_POT_GENERATE|True}}, VASP will additionally produce the {{FILE|CONTCAR_ELPH}} file.
+This file contains the primitive-cell crystal structure in the {{FILE|POSCAR}} format and can directly be used as input for the subsequent electron-phonon calculation.
+The primitive cell is automatically determined by VASP during the supercell calculation, but can optionally be specified via the {{TAG|ELPH_POT_LATTICE}} tag.
+
+Finally, the electron-phonon potential in the {{FILE|phelel_params.hdf5}} file is computed on a real-space FFT grid that has to match exactly the FFT grid dimensions ({{TAG|NGX}}, {{TAG|NGY}}, {{TAG|NGZ}}) of the primitive cell used in the subsequent electron-phonon calculation.
+The dimensions of the FFT grid used to compute the electron-phonon potential can be chosen via the {{TAG|ELPH_POT_FFT_MESH}} tag.
+If one does not specify an FFT grid explicitly, VASP will determine the FFT grid dimensions automatically based on the current {{TAG|ENCUT}}.
+This should produce an FFT mesh for the electron-phonon potential that is compatible with the FFT mesh used in a primitive-cell calculation at the same {{TAG|ENCUT}}.
+{{NB|tip|The {{TAG|PREC}} {{FILE|INCAR}} tag influences the size of the FFT mesh. Therefore, it is recommended to choose the same {{TAG|PREC}} for both the supercell as well as the primitive-cell calculation.}}
+
+Basic information about the primitive-cell geometry and FFT grid is written to the {{FILE|OUTCAR}} file in the following format:
+<pre>
+ Generation of phelel_params.hdf5
+ ================================
+
+Primitive cell
+   a1 =     1.78093078    1.78093078    0.00000000
+   a2 =     0.00000000    1.78093078    1.78093078
+   a3 =     1.78093078    0.00000000    1.78093078
+
+Primitive FFT mesh =     18    18    18
+</pre>
+It is also written to the machine-readable {{FILE|vaspout.h5}} file at the following HDF5 paths:
+<pre>
+results/elph_potential/primitive_positions
+results/elph_potential/primitive_fft_mesh
+</pre>
+This information is already contained within the generated {{FILE|phelel_params.hdf5}} file.
+However, it is mirrored in the standard output to make it easier for users to check their calculations and to automate workflows.
+
+==Related tags and articles==
+* {{TAG | ELPH_POT_LATTICE}}
+* {{TAG | ELPH_POT_FFT_MESH}}
+* {{TAG | IBRION}}
+* [[Electron-phonon potential from supercells]]
+* {{FILE | phelel_params.hdf5}}
+* {{FILE | CONTCAR_ELPH}}
+
+[[Category:INCAR tag]][[Category:Electron-phonon_interactions]]

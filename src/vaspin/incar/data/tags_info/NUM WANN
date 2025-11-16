@@ -1,0 +1,22 @@
+{{DISPLAYTITLE:NUM_WANN}}
+{{TAGDEF|NUM_WANN|[integer]|{{TAG|NBANDS}}}}
+
+Description: Controls the number of Wannier orbitals to be constructed.
+
+----
+
+This tag is used to determine the number of Wannier orbitals to be constructed in the [[:Category:Wannier_functions#Selected_columns_of_the_density_matrix_(SCDM)|SCDM method]].
+
+Since VASP 6.2.0, {{TAG|NUM_WANN}} also determines the number of Wannier orbitals to be used with wannier90.
+Note that the <code>num_wann</code> value written to the <code>wannier90.win</code> file is always the value of {{TAG|NUM_WANN}} known by vasp.
+
+When using {{TAG|LOCPROJ}} for Wannierization, it is not necessary to set {{TAG|NUM_WANN}}.
+In this case, the number of Wannier orbitals is automatically set equal to the number of local functions.
+
+== Related tags and articles ==
+{{TAG|LWANNIER90}},
+{{TAG|LSCDM}},
+{{TAG|CUTOFF_TYPE}}
+----
+
+[[Category:INCAR tag]][[Category:Wannier functions]][[Category:Constrained-random-phase approximation]]

@@ -1,0 +1,29 @@
+{{DISPLAYTITLE:XC_C}}
+{{TAGDEF|XC_C|[real array] | 1.0*NXC}}
+
+Description: Multiplication factors for the components of the functional given by the {{TAG|XC}} tag.
+----
+
+{{TAG|XC_C}} sets the factors that multiply each component of the functional specified with the {{TAG|XC}} tag. The number of values specified with {{TAG|XC_C}} has to be equal to the number of functional components set with {{TAG|XC}} (NXC). Examples of how to use {{TAG|XC_C}} are provided at {{TAG|XC}}.
+{{NB|mind|
+*{{TAG|XC_C}} is available since VASP.6.4.3.
+*The {{TAG|XC_C}} tag can be used together with the {{TAG|ALDAX}}, {{TAG|ALDAC}}, {{TAG|AGGAX}}, {{TAG|AGGAC}}, {{TAG|AMGGAX}}, and {{TAG|AMGGAC}} tags that can be used when {{TAG|LHFCALC}}{{=}}.TRUE.. Such examples are provided at {{TAG|XC}}.
+}}
+
+== Related tags and articles ==
+
+{{TAG|XC}},
+{{TAG|GGA}},
+{{TAG|METAGGA}},
+{{TAG|ALDAX}},
+{{TAG|ALDAC}},
+{{TAG|AGGAX}},
+{{TAG|AGGAC}},
+{{TAG|AMGGAX}},
+{{TAG|AMGGAC}}
+
+{{sc|XC_C|Examples|Examples that use this tag}}
+
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:Hybrid_functionals]]

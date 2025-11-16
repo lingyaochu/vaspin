@@ -1,0 +1,22 @@
+{{TAGDEF|LELF|.TRUE. {{!}} .FALSE. |.FALSE.}}
+
+Description: {{TAG|LELF}} determines whether to create an
+{{FILE|ELFCAR}} file or not.
+----
+This file contains the so-called ELF (electron localization
+function) <ref name="silvi:nature:371"/>
+
+If {{TAG|LELF}} is set, {{TAG|NPAR}}=1 has to be set explicitely in
+the {{FILE|INCAR}} file in addition
+
+== Related tags and articles ==
+{{TAG|NPAR}}
+
+{{sc|LELF|Examples|Examples that use this tag}}
+
+== References ==
+<references>
+<ref name="silvi:nature:371">[http://www.nature.com/nature/journal/v371/n6499/pdf/371683a0.pdf B. Silvi and A. Savin, Nature 371, 683-686 (1994).]</ref>
+</references>
+
+[[Category:INCAR tag]][[Category:Electronic ground-state properties]]

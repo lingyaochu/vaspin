@@ -1,0 +1,26 @@
+{{DISPLAYTITLE:LWANNIER90_RUN}}
+{{TAGDEF|LWANNIER90_RUN|.TRUE. {{!}} .FALSE.|.FALSE.}}
+
+Description: {{TAG|LWANNIER90_RUN}} executes <tt>wannier_setup</tt> (see {{TAG|LWANNIER90}}=.TRUE.) and subsequently runs [http://www.wannier.org WANNIER90] in library mode (<tt>wannier_run</tt>).
+----
+For details on the execution of <tt>wannier_setup</tt> in VASP, see the description of the {{TAG|LWANNIER90}}-tag.
+For information on the many tags one may set in the {{FILE|wannier90.win}} file to control the execution of WANNIER90 (be it standalone or in library mode) we refer to the [http://www.wannier.org/doc/user_guide.pdf WANNIER90 manual].
+
+'''Mind''': when running WANNIER90 in library mode, the {{FILE|wannier90.mmn}} and {{FILE|wannier90.amn}} files are not written. The information these files normally contain is passed on to <tt>wannier_run</tt> internally. If you want these files to be written anyway, for instance to be able to run WANNIER90 standalone later on, one should add
+
+ {{TAG|LWRITE_MMN_AMN}}=.TRUE.
+
+to the {{FILE|INCAR}} file.
+
+== Related tags and articles ==
+{{TAG|LWANNIER90}},
+{{TAG|LWRITE_MMN_AMN}},
+{{TAG|LWRITE_UNK}},
+{{TAG|NUM_WANN}},
+{{TAG|LWRITE_SPN}},
+{{TAG|WANNIER90_WIN}}
+
+{{sc|LWANNIER90_RUN|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Wannier functions]][[Category:Constrained-random-phase approximation]]

@@ -1,0 +1,12 @@
+{{TAGDEF|LCHARGH5|[logical]|{{TAG|LH5}}}}
+
+Description: {{TAG|LCHARGH5}} determines whether the charge densities are written to {{FILE|vaspwave.h5}}.
+
+== Related tags and articles ==
+{{TAG|LWAVE}}, {{TAG|LWAVEH5}}, {{TAG|LCHARG}}, {{TAG|LH5}}
+
+
+{{sc|LCHARGH5|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Charge density]]

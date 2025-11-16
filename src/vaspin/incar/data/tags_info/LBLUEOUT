@@ -1,0 +1,18 @@
+{{TAGDEF|LBLUEOUT|.TRUE.{{!}}.FALSE.|.FALSE.}}
+
+Description: for {{TAG|LBLUEOUT}}=.TRUE., VASP writes output for the free-energy gradient calculation to the {{FILE|REPORT}} file (in case VASP was compiled with [[Precompiler_flags|-Dtbdyn]]).
+----
+If LBLUEOUT=.TRUE., the information needed to compute the free-energy gradient is written in the {{FILE|REPORT}} file after each molecular-dynamics step ({{TAG|MDALGO}}=1 {{!}} 2), check the lines after the header:
+
+ >Blue_moon
+        lambda         |z|^(-1/2)      GkT           |z|^(-1/2)*(lambda+GkT)
+
+For the theory of the blue-moon ensemble we refer to [[Blue-moon ensemble|here]].
+
+== Related tags and articles ==
+{{TAG|IBRION}}, {{TAG|MDALGO}}, {{TAG|ICONST}}, [[Blue-moon ensemble]], [[Slow-growth approach]]
+
+{{sc|LBLUEOUT|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Advanced molecular-dynamics sampling]]

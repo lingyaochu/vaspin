@@ -1,0 +1,27 @@
+{{TAGDEF|NSTORB|[integer]}}
+{{DEF|NSTORB|-1|}}
+
+Description: {{TAG|NSTORB}} specifies the number of stochastic orbitals per cycle in the stochastic MP2 algorithm.{{cite|Schaefer:JCP2017}}
+----
+
+{{TAGBL|NSTORB}} defines the number of stochastic orbitals per cycle, i.e., the number of stochastic orbitals that define one stochastic sample. If the sample is not large enough, the calculations are repeated until the accuracy, defined by ESTOP, is reached.
+
+As a rule of thumb, we recommend setting
+
+<math>
+\texttt{NSTORB} = \sqrt{\texttt{NBANDS}} \;.
+</math>
+
+See [[Stochastic_LTMP2|here]] for a small tutorial on stochastic Laplace transformed MP2 calculations.
+
+== Related tags and articles ==
+{{TAG|NOMEGA}},
+{{TAG|ESTOP}},
+{{TAG|LSMP2LT}},
+{{TAG|LMP2LT}},
+{{TAG|NBANDS}},
+{{TAG|KPAR}},
+{{TAG|ALGO}}
+----
+
+[[Category:INCAR tag]][[Category:Many-body perturbation theory]][[Category:MP2]]

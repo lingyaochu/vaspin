@@ -1,0 +1,12 @@
+{{TAGDEF|LH5|[logical]|.FALSE.}}
+
+Description: {{TAG|LH5}} determines whether the output is written to the legacy files ({{FILE|CHGCAR}}, {{FILE|CHG}}, {{FILE|WAVECAR}}) or the {{FILE|vaspwave.h5}} file.
+
+-----
+
+== Related tags and articles ==
+{{TAG|LWAVE}}, {{TAG|LWAVEH5}}, {{TAG|LCHARG}}, {{TAG|LCHARGH5}}
+
+{{sc|LH5|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Charge density]]

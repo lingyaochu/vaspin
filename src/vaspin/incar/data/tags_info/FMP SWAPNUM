@@ -1,0 +1,17 @@
+{{DISPLAYTITLE:FMP_SWAPNUM}}
+{{TAGDEF|FMP_SWAPNUM|integer | 1}}
+
+Description: Number of pairs that are exchanged in a single swapping event in the [[Müller-Plathe method]].
+
+-----
+
+{{TAG|FMP_SWAPNUM}} defines the number of pairs of particles exchanged in a single swapping event of the reverse nonequilibrium molecular dynamics run using the [[Müller-Plathe method]]. Only the particles of the same type are selected.
+{{NB|mind|This tag will only be available from VASP 6.4.4}}
+== Related tags and articles ==
+[[Müller-Plathe method]],
+{{TAG|FMP_DIRECTION}},
+{{TAG|FMP_ACTIVE}},
+{{TAG|FMP_SNUMBER}},
+{{TAG|FMP_PERIOD}}
+
+[[Category:INCAR tag]][[Category:Molecular dynamics]][[Category:Ensemble properties]]

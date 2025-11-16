@@ -1,0 +1,25 @@
+{{DISPLAYTITLE:ELPH_TRANSPORT_DRIVER}}
+{{TAGDEF|ELPH_TRANSPORT_DRIVER|[integer]|{{TAG|ELPH_TRANSPORT_DRIVER}}}}
+
+Description: choose method to compute the Onsager coefficients, which are then used to compute the transport coefficients.
+{{Available|6.5.0}}
+
+----
+The transport coefficients can be computed using either of the options bellow, each with its own advantages and disadvantages.
+
+; {{TAGO|ELPH_TRANSPORT_DRIVER|1|op==}}
+: Use a linear grid of energies with {{TAG|TRANSPORT_NEDOS}} in the interval determined by {{TAG|ELPH_TRANSPORT_DFERMI_TOL}} or {{TAG|ELPH_TRANSPORT_EMIN}} and {{TAG|ELPH_TRANSPORT_EMAX}} and the Simpson integration rule to evaluate the Onsager coefficients.
+
+; {{TAGO|ELPH_TRANSPORT_DRIVER|2|op==}}
+: Use Gauss-Legendre integration to evaluate the Onsager coefficients. The convergence of the integral can be checked by performing a convergence study with respect to {{TAG|TRANSPORT_NEDOS}} alone.
+
+==Related tags and articles==
+* [[Transport coefficients including electron-phonon scattering|Transport calculations]]
+* {{TAG|ELPH_RUN}}
+* {{TAG|ELPH_TRANSPORT}}
+* {{TAG|TRANSPORT_NEDOS}}
+* {{TAG|ELPH_TRANSPORT_DFERMI_TOL}}
+* {{TAG|ELPH_TRANSPORT_EMIN}}
+* {{TAG|ELPH_TRANSPORT_EMAX}}
+
+[[Category:INCAR tag]][[Category:Electron-phonon_interactions]]

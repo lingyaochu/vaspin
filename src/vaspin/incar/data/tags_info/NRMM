@@ -1,0 +1,14 @@
+{{TAGDEF|NRMM|[integer]|4}}
+
+Description: Maximum number of iterative steps for RMM-DIIS ({{TAG|IALGO}}=4X) or Davidson algorithms ({{TAG|IALGO}}=3X).
+
+-----
+
+Note: This tag was formerly known as NDAV which is the name of the variable in the VASP source code.
+
+== Related tags and articles ==
+{{TAG|IALGO}}
+
+{{sc|NRMM|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Electronic minimization]]

@@ -1,0 +1,26 @@
+{{TAGDEF|LMAXMIX|[integer]|2}}
+
+Description: {{TAG|LMAXMIX}} controls up to which ''l''-quantum number the one-center PAW charge densities are passed through the charge density mixer and written to the {{FILE|CHGCAR}} file.
+----
+Higher ''l''-quantum numbers (''l''>{{TAG|LMAXMIX}}) are not handled by the [[:Category:Density mixing|density mixer]] (these components of the one-center charge density are set to the value corresponding to the present orbitals). Usually, it is not necessary to increase {{TAG|LMAXMIX}}, but the following cases are exceptions:
+
+*[[:Category:DFT+U|DFT+U calculations]] require, in many cases, an increase of {{TAG|LMAXMIX}} to 4 for ''d''-electrons (or 6 for ''f''-elements) to obtain fast convergence to the ground state.
+
+*The {{FILE|CHGCAR}} file will contain the one-center PAW occupancy matrices up to {{TAG|LMAXMIX}}. When the {{FILE|CHGCAR}} file is read and kept fixed in the course of the calculations ({{TAG|ICHARG}}=11), the results will not necessarily be identical to a self-consistent run. The deviations will be large for DFT+U calculations. For the calculation of band structures within the DFT+U approach, it is strictly required to increase {{TAG|LMAXMIX}} to 4 for ''d''-elements and to 6 for ''f''-elements.
+
+*[[:Category:Magnetism|SDFT calculations]] that consider noncollinear magnetism often require slow mixing of the spin density up to 4 for ''d''-elements and up to 6 for ''f''-elements to obtain fast convergence to the ground state.
+
+== Related tags and articles ==
+{{TAG|IMIX}},
+{{TAG|INIMIX}},
+{{TAG|MAXMIX}},
+{{TAG|BMIX}},
+{{TAG|AMIX_MAG}},
+{{TAG|BMIX_MAG}},
+{{TAG|AMIN}},
+{{TAG|MIXPRE}},
+{{TAG|WC}}
+
+{{sc|LMAXMIX|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Density mixing]]

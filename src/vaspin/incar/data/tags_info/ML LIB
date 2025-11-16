@@ -1,0 +1,19 @@
+{{DISPLAYTITLE:ML_LIB}}
+{{TAGDEF|ML_LIB|[logical]}}
+{{DEF|ML_LIB|.TRUE.|if compiled with [[VASPml library]] (precompiler flag <code>-Dlibvaspml</code>) |.FALSE.|else}}
+
+Description: {{TAG|ML_LIB}} enables/disables the use of the [[VASPml library|VASPml C++ library]] for machine-learning features.
+{{Available|6.5.0}}
+
+----
+Some machine learning modes of operation ({{TAG|ML_MODE}}) are implemented twice in {{VASP}}, once in the original Fortran code and again in a C++ rewrite as part of the VASPml library. However, the supported features and {{FILE|INCAR}} tags may be [[VASPml library#Restrictions|different]]. For example, the C++ library does not yet implement the thermodynamic integration method. The {{TAG|ML_LIB}} tag allows to switch seamlessly between the two code paths without the need to recompile {{VASP}}.
+
+== Related tags and articles==
+{{TAG|ML_LMLFF}},
+{{TAG|ML_MODE}}
+
+{{sc|ML_LIB|Examples|Examples that use this tag}}
+
+----
+[[Category:INCAR tag]]
+[[Category:Machine-learned force fields]]

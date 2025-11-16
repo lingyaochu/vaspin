@@ -1,0 +1,54 @@
+{{TAGDEF|LMAXFOCK|[integer]|4}}
+
+Description: {{TAG|LMAXFOCK}} sets the maximum angular momentum quantum number ''L'' for the augmentation of charge densities in Hartree-Fock type routines.
+----
+In the [[Projector-augmented-wave_formalism|PAW method]], the difference between the charge density of the all-electron partial waves <math>\phi_\beta</math> and
+the pseudo partial waves <math>\tilde \phi_\beta</math>
+
+<math>
+Q_{\alpha\beta}({\mathbf r})= \phi^*_\alpha({\mathbf r})\phi_\beta({\mathbf r})  - \tilde \phi^*_\alpha({\mathbf r})\tilde \phi_\beta({\mathbf r})
+</math>
+
+is usually treated on spherical grids centered at each atom
+(one-center terms inside the PAW spheres, see [[Projector-augmented-wave_formalism|PAW method]]). To describe long range electrostatic effects, the ''moments'' of the differences of the all-electron and pseudo charge density
+also need to be added on the plane wave grid (compensation density, see [[Projector-augmented-wave_formalism|PAW method]]).
+These compensation charges exactly restore the moments of the all-electron density on the plane wave
+grid. For the charge densities used in the Hartree and DFT term,
+the augmentation is done exactly up to the maximum ''L'' quantum number required by the POTCAR files,
+whereas for the Fock exchange, for reasons of efficiency,
+the augmentation on the plane wave grid is controlled by {{TAG|LMAXFOCK}}.
+
+Specifically, when the  exchange energy is evaluated
+
+<span id="ExFock">
+:<math>
+E_{\mathrm{x}}= -\frac{e^2}{2}\sum_{n\mathbf{k},m\mathbf{q}}
+f_{n\mathbf{k}} f_{m\mathbf{q}} \times
+\int\int d^3\mathbf{r} d^3\mathbf{r}'
+\frac{\psi_{n\mathbf{k}}^{*}(\mathbf{r})\psi_{m\mathbf{q}}^{*}(\mathbf{r}')
+\psi_{n\mathbf{k}}(\mathbf{r}')\psi_{m\mathbf{q}}(\mathbf{r})}
+{\vert \mathbf{r}-\mathbf{r}' \vert}
+</math>
+</span>
+
+the overlap density <math> \psi_{n\mathbf{k}}^{*}(\mathbf{r})\psi_{m\mathbf{q}}(\mathbf{r}) </math>
+between two Bloch orbitals needs to be calculated on the plane wave grid (see [[Projector-augmented-wave_formalism|PAW method]]). The tag {{TAG|LMAXFOCK}}
+controls up to which ''L'' quantum number, the compensation charge <math>\widehat{n}(\mathbf{r})</math> is calculated on the plane wave grid (compared [[Projector-augmented-wave_formalism|PAW method]] compensation charge):
+
+<math>
+  \widehat{n}(\mathbf{r}) = \sum_{\alpha,\beta,LM} \widehat{Q}_{\alpha,\beta}^{LM}(\mathbf{r})\,
+              \langle \widetilde{\psi}_{nk} | \widetilde{p}_{\alpha} \rangle
+              \langle \widetilde{p}_{\beta} | \widetilde{\psi}_{mk} \rangle.
+</math>
+
+To accelerate convergence with respect to {{TAG|LMAXFOCK}}, VASP uses a small trick: the contributions from the Hartree-Fock one-center terms are evaluated for the pseudo orbitals also only up to ''L''={{TAG|LMAXFOCK}}, whereas the one-center terms for the exact all-electron orbitals are evaluated up to the maximum required ''L'' (twice the angular quantum number of the partial wave with the highest ''l''). The default is {{TAG|LMAXFOCK}}=4, and it might be necessary to increase this parameter, if the system contains f-electrons. Since this increases the computational load considerably (about factor 2), it is recommended to perform tests, whether the results are already reasonably converged using the default {{TAG|LMAXFOCK}}=4.
+
+To be compatible w.r.t. old releases, VASP also reads the flag {{TAG|HFLMAX}} to the same effect as {{TAG|LMAXFOCK}}.
+
+== Related tags and articles ==
+{{TAG|HFLMAX}},
+{{TAG|LMAXFOCKAE}}
+
+{{sc|LMAXFOCK|Examples|Examples that use this tag}}
+----
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:Hybrid_functionals]]

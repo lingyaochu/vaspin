@@ -1,0 +1,21 @@
+{{TAGDEF|CMBJE|[real]|0.5}}
+
+Description: sets the <math>e</math> parameter in the MBJ and local MBJ potentials.
+----
+See the description of the {{TAG|METAGGA}} tag.
+
+== Related tags and articles ==
+{{TAG|METAGGA}},
+{{TAG|CMBJ}},
+{{TAG|CMBJA}},
+{{TAG|CMBJB}},
+{{TAG|SMBJ}},
+{{TAG|RSMBJ}},
+{{TAG|LASPH}},
+{{TAG|LMAXTAU}},
+{{TAG|LMIXTAU}}
+
+{{sc|CMBJE|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]]

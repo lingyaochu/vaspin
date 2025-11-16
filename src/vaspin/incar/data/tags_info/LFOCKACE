@@ -1,0 +1,29 @@
+{{TAGDEF|LFOCKACE|.TRUE. {{!}} .FALSE. | .TRUE.}}
+{{DEF|LFOCKACE|.TRUE.|for VASP.6|N/A|for VASP.5.X and older}}
+
+Description: {{TAG|LFOCKACE}} determines whether the Adaptively Compressed Exchange Operator is used.{{cite|linlin:jctc:2016}}
+
+*N.B.:Available for CPU and OpenACC version of VASP.6 when compiled with [[Precompiler flags|-Dfock_dblbuf]].
+----
+For {{TAG|LFOCKACE}}=.TRUE. the Cholesky decomposition <math>X=LL^\dagger</math> of the Fock exchange matrix <math>X_{ij} = \langle \tilde\psi_i \mid \tilde V_X \mid \tilde\psi_j \rangle </math> is calculated and the adaptively compressed exchange operator <math>\tilde V_{ACE} = -\sum_i \mid \tilde X_i \rangle \langle \tilde X_i \mid </math> is used for the action of the Fock exchange on the pseudo orbitals. This method can be used for [[:Category:Hybrid functionals|hybrid functionals]] in combination with the Davidson algorithm ({{TAGBL|ALGO}}=Normal) to save a factor of <math>\approx 3</math> in computation time.
+
+For {{TAG|LFOCKACE}}=.FALSE. the conventional orbital representation is used.
+
+Note: it is good scientific practice to cite the original publication (Ref. {{cite|linlin:jctc:2016}}) if you use this feature. The feature is used by default, if the Davidson algorithm ({{TAG|ALGO}} = Normal) is used; ACE is not used for {{TAG|ALGO}} = Damped or {{TAG|ALGO}} = All.
+
+== Related tags and articles ==
+{{TAG|AEXX}},
+{{TAG|AEXX}},
+{{TAG|AGGAX}},
+{{TAG|AGGAC}},
+{{TAG|LHFCALC}},
+[[list_of_hybrid_functionals|List of hybrid functionals]],
+[[Hybrid_functionals:_formalism|Hybrid functionals: formalism]]
+
+{{sc|LHFCALC|Examples|Examples that use this tag}}
+
+== References ==
+<references/>
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:Hybrid_functionals]]

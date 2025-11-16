@@ -1,0 +1,27 @@
+{{DISPLAYTITLE:KPOINT_BSE}}
+{{TAGDEF|KPOINT_BSE|[integer] (optionally [integer],[integer],[integer])}}
+
+Description: {{TAG|KPOINT_BSE}}  specifies the k-point index at which VASP calculates the dielectric matrix.
+----
+In the simplest form, one can specify
+
+   KPOINT_BSE = index_of_k-point
+
+Select the desired k point from the list of k points in the {{TAG|OUTCAR}} file. Additionally, a shift by an arbitrary reciprocal lattice vector can be supplied by specifying three additional integer numbers:
+
+  KPOINT_BSE = index_of_k-point  n1 n2 n3
+
+This allows calculating the dielectric function at a k point outside of the first Brillouin zone corresponding to
+
+:<math> \bold{k} + n_{1} \bold{b}_{1}+ n_{2} \bold{b}_{2} + n_{3} \bold{b}_{3} </math>
+
+where <math>\bold{b}_{i}</math> are the reciprocal-lattice vectors of the unit cell.
+{{NB|warning|We strongly recommend using {{TAG|ANTIRES}}{{=}}2 for the finite wavevector calculations. The Tamm-Dancoff approximation can lead to unphysical results for the dielectric function at a finite wavevector.|}}
+
+== Related tags and articles ==
+{{TAG|BSE calculations}}
+
+{{sc|KPOINT_BSE|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Many-body perturbation theory]][[Category:Bethe-Salpeter equations]]

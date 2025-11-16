@@ -1,0 +1,12 @@
+{{DISPLAYTITLE:ML_LERR}}
+{{TAGDEF|ML_LERR|[logical]|.TRUE.}}
+{{NB|warning|This tag is deprecated and is replaced by {{TAG|ML_IERR}}.}}
+
+Description: Decides whether the Bayesian error estimates are calculated and written out or not.
+----
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_IERR}}, {{TAG|ML_MODE}}
+----
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

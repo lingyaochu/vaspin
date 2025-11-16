@@ -1,0 +1,32 @@
+{{TAGDEF|OMEGAMAX|[real]|outermost node in dielectric function <math>\epsilon(\omega)</math>/1.3}}
+
+Description: {{TAG|OMEGAMAX}} specifies the maximum frequency for the dense part of the frequency grid for GW calculations (old GW code, does not apply to GWR).
+For CRPA calculations, {{TAG|OMEGAMAX}} is the frequency point of the interaction.
+For BSE calculations {{TAG|OMEGAMAX}} determines the maximum energy difference for excitation pairs to be included. Since the flag controls different aspects of the code, be careful when setting it (and remember to remove the tag, when you change the type of calculations).
+----
+GW type calculations:
+
+For the frequency grid along the real and imaginary axis sophisticated schemes are used, which are based on simple model functions for the macroscopic dielectric function. The grid spacing is dense up to roughly 1.3*{{TAG|OMEGAMAX}} and becomes coarser for larger frequencies. The default value for {{TAG|OMEGAMAX}} is either determined by the outermost node in the dielectric function (corresponding to a singularity in the inverse of the dielectric function) or the energy difference between the valence band minimum and the conduction band minimum. The larger of these two values is used. Except for pseudopotentials with deep lying core states, {{TAG|OMEGAMAX}} is usually determined by the node in the dielectric function.
+
+For {{TAG|ACFDT calculations}}, only {{TAG|OMEGAMIN}} and {{TAG|OMEGATL}} determine the frequency grid (using a minimax algorithm).
+
+The defaults have been carefully tested, and it is recommended to leave them unmodified, whenever possible. The grid should be solely controlled by {{TAG|NOMEGA}}. The only other value that can be modified is the complex shift {{TAG|CSHIFT}}. In principle, {{TAG|CSHIFT}} should NOT be chosen independently of {{TAG|NOMEGA}} and {{TAG|OMEGAMAX}}: e.g. for less dense grids (smaller {{TAG|NOMEGA}}) the complex shift must be accordingly increased. The default for {{TAG|CSHIFT}} has been chosen such that the calculations are converged to 10 meV with respect to {{TAG|NOMEGA}}: i.e. if {{TAG|CSHIFT}} is kept constant and {{TAG|NOMEGA}} is increased, the QP shifts should not change by more than 10 meV; at least for {{TAG|LSPECTRAL}} = .TRUE.. This was the case for the considered test materials. For {{TAG|LSPECTRAL}} = .FALSE. this does not apply. In this case it is recommended to set {{TAG|CSHIFT}} manually and to perform careful convergence tests.
+
+For {{TAG|LSPECTRAL}} = .TRUE. independent convergence tests with respect to {{TAG|NOMEGA}} and {{TAG|CSHIFT}} are usually not required, and it should be sufficient to control the technical parameters via the single parameter {{TAG|NOMEGA}}. Also note that too large values for {{TAG|NOMEGA}} in combination with coarse k-point grids can cause a decrease in precision (see {{TAG|NOMEGA}}).
+
+
+BSE and TD-DFT type calculations (see {{TAG| BSE calculations}}):
+
+In this case, {{TAG|OMEGAMAX}} allows to reduce the number of conduction/ valence band pairs. Usually these are determined by {{TAG| NBANDSV}} and {{TAG| NBANDSO}}. The number of pairs is roughly proportional to the products of {{TAG| NBANDSV}}, {{TAG| NBANDSO}}, and the number of k-points in the full Brillouin zone. If {{TAG|OMEGAMAX}} is set, pairs for which the difference of the independent particle energy is larger than
+{{TAG|OMEGAMAX}} will be removed from the basis set (and from the BSE calculations). This can improve performance, without significantly affecting the imaginary part of the dielectric function. The real part of the dielectric function is, however, rather sensitive to reducing {{TAG|OMEGAMAX}}, {{TAG|NBANDSV}}, {{TAG|NBANDSO}}.
+
+== Related tags and articles ==
+{{TAG|OMEGATL}},
+{{TAG|CSHIFT}},
+{{TAG|NOMEGA}},
+{{TAG|OMEGAMIN}}
+
+{{sc|OMEGAMAX|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Many-body perturbation theory]][[Category:GW]]

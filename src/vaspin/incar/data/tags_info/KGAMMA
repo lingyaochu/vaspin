@@ -1,0 +1,12 @@
+{{TAGDEF|KGAMMA|[logical]|.TRUE.}}
+
+Description: Determines whether the k points (specified by the {{TAG|KSPACING}} tag ) include ({{TAG|KGAMMA}}=.TRUE.) the <math>\Gamma</math> point.
+----
+{{NB|important| If a {{TAG|KPOINTS}} file is present, VASP ignores the {{TAG|KGAMMA}} tag and the {{TAG|KSPACING}} tag.}}
+== Related tags and articles ==
+{{TAG|KSPACING}}
+
+{{sc|KGAMMA|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Crystal momentum]]

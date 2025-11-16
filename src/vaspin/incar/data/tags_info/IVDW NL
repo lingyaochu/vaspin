@@ -1,0 +1,16 @@
+{{DISPLAYTITLE:IVDW_NL}}
+{{TAGDEF|IVDW_NL|[integer]}}
+{{DEF|IVDW_NL|1 | for a {{TAG|GGA}} | 2 | for a {{TAG|METAGGA}}}}
+
+Description: {{TAG|IVDW_NL}} allows to select the kernel of the nonlocal van der Waals part of a functional (available as of VASP.6.4.0).
+----
+
+{{TAG|IVDW_NL}}=1 corresponds to the kernel of Dion ''et al.''{{cite|dion:prl:2004}} and {{TAG|IVDW_NL}}=2 to the kernel rVV10{{cite|sabatini:prb:2013}}. Note that the kernel of Dion ''et al.'' contains one adjustable parameter ({{TAG|ZAB_VDW}}), while the rVV10 kernel contains two such parameters ({{TAG|BPARAM}} and {{TAG|CPARAM}}).
+
+== Related tags and articles ==
+{{TAG|GGA}}, {{TAG|METAGGA}}, {{TAG|LUSE_VDW}}, {{TAG|ZAB_VDW}}, {{TAG|BPARAM}}, {{TAG|CPARAM}}, {{TAG|Nonlocal vdW-DF functionals}}
+
+{{sc|IVDW_NL|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category: van der Waals functionals]]

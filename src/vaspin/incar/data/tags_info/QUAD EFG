@@ -1,0 +1,31 @@
+{{DISPLAYTITLE:QUAD_EFG}}
+
+{{TAGDEF|QUAD_EFG|[real array]|NTYP*1.0}}
+
+Description: nuclear quadrupole moment (in millbarn) for the atomic types on the {{FILE|POTCAR}} file.
+----
+Setting the {{TAG|QUAD_EFG}} tag allows the conversion of the ''V''<sub>zz</sub> (see {{TAG|LEFG}}) values into the quadrupole coupling constants ''C''<sub>q</sub> often encountered in NMR literature.
+The conversion formula is as follows (''Q'' is the element and isotope specific quadrupole moment):
+:<math>
+C_q = \frac{e Q V_{zz}}{h}.
+</math>
+{{NB|tip|Several definitions of <math> C_q</math> are used in the NMR community.}}
+The {{TAG|QUAD_EFG}} tag specifies the nuclear quadrupole moment in millibarns for each atomic species, in the same
+order as in the {{FILE|POTCAR}} file. The output ''C''<sub>q</sub> is in MHz. An online compilation of nuclear quadrupole moments can be found online in a database {{Cite|pyykko:web}} or in Ref. {{Cite|pyykko:molphys:2008}} (updated numbers in Ref. {{Cite|pyykko:molphys:2017}}).
+
+Suppose a solid contains Al, C, and Si, then the {{TAG|QUAD_EFG}} tag could read:
+
+ QUAD_EFG = 146.6 33.27 0.0
+
+<sup>27</sup>Al is the stable isotope of Al with a natural abundance of 100% and ''Q''=146.6.
+The stable isotopes <sup>12</sup>C and <sup>13</sup>C are not quadrupolar nuclei, however, the radioactive
+<sup>11</sup>C is. It has ''Q''=33.27. For Si, all stable isotopes have I≤1/2, making it redundant to calculate a ''C''<sub>q</sub>. No moments are known for the other isotopes.
+{{NB|important|For heavy nuclei inaccuracies are to be expected because of an incomplete treatment of relativistic effects.}}
+== Related tags and articles ==
+{{TAG|LEFG}}
+
+{{sc|QUAD_EFG|Examples|Examples that use this tag}}
+
+== References ==
+
+[[Category:INCAR tag]][[Category:NMR]]

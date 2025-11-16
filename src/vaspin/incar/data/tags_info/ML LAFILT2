@@ -1,0 +1,17 @@
+{{DISPLAYTITLE:ML_LAFILT2}}
+{{TAGDEF|ML_LAFILT2|[logical]|.TRUE.}}
+
+Description: This tag specifies whether angular filtering is applied or not within the machine learning force field method.
+----
+For the desciption of the filters please see: {{TAG|ML_IAFILT2}} and {{TAG|ML_AFILT2}}.
+
+The applied angular filter is also briefly described [[Machine learning force field: Theory#Basis set expansion|here]].
+
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_IAFILT2}}, {{TAG|ML_AFILT2}}
+
+{{sc|ML_LAFILT2|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

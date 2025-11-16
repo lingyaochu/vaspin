@@ -1,0 +1,27 @@
+{{TAGDEF|PMASS|[Real]|1000}}
+
+Description: {{TAG|PMASS}} assigns a fictitious mass (in amu) to the lattice degrees-of-freedom in case of Parrinello-Rahman dynamics (in case VASP was compiled with [[Precompiler options#-Dtbdyn|-Dtbdyn]]).
+----
+When running ''NpT'' simulations with a [[MDALGO#LangevinEOM|Langevin thermostat]]<ref name="Allen91"/> ({{TAG|MDALGO}}=3), using the method of [[NpT_ensemble|Parrinello and Rahman]],<ref name="Parrinello80"/><ref name="Parrinello81"/> a fictitious mass (in amu) for the lattice degrees-of-freedom has to be assigned using the {{TAG|PMASS}} tag.
+The friction coefficient for lattice degrees-of-freedom have to be specified (in ps<sup>-1</sup>) by means of the {{TAG|LANGEVIN_GAMMA_L}} tag.
+
+The friction coefficients &gamma; for the atomic degrees-of-freedom are specified using the {{TAG|LANGEVIN_GAMMA}} tag.
+
+The optimal setting for {{TAG|PMASS}} depends very much on the particular system at hand and can be considered as a compromise between two opposing factors: too large values lead to very slow variation of lattice degrees of freedom (and hence the sampling becomes inefficient) while too small value can lead to too large geometric changes in an MD step and hence may cause numerical problems. We strongly recommend to make careful tests with various settings before performing the production run.
+
+== Related tags and articles ==
+{{TAG|LANGEVIN_GAMMA_L}},
+{{TAG|LANGEVIN_GAMMA}},
+{{TAG|MDALGO}}
+
+== References ==
+<references>
+<ref name="Allen91">M. P. Allen and D. J. Tildesley, ''Computer simulation of liquids'', Oxford university press: New York, 1991.</ref>
+<ref name="Parrinello80">[http://dx.doi.org/10.1103/PhysRevLett.45.1196 M. Parrinello and A. Rahman, Phys. Rev. Lett. 45, 1196 (1980).]</ref>
+<ref name="Parrinello81">[http://dx.doi.org/10.1063/1.328693 M. Parrinello and A. Rahman, J. Appl. Phys. 52, 7182 (1981).]</ref>
+</references>
+
+{{sc|PMASS|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Molecular dynamics]]

@@ -1,0 +1,11 @@
+{{TAGDEF|TIME|[real]|0.4}}
+
+Description: {{TAG|TIME}} controls the time step for {{TAG|IALGO}}=5X and for the initial (steepest descent) phase of {{TAG|IALGO}}=4X.
+----
+== Related tags and articles ==
+{{TAG|IALGO}}
+
+{{sc|TIME|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Electronic minimization]]

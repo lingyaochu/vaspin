@@ -1,0 +1,35 @@
+{{TAGDEF|LSEPK|[logical]|.FALSE.}}
+
+Description: Specifies whether the [[Band-decomposed charge densities|partial charge density]] is summed up for all selected '''k''' points or separated and printed out in different files.
+{{NB|mind|If the '''k''' points are separated, each '''k''' point weight is set to 1. To get the correct results in this case it is necessary to turn off symmetry ({{TAG|ISYM}} {{=}} -1) for the initial ground state calculation and the post-processing partial charge calculation in most cases. However, the correct weight of each '''k''' point is determined from the {{FILE|KPOINTS}} file if all contributions are summed up.}}
+
+----
+If {{TAG|LPARD}} = .TRUE. the partial charge density is calculated for a subset of bands and '''k''' points depending on the setting of the tags {{TAG|IBAND}}, {{TAGO|KPUSE}}, {{TAGO|NBMOD}}, and {{TAGO|EINT}}. If {{TAG|LSEPK}} is set to .TRUE., separate PARCHG.ALLB.nk or PARCHG.nb.nk files are created, dependent on the {{TAG|LSEPB}} tag. If {{TAG|LSEPK}} = .FALSE., the output is written to {{FILE|PARCHG}} or PARCHG.nb.ALLK, again depending on {{TAG|LSEPB}}.
+
+Here are four examples to illustrate the interplay of {{TAG|LSEPB}} and {{TAG|LSEPK}}. in all cases, the following settings apply, selecting three specific bands and two '''k''' points {{TAGO|IBAND| 9 10 11}}, {{TAGO|NBMOD|3}}, and {{TAGO|KPUSE| 1 34}}:
+
+*{{TAGO|LSEPB|.FALSE.}}, {{TAGO|LSEPK|.FALSE.}}
+{{NB|deprecated|PARCHG|:|output files:}}
+*{{TAGO|LSEPB|.TRUE.}}, {{TAGO|LSEPK|.FALSE.}}
+{{NB|deprecated|PARCHG.0009.ALLK, PARCHG.0010.ALLK, PARCHG.0011.ALLK|:|output files:}}
+*{{TAGO|LSEPB|.FALSE.}}, {{TAGO|LSEPK|.TRUE.}}
+{{NB|deprecated|PARCHG.ALLB.0001, PARCHG.ALLB.0034|:|output files:}}
+*{{TAGO|LSEPB|.TRUE.}}, {{TAGO|LSEPK|.TRUE.}}
+{{NB|deprecated|PARCHG.0009.0001, PARCHG.0009.0034, PARCHG.0010.0001, PARCHG.0010.0034,  PARCHG.0011.0001, PARCHG.0011.0034|:|output files:}}
+{{NB|mind|If VASP 6.5.0 or later is used, the code is compiled with [[Makefile.include#HDF5_support_(strongly_recommended)|HDF5 support]], and {{TAG|LPARDH5}} {{=}} .TRUE., all output will be redirected to the {{FILE|vaspout.h5}} file, where it can be analyzed with {{py4vasp}}.}}
+== Related tags and articles ==
+{{TAG|LPARD}},
+{{TAG|IBAND}},
+{{TAG|EINT}},
+{{TAG|NBMOD}},
+{{TAG|KPUSE}},
+{{TAG|LSEPB}},
+{{TAG|LPARDH5}},
+{{FILE|PARCHG}},
+{{FILE|vaspout.h5}},
+[[Band-decomposed charge densities]]
+
+{{sc|LSEPB|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Charge density]]

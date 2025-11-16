@@ -1,0 +1,20 @@
+{{DISPLAYTITLE:ML_LFAST}}
+{{TAGDEF|ML_LFAST|[logical]}}
+{{DEF|ML_LFAST|.TRUE.|for {{TAGO|ML_MODE|refit}}|.FALSE.|else}}
+
+Description: This tag switches on the descriptors for refitting in the fast execution mode within machine learning force fields. This tag is usually switched on by {{TAGO|ML_MODE|refit}} and doesn't need to be set explicitely.
+{{NB|mind|This tag is only available as of VASP.6.4.0}}
+----
+This tag switches on the descriptors for the fast execution mode. To use the fast execution mode the force field first has to be refit with the fast descriptors. This is done by setting {{TAGO|ML_MODE|refit}}, which will automatically set {{TAG|ML_LFAST|.TRUE.}}. As usual, the resulting {{TAG|ML_FFN}} has to be copied to {{TAG|ML_FF}} and the fast code will be automatically run in production mode runs by setting {{TAG|ML_MODE|run}}.
+
+The speedup of the fast method compared to the regular method is increasing with increasing number of local reference configurations.
+
+It should be noted that in the fast version no Bayesian error estimation is available.
+
+Since the calculation time of the fast version is of the same order of magnitude as the timing for the output of the molecular-dynamics results, we advise decreasing the output frequency for molecular dynamics by the tag {{TAG|ML_OUTBLOCK}}. Additionally, the calculation and output of the pair-correlation function can be suppressed by {{TAGO|ML_OUTPUT_MODE|0}} as default. {{NB|deprecated|If {{TAGO|ML_LFAST|.TRUE.}} is explicitely used without the {{TAG|ML_MODE}} tag then it can only be used with {{TAGO|ML_ISTART|4}} and {{TAGO|ML_IALGO_LINREG|1|op=>}}.}}
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_MODE}}, {{TAG|ML_IERR}}, {{TAG|ML_OUTBLOCK}}, {{TAG|ML_OUTPUT_MODE}}
+----
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

@@ -1,0 +1,16 @@
+{{TAGDEF|ISPIN|1 {{!}} 2|1}}
+
+Description: {{TAG|ISPIN}} specifies spin polarization.
+----
+*{{TAG|ISPIN}}=1: non-spin-polarized calculations are performed.
+*{{TAG|ISPIN}}=2: spin-polarized calculations (collinear) are performed.
+
+By combining {{TAG|ISPIN}} with {{TAG|MAGMOM}} collinear magnetism can be studied.
+{{NB|important| For noncollinear calculations {{TAG|ISPIN}} is ignored. In VASP 6.5.0, the calculation will exit with an error message if {{TAG|ISPIN}}{{=}}2 and {{TAG|MAGMOM}} is used in combination with the {{TAG|LNONCOLLINEAR}}{{=}}.TRUE.|}}
+
+== Related tags and articles ==
+{{TAG|MAGMOM}}
+
+{{sc|ISPIN|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Magnetism]]

@@ -1,0 +1,16 @@
+{{DISPLAYTITLE:VDW_C6AU}}
+{{TAGDEF|VDW_C6AU|[real (array)]}}
+
+Description: {{TAG|VDW_C6AU}} defines the <math>C_6</math> parameters (<math>\mathrm{Hartree}</math> <math>\mathrm{bohr}^{6}</math>) for each species defined in the {{TAG|POSCAR}} file.
+----
+{{TAG|VDW_C6AU}} sets the <math>C_6</math> parameters (<math>\mathrm{Hartree}</math> <math>\mathrm{bohr}^{6}</math>) for each species defined in the {{TAG|POSCAR}} file for the [[Tkatchenko-Scheffler_method|Tkatchenko-Scheffler]] and [[Many-body dispersion energy|Many-body dispersion energy]] methods.
+
+== Related tags and articles ==
+{{TAG|VDW_C6}},
+[[Tkatchenko-Scheffler_method|Tkatchenko-Scheffler method]],
+[[Many-body dispersion energy|Many-body dispersion energy]]
+
+{{sc|VDW_C6AU|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:van der Waals functionals]]

@@ -1,0 +1,23 @@
+{{TAGDEF|POTIM|[real]}}
+
+{{DEF|POTIM|none,| ''must'' be set if {{TAG|IBRION}}{{=}} 0 (MD)|0.5| if {{TAG|IBRION}}{{=}} 1, 2, and 3 (ionic relaxation), and 5 (up to VASP.4.6)|0.015|if {{TAG|IBRION}}{{=}}5, and 6 (as of VASP.5.1)}}
+
+Description: {{TAG|POTIM}} sets the time step in molecular dynamics or the step width in ionic relaxations.
+
+----
+
+* For {{TAG|IBRION}} = 0, {{TAG|POTIM}} gives the time step (in fs) in all ab-initio Molecular Dynamics runs, it ''has'' to be supplied therefore, otherwise VASP crashes immediately after having started.
+
+* For {{TAG|IBRION}} =1, 2, and 3, which corresponds to ionic relaxation using a quasi-Newton algorithm, conjugate-gradient algorithm, and damped molecular dynamics, respectively, the {{TAG|POTIM}} tag serves as a scaling constant for the step widths. The quasi-Newton algorithm is especially sensitive to the choice of this parameter.
+
+* For {{TAG|IBRION}} = 5, and 6, a phonon calculations using the finite differences approach is done, where {{TAG|POTIM}} is the width of the displacement of each ion to calculate the Hessian Matrix.
+:VASP.4.6 and older releases: {{TAG|POTIM}} has to be small enough to ensure that the displacements are within the harmonic limit. The vibrational frequencies using the frozen phonon approach are based on the harmonic approximation.
+{{NB|mind| For VASP.5.1 and newer releases, {{TAG|POTIM}} is automatically reset to 0.015 &Aring;, if the supplied value for {{TAG|POTIM}} is unreasonably large.|:}}
+</span>
+== Related tags and articles ==
+[[structure optimization]], {{TAG|IBRION}}, {{TAG|NFREE}}
+
+{{sc|POTIM|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Ionic minimization]][[Category:Molecular dynamics]][[Category:Phonons]]

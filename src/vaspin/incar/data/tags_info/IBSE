@@ -1,0 +1,24 @@
+{{TAGDEF|IBSE|0 {{!}} 1 {{!}} 2 {{!}} 3 |2}}
+
+Description: {{TAG|IBSE}} can be used to select the algorithm for solving the Bethe-Salpeter or Casida equation.
+----
+The following options are available to solve the Bethe-Salpeter or Casida equation:
+*{{TAG|IBSE}} = 0: [[Bethe-Salpeter equations#Exact diagonalization|Exact diagonalization with old BSE driver]]
+*{{TAG|IBSE}} = 1: [[Bethe-Salpeter equations#Time evolution|Time evolution]]
+*{{TAG|IBSE}} = 2: [[Bethe-Salpeter equations#Exact diagonalization| Exact diagonalization]]
+*{{TAG|IBSE}} = 3: [[Bethe-Salpeter equations#Lanczos algorithm|Lanczos algorithm]]
+
+{{TAGO|IBSE|2}} and {{TAGO|IBSE|0}} yield exactly the same results but the old driver ({{TAGO|IBSE|0}}) is typically much slower and will be deprecated in the future.
+{{NB|mind| {{TAGO|IBSE|2}} and {{TAGO|IBSE|3}} are only available for VASP version 6.5.0 and above.}}
+== Related tag and articles ==
+{{TAG|IBSE}},
+{{TAG|BSEPREC}},
+{{TAG|NBANDSV}},
+{{TAG|NBANDSO}},
+{{TAG|CSHIFT}},
+{{TAG|OMEGAMAX}},
+[[BSE calculations]],
+[[Time-dependent density-functional theory calculations]],
+[[Bethe-Salpeter equations]]
+----
+[[Category:INCAR tag]] [[Category:Many-body perturbation theory]][[Category:Bethe-Salpeter equations]]

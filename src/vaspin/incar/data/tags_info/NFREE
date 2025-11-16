@@ -1,0 +1,44 @@
+{{TAGDEF|NFREE|[integer]}}
+
+{{DEF|NFREE|1|if {{TAG|IBRION}}{{=}}2|0|else|}}
+
+Description: depending on {{TAG|IBRION}}, {{TAG|NFREE}} specifies the number of remembered steps in the history of ionic convergence runs, or the number of ionic displacements in frozen phonon calculations.
+----
+<span>
+*{{TAG|IBRION}}=1 (quasi-Newton algorithm for ionic relaxation):
+
+:(i) If  {{TAG|NFREE}} is set, only up to {{TAG|NFREE}} ionic steps are kept in the iteration history (the rank of the approximate Hessian matrix is not larger than {{TAG|NFREE}}).
+
+:(ii) If {{TAG|NFREE}} is '''not''' specified, the criterion whether information is removed from the iteration history is based on the eigenvalue spectrum of the inverse Hessian matrix: if one eigenvalue of the inverse Hessian matrix is larger than 8, information from previous steps is discarded.
+:For complex problems {{TAG|NFREE}} can usually be set to a rather large value (i.e. 10-20), however systems of low dimensionality require a careful setting of {{TAG|NFREE}} (or preferably an exact  counting of the number of degrees of freedom). To increase {{TAG|NFREE}} beyond 20 rarely improves convergence. If {{TAG|NFREE}} is set to too large, the RMM-DIIS algorithm might diverge.
+</span>
+<span>
+*{{TAG|IBRION}}=5 (from VASP.4.5) or {{TAG|IBRION}}=6 (from VASP.5.1): frozen phonon approach to calculate the zone-center vibrational frequencies of a system.
+:{{TAG|NFREE}} determines how many displacements are used for each direction and ion. The step size has to be given in {{TAG|INCAR}}, by the tag {{TAG|POTIM}}.  Displacements should be small enough to ensure that the harmonic approximation is safely fulfilled.   If too large values are supplied in the input file, it is defaulted to 0.015 &Aring; up from VASP.5.1 (but ''not'' in all earlier releases). Expertise shows that this is a very reasonable compromise.
+
+:{{TAG|NFREE}} = 2 uses central difference, ''i.e'' each ion is displaced in each direction by a small positive and negative displacement
+
+::<math>\pm</math> {{TAG|POTIM}} * <math>\hat{x}  </math>,
+
+::<math>\pm</math> {{TAG|POTIM}} * <math>\hat{y}  </math>,
+
+::<math>\pm</math> {{TAG|POTIM}} * <math>\hat{z}  </math>,
+
+:For {{TAG|NFREE}} = 4, four displacements are used
+
+::<math>\pm</math> {{TAG|POTIM}} * <math>\hat{x}  </math> and <math>\pm</math> 2 * {{TAG|POTIM}} * <math>\hat{x}</math>,
+
+::<math>\pm</math> {{TAG|POTIM}} * <math>\hat{y}  </math> and <math>\pm</math> 2 * {{TAG|POTIM}} * <math>\hat{x}</math>,
+
+::<math>\pm</math> {{TAG|POTIM}} * <math>\hat{z}  </math> and <math>\pm</math> 2 * {{TAG|POTIM}} * <math>\hat{x}</math>,
+
+:For {{TAG|NFREE}}=1, only a single displacement is applied (it is strongly recommend to avoid {{TAG|NFREE}}=1).
+
+== Related tags and articles ==
+{{TAG|IBRION}},
+{{TAG|POTIM}}
+
+{{sc|NFREE|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Ionic minimization]][[Category:Molecular dynamics]][[Category:Phonons]]

@@ -1,0 +1,38 @@
+{{TAGDEF|KERNEL_TRUNCATION/IDIMENSIONALITY| 0 {{!}} 2 {{!}} 3 | 3}}
+
+Description: {{TAG|KERNEL_TRUNCATION/IDIMENSIONALITY}} specifies the boundary condition used to compute the hartree and ionic potential.
+
+----
+
+If {{TAG|KERNEL_TRUNCATION/LTRUNCATE}} = T, {{TAG|KERNEL_TRUNCATION/IDIMENSIONALITY}} determines the boundary condition that is used to compute the local potential.
+The default value of 3 implies that the system is periodic in all dimensions, i.e. there is no influence of kernel truncation on the resulting energies and forces.
+Setting {{TAG|KERNEL_TRUNCATION/IDIMENSIONALITY}} to either 0 or 2 uses the 0D and 2D truncated kernel respectively.{{cite|vijay:arxiv:2024}}{{cite|rozzi:prb:2006}}{{cite|sohier:prb:2017}}
+These kernels create 0D (i.e. no periodic interactions, as is the case of molecules) and 2D (i.e. periodic interactions only in two dimensions, as in the case for surfaces).
+{{NB|mind|IF {{TAG|KERNEL_TRUNCATION/LTRUNCATE}} is switched off, all other KERNEL_TRUNCATION tags, i.e. {{TAG|KERNEL_TRUNCATION/IDIMENSIONALITY}}, {{TAG|KERNEL_TRUNCATION/LCOARSEN}}, and {{TAG|KERNEL_TRUNCATION/ISURFACE}} will be ignored.}}
+
+== {{TAG|KERNEL_TRUNCATION/IDIMENSIONALITY}} = 0 ==
+Consider using the option when computing energies and forces of atoms and molecules.
+Recommended {{FILE|INCAR}} tags to be used with option are
+  KERNEL_TRUNCATION {
+        LTRUNCATE      = T
+        IDIMENSIONALITY = 0
+        LCOARSEN       = T
+  }
+
+== {{TAG|KERNEL_TRUNCATION/IDIMENSIONALITY}} = 2 ==
+Use this option when computing the energies and forces of 2D and quasi-2D systems, such as 2D materials and surfaces. We suggest setting the following {{FILE|INCAR}} tags for a surface that is oriented along the z-axis
+  KERNEL_TRUNCATION {
+        LTRUNCATE      = T
+        IDIMENSIONALITY = 2
+        LCOARSEN       = T
+        ISURFACE       = 3
+  }
+
+== Related tags and articles ==
+{{TAG|KERNEL_TRUNCATION/LTRUNCATE}},
+{{TAG|KERNEL_TRUNCATION/LCOARSEN}},
+{{TAG|KERNEL_TRUNCATION/ISURFACE}}
+
+== References ==
+
+[[Category:INCAR tag]][[Category:Electrostatics]]

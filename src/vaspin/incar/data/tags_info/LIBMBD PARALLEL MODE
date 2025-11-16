@@ -1,0 +1,23 @@
+{{DISPLAYTITLE:LIBMBD_PARALLEL_MODE}}
+{{TAGDEF|LIBMBD_PARALLEL_MODE|auto {{!}} kpoints {{!}} atoms}}
+
+Default: {{TAG|LIBMBD_PARALLEL_MODE}}=auto (default in libMBD)
+
+Description: {{TAG|LIBMBD_PARALLEL_MODE}} selects the parallelization scheme used in the library libMBD of many-body dispersion methods{{cite|libmbd_1}}{{cite|libmbd_2}}{{cite|hermann:jcp:2023}}.
+----
+{{TAG|LIBMBD_PARALLEL_MODE}} allows to choose the parallelization scheme used in the library libMBD of many-body dispersion methods{{cite|libmbd_1}}{{cite|libmbd_2}}{{cite|hermann:jcp:2023}}. The value is internally passed to the libMBD input '''parallel_mode''' described at the page {{cite|libmbd_input}}.
+{{NB|important|
+*The {{TAG|LIBMBD_PARALLEL_MODE}} tag can be used only if libMBD was compiled with MPI parallelization enabled.
+*This feature is available from VASP.6.4.3 onwards that needs to be compiled with [[Precompiler_options#-DLIBMBD|-DLIBMBD]].}}
+libMBD is a separate library package that has to be downloaded{{cite|libmbd_2}} and compiled before VASP is compiled with the corresponding [[Precompiler_options#-DLIBMBD|precompiler options]] and [[Makefile.include#LIBMBD_.28optional.29|links to the libraries]].
+
+== Related tags and articles ==
+{{TAG|LIBMBD_METHOD}}
+
+{{sc|LIBMBD_PARALLEL_MODE|Examples|Examples that use this tag}}
+
+== References ==
+<references/>
+
+----
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:van der Waals functionals]]

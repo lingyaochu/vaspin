@@ -1,0 +1,23 @@
+{{DISPLAYTITLE:LIBMBD_XC}}
+{{TAGDEF|LIBMBD_XC|pbe {{!}} pbe0 {{!}} hse {{!}} blyp {{!}} b3lyp {{!}} revpbe {{!}} am05 {{!}} none}}
+
+Default: The functional set by the {{TAG|GGA}}, {{TAG|METAGGA}} or {{TAG|XC}} tag
+
+Description: {{TAG|LIBMBD_XC}} sets the exchange-correlation functional for the setting of damping parameters used in the methods available in the library libMBD of many-body dispersion methods{{cite|libmbd_1}}{{cite|libmbd_2}}{{cite|hermann:jcp:2023}}.
+----
+{{TAG|LIBMBD_XC}} allows to choose the exchange-correlation functional that determines which set of damping parameters is used in the methods available in the library libMBD of many-body dispersion methods. The value is internally passed to the libMBD input '''xc''' described at the page {{cite|libmbd_input}}.
+
+The possible choices depend on the dispersion method selected with the {{TAG|LIBMBD_METHOD}} tag and are listed in the file mbd_damping.F90 of the libMBD source code. If {{TAG|LIBMBD_XC}}=none is chosen, then no set of damping parameters is selected and either {{TAG|LIBMBD_TS_SR}} or {{TAG|LIBMBD_MBD_BETA}} has to be set.
+{{NB|important| This feature is available from VASP.6.4.3 onwards that needs to be compiled with [[Precompiler_options#-DLIBMBD|-DLIBMBD]].}}
+libMBD is a separate library package that has to be downloaded{{cite|libmbd_2}} and compiled before VASP is compiled with the corresponding [[Precompiler_options#-DLIBMBD|precompiler options]] and [[Makefile.include#LIBMBD_.28optional.29|links to the libraries]].
+
+== Related tags and articles ==
+{{TAG|LIBMBD_METHOD}}
+
+{{sc|LIBMBD_XC|Examples|Examples that use this tag}}
+
+== References ==
+<references/>
+
+----
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:van der Waals functionals]]

@@ -1,0 +1,29 @@
+{{TAGDEF|NBANDS|[integer]}}
+{{DEF|NBANDS|max({{TAG|NELECT}}/2+NIONS/2,{{TAG|NELECT}}*0.6)|}}
+
+Description: {{TAG|NBANDS}} specifies the total number of KS or QP orbitals in the calculation.
+----
+The right choice of {{TAG|NBANDS}} strongly depends on the type of the performed calculation and the system. As a minimum, VASP requires all occupied states + one empty band, otherwise, a warning is given.
+
+==== Electronic minimization ====
+In the electronic minimization calculations, empty states do not contribute to the total energy, however, empty states are required to achieve a better convergence.
+In iterative matrix-diagonalization algorithms (see {{TAG|ALGO}}) eigenvectors close to the top of the calculated number of states converge much slower than the lowest eigenstates, thus it is important to choose a sufficiently large {{TAG|NBANDS}}.  Therefore, we recommend using the default settings for {{TAG|NBANDS}}, i.e.,  ''NELECT/2 + NIONS/2'', which is a safe choice in most cases. In some cases, it is also possible to decrease it to ''NELECT/2+NIONS/4'', however, in some transition metals with open ''f'' shells a much larger number of empty bands might be required (up to ''NELECT/2+2*NIONS'').  To check this parameter perform several calculations for a fixed potential ({{TAG|ICHARG}}=12) with an increasing number of bands (e.g. starting from ''NELECT/2 + NIONS/2''). An accuracy of <math> 10^{-6}</math> should be obtained in 10-15 iterations.
+{{NB|tip|Note that the {{TAG|RMM-DIIS}} scheme ({{TAG|ALGO}}{{=}}Fast) is more sensitive to the number of bands than the default Davidson algorithm ({{TAG|ALGO}}{{=}}Normal) and can require more bands for fast convergence.|}}
+
+==== Many-body perturbation theory calculations ====
+In the Many-Body Perturbation Theory calculations ([[Practical guide to GW calculations|''GW'']],[[RPA/ACFDT: Correlation energy in the Random Phase Approximation|RPA]], and [[BSE calculations|BSE]]), a large number of empty orbitals is usually required, which can be much higher than the number of occupied states.  The convergence of the calculations with a large number of empty states can be very slow. In such cases, we recommend performing an exact diagonalization ({{TAG|ALGO}}=Exact) of the Hamiltonian with empty bands starting from a converged charge density.
+
+==== Parallelization ====
+When executed on multiple CPUs, VASP automatically increases the number of bands, so that {{TAG|NBANDS}} is divisible by the number of CPU cores.  If {{TAG|NCORE}} > 1, {{TAG|NBANDS}} is increased until it is divisible by the number of cores in a group ({{TAG|NCORE}}).  If {{TAG|KPAR}} > 1, {{TAG|NBANDS}} is increased until it is divisible by the number of cores in a group.
+
+==== Spin-polarized calculation ====
+In the case of spin-polarized calculations, the default value for {{TAG|NBANDS}} is increased to account for the initial magnetic moments.
+
+==== Noncollinear calculation ====
+In noncollinear calculations, the default {{TAG|NBANDS}} value is doubled to account for the spinors components.
+
+== Related tags and article ==
+{{TAG|NCORE}}, {{TAG|NBANDS}}, {{TAG|NBANDSGW}}, {{TAG|NBANDSV}}, {{TAG|NBANDSO}}, {{TAG|NPAR}},{{TAG|KPAR}}
+
+----
+[[Category:INCAR tag]][[Category:Electronic minimization]][[Category:Dielectric properties]][[Category:Parallelization]]

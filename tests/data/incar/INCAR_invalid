@@ -1,0 +1,31 @@
+ NCORE      = 8                      #parallelization over bands
+ NSIM       = 16
+
+
+ PREC       = Normal                 #Low; Medium; Normal; High; Accutate; Single
+ ISTART     = 1                      #job : 0-new 1-cont 2-samecut
+
+
+ ISPIN      = 2                      #1-no spin; 2-inlcude spin
+ NUPDOWN    = 2
+ NELECT     = 2046                    #control the electron numbers of the cell
+
+
+ ENCUT      = 520                    #cut-off energy (eV)
+ GGA        = PS                     #exchange-correlation functional
+ ISMEAR     = 0                      #0:Gaussian  -1:Fermi  -5:Tetrahedron method  1:method of Methfessel-Pexton order N
+ SIGMA      = 0.05                   #broadening in eV
+ EDIFF      = 1E-6                   #stopping-criterion for electronic SC-loop
+
+
+
+ ISIF       = 2                      #stress and relaxation;2:only relax atoms; 3:full relax; 7:onlu relax volume;    use 2-7-3 order; 4:keep volume fixed and relax lattice parameter
+ EDIFFG     = -1E-2                  #stopping-criterion for ionic relaxation loop
+ NSW        = 20                      #number of steps for ionic relaxation loop
+ IBRION     = 2                     #ionic relax: 0-MD  1-quasi-New  2-CG
+ POTIM      = 0.3
+
+
+ LDMATRIX   = .F.
+ LWAVE      = .TRUE.
+ LHYPERFINE

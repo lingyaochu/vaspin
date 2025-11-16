@@ -1,0 +1,16 @@
+{{TAGDEF|LSYNCH5|[logical]|.FALSE.}}
+
+Description: {{TAG|LSYNCH5}} determines whether the output in {{FILE|vaspout.h5}} is always synchronized with VASP while the calculation is running.
+
+-----
+
+If you set this flag, VASP will enable single-writer-multiple-reader mode for the HDF5 file.
+This allows you to monitor the output using {{py4vasp}} while the calculation is still running.
+{{NB|mind|Synchronizing the HDF5 file continuously comes with a computational cost. Please do your own testing whether that is a bottleneck for your calculation.}}
+
+== Related tags and articles ==
+{{TAG|LH5}}
+
+{{sc|LSYNCH5|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]]

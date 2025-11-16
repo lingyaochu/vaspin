@@ -1,0 +1,28 @@
+{{TAGDEF|BMIX|[real]|1.0}}
+
+Description: {{TAG|BMIX}} sets the cutoff wave vector for Kerker mixing scheme {{Cite|kerker:prb:81}} ({{TAG|IMIX}}=1 and/or {{TAG|INIMIX}}=1).
+----
+The mixed density is given by
+::<math>\rho_{\rm mix}\left(G\right)=\rho_{\rm in}\left(G\right)+A \frac{G^2}{G^2+B^2}\Bigl(\rho_{\rm out}\left(G\right)-\rho_{\rm in}\left(G\right)\Bigr)</math>
+with <math>A</math>={{TAG|AMIX}} and <math>B</math>={{TAG|BMIX}}
+
+In VASP the eigenvalue spectrum of the charge dielectric matrix is calculated and written to the {{FILE|OUTCAR}} file at each electronic step. This allows a rather easy optimization of the mixing parameters, if required. Search in the {{FILE|OUTCAR}} file for
+ eigenvalues of (default mixing * dielectric matrix)
+The parameters for the mixing are optimal if the mean eigenvalue &Gamma;<sub>mean</sub>=1, and if the width of the eigenvalue spectrum is minimal. For an initial linear mixing ({{TAG|BMIX}}&asymp;0) an optimal setting for {{TAG|AMIX}} can be found easily by setting {{TAG|AMIX}}<sub>optimal</sub>={{TAG|AMIX}}<sub>current</sub>*&Gamma;<sub>mean</sub>. For the Kerker scheme ({{TAG|IMIX}}=1) either {{TAG|AMIX}} or {{TAG|BMIX}} can be optimized, but we recommend to change only {{TAG|BMIX}} and keep {{TAG|AMIX}} fixed (you must decrease {{TAG|BMIX}} if the mean eigenvalue is larger than one, and increase {{TAG|BMIX}} if the mean eigenvalue &Gamma;<sub>mean</sub><1).
+
+== Related tags and articles ==
+{{TAG|IMIX}},
+{{TAG|INIMIX}},
+{{TAG|MAXMIX}},
+{{TAG|AMIX}},
+{{TAG|AMIX_MAG}},
+{{TAG|BMIX_MAG}},
+{{TAG|AMIN}},
+{{TAG|MIXPRE}},
+{{TAG|WC}}
+
+{{sc|BMIX|Examples|Examples that use this tag}}
+
+== References ==
+
+[[Category:INCAR tag]][[Category:Density mixing]]

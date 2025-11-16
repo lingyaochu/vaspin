@@ -1,0 +1,15 @@
+{{DISPLAYTITLE:LNICSALL}}
+{{TAGDEF|LNICSALL|.TRUE. {{!}} .FALSE.|.FALSE.}}
+
+Description: {{TAG|LNICSALL}}=.TRUE. calculates the NICS at the positions on the fine FFT grid {{TAG|NGXF}} x {{TAG|NGYF}} x {{TAG|NGZF}}.
+----
+{{not released}}
+{{TAG|LNICSALL}}=.TRUE. ensures that the FFT grid {{TAG|NGXF}} x {{TAG|NGYF}} x {{TAG|NGZF}} is used to calculate the NICS (nucleus-independent chemical shift) points. These chemical shieldings will be printed to {{FILE|NICS}}.
+{{NB|mind|If {{TAGO|LNICSALL|True}} is set, and {{FILE|POSNICS}} is also present, {{TAG|LNICSALL}} will take precedent.}}
+
+== Related tags and articles ==
+{{FILE|LCHIMAG}},
+{{TAG|NUCIND}},
+{{TAG|NICS}}
+
+[[Category:INCAR tag]][[Category:NMR]]

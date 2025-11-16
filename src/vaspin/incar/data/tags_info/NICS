@@ -1,0 +1,10 @@
+{{not released}}
+
+The {{FILE|NICS}} file contains the NMR nucleus-independent chemical shielding (NICS) in ppm. It is written if {{TAG|NUCIND}} = .TRUE. is set and no {{FILE|POSNICS}} is present. The format is the same as {{FILE|CHGCAR}} with a header to define the grid and then 9 blocks that correspond to the indices of the chemical shielding tensor <math>\sigma_{ij}</math>: <math>\sigma_{xx}</math>, <math>\sigma_{xy}</math>, <math>\sigma_{xz}</math>, <math>\sigma_{yx}</math>, <math>\sigma_{yy}</math>, <math>\sigma_{yz}</math>, <math>\sigma_{zx}</math>, <math>\sigma_{zy}</math>, and <math>\sigma_{zz}</math>.
+
+== Related tags and articles ==
+{{FILE|LCHIMAG}},
+{{TAG|NUCIND}},
+{{TAG|LNICSALL}}
+
+[[Category:INCAR tag]][[Category:NMR]]

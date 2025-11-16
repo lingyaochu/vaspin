@@ -1,0 +1,56 @@
+{{TAGDEF|ENCUTGW|[real]| 2/3 {{TAG|ENCUT}}}}
+
+
+Description: The tag {{TAG|ENCUTGW}} sets the energy cutoff for the response function. It controls the basis set for the response functions
+in exactly the same manner as {{TAG|ENCUT}} does for the orbitals.
+
+
+__TOC__
+
+----
+In GW and random-phase-approximation (RPA) calculations,  storing and manipulating the response function dominates the computational work load:
+
+<math>\chi_{{\mathbf{q}}}^0 ({\mathbf{G}}, {\mathbf{G}}', \omega)=\frac{1}{\Omega} \sum_{n,n',{\mathbf{k}}}2 w_{{\mathbf{k}}}
+ (f_{n'{\mathbf{k}}+{\mathbf{q}}} - f_{n{\mathbf{k}}})
+\times  \frac{\langle \psi_{n{\mathbf{k}}}| e^{-i ({\mathbf{q}}+{\mathbf{G}}){\mathbf{r}}} | \psi_{n'{\mathbf{k}}+{\mathbf{q}}}\rangle
+\langle \psi_{n'{\mathbf{k}}+{\mathbf{q}}}| e^{i ({\mathbf{q}}+{\mathbf{G}}'){\mathbf{r'}}} | \psi_{n{\mathbf{k}}}\rangle}
+ { \epsilon_{n'{\mathbf{k}}+{\mathbf{q}}}-\epsilon_{n{\mathbf{k}}} -  \omega - i \eta }. </math>
+
+{{TAG|ENCUTGW}}  controls how many <math>\mathbf{G}</math> vectors are included in the
+the response function <math>\chi_{{\mathbf{q}}}^0 ({\mathbf{G}}, {\mathbf{G}}', \omega)</math>.
+
+Our experience suggests that choosing {{TAG|ENCUTGW}}= 2/3 {{TAG|ENCUT}} yields reasonable results at fairly modest computational cost, although, the response function contains contributions up to twice the plane wave cutoff <math>G_{\rm cut}</math>, see {{TAG|ALGO}} tag. Furthermore, RPA correlation energies are reported using an internal extrapolation of the correlation energy by varying the value of {{TAG|ENCUTGW}} inside VASP between the largest value given in the {{TAG|INCAR}} file and smaller values {{cite|harl:prb:08}}. Mind: The extrapolated value is only reliable, if {{TAG|ENCUTGW}} is smaller then {{TAG|ENCUT}}. The cutoff extrapolation with respect to {{TAG|ENCUTGW}} would be precise if the plane wave basis for the orbitals were infinite. Again, the VASP defaults yield very reasonable values for the extrapolated correlation energy. In fact, it is unwise to increase {{TAG|ENCUTGW}} only, without increasing {{TAG|ENCUT}}. To converge RPA correlation energies, simply increase {{TAG|ENCUT}} and the number of orbitals, and use the VASP default for {{TAG|ENCUTGW}}.
+{{NB|mind|More details on how the infinite basis set limit is extrapolated in RPA/ACFDT can be found [[ACFDT/RPA_calculations#Basis_set_convergence|here]].}}
+For quasiparticle (QP) bandgaps, it is sometimes possible to set {{TAG|ENCUTGW}} to values between 150 to 200 eV, and even 100 eV can yield
+gaps that are accurate to within a few tens of an eV for main group elements. Be aware, however, that the absolute values of the QP energies depend inverse proportionally on the number of plane waves. Thus, the convergence of absolute QP energies is very slow, although QP gaps might seem converged.
+
+The recommended procedure to obtain accurate QP energies is discussed in the reference below. Specifically,  for reference type calculations we recommend the following procedure:
+
+* Use the default for {{TAG|ENCUTGW}}, or even decrease {{TAG|ENCUTGW}} to half the value of {{TAG|ENCUT}}.
+* Calculate all orbitals that the plane-wave basis set allows to calculate. This number can be determined by searching for "maximum number of plane-waves" in the ground-state DFT {{TAG|OUTCAR}} file, and setting {{TAG|NBANDS}} to this value.
+* Increase {{TAG|ENCUT}} systematically and plot the QP energies versus the number of plane-wave coefficients, which equals the number of orbitals. This means {{TAG|ENCUTGW}} and {{TAG|NBANDS}} increase as {{TAG|ENCUT}} increases.
+
+This procedure can be carried out using few k points. Other commonly applied methods can yield less accurate results and are not considered to be reliable.
+
+== FFT grid and {{TAG|PRECFOCK}} ==
+The {{TAG|PRECFOCK}} tag determines the fast Fourier transformation (FFT) grid in all GW (and Hartree-Fock) related routines. For small systems, the computational time is often dominated by FFT operations. Therefore, the {{TAG|PRECFOCK}} tag can have a significant impact on the compute time for QP calculations. For large systems, the FFT's usually do not dominate the computational workload, and savings are expected to be small for {{TAG|PRECFOCK}} = ''fast''.
+QP shifts are usually not very sensitive to the setting of {{TAG|PRECFOCK}} and therefore there is no harm in setting {{TAG|PRECFOCK}} = ''fast''), whereas for RPA calculations we recommend to set {{TAG|PRECFOCK}} = ''normal'' to avoid numerical errors.
+
+== Related tags and articles ==
+{{TAG|PRECFOCK}},
+{{TAG|ENCUT}},
+{{TAG|ENCUTGWSOFT}},
+{{TAG|GW calculations}},
+[[ACFDT/RPA_calculations#Basis_set_convergence|Basis set convergence]]
+
+{{sc|ENCUTGW|Examples|Examples that use this tag}}
+
+== Further reading ==
+*Generally, QP energies converge like one over the number of orbitals and one over the number of plane waves in the response function. For basis set converged calculations, we recommend using the strategies outlined in Ref. {{cite|klimes:prb:14}}, which contains a comprehensive study of the performance of the convergence of GW calculations.
+
+== References ==
+
+
+----
+
+[[Category:INCAR tag]][[Category:Many-body perturbation theory]][[Category:GW]]

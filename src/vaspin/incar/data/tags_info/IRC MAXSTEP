@@ -1,0 +1,18 @@
+{{DISPLAYTITLE:IRC_MAXSTEP}}
+{{TAGDEF|IRC_MAXSTEP|real | 3.000}}
+
+Description: Upper limit for the step size (in fs).
+
+-----
+
+The damped-velocity-Verlet algorithm for the [[IRC calculations]] uses an adaptively varying size of the time step. It depends on the estimated accuracy of the previous step. {{TAG|IRC_MAXSTEP}} defines the upper limit for the step size in fs.
+
+== Related tags and articles ==
+[[IRC calculations]],
+{{TAG|IRC_DIRECTION }},
+{{TAG|IRC_STOP}},
+{{TAG|IRC_DELTA0}},
+{{TAG|IRC_MINSTEP}},
+{{TAG|IRC_VNORM0}}
+
+[[Category:INCAR tag]][[Category: Transition states]]

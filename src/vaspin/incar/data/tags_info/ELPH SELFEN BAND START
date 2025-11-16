@@ -1,0 +1,20 @@
+{{DISPLAYTITLE:ELPH_SELFEN_BAND_START}}
+{{TAGDEF|ELPH_SELFEN_BAND_START|[real]|1}}
+
+Description: Compute the electron self-energy due to electron-phonon coupling only for bands with indices starting from {{TAG|ELPH_SELFEN_BAND_START}}.
+{{Available|6.5.0}}
+
+----
+This tag can be used in combination with {{TAG|ELPH_SELFEN_KPTS}}, {{TAG|ELPH_SELFEN_IKPT}} or {{TAG|ELPH_SELFEN_BAND_STOP}} to limit the calculation of the electron-phonon self-energy to a particular set of <b>k</b>-points and bands.
+
+==Related tags and articles==
+* [[Bandgap renormalization due to electron-phonon coupling|Bandstructure renormalization]]
+* [[Transport coefficients including electron-phonon scattering|Transport calculations]]
+* {{TAG|ELPH_RUN}}
+* {{TAG|ELPH_SELFEN_GAPS}}
+* {{TAG|ELPH_SELFEN_FAN}}
+* {{TAG|ELPH_SELFEN_KPTS}}
+* {{TAG|ELPH_SELFEN_IKPT}}
+* {{TAG|ELPH_SELFEN_BAND_STOP}}
+
+[[Category:INCAR tag]][[Category:Electron-phonon_interactions]]

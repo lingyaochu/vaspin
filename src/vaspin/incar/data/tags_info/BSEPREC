@@ -1,0 +1,31 @@
+{{TAGDEF|BSEPREC|Low {{!}} Medium {{!}} High {{!}}  Accurate | Medium}}
+
+Description: {{TAG|BSEPREC}} determines the precision of the time-evolution algorithm for solving the Bethe-Salpeter or Casida equations, i.e., the timestep and the number of steps.
+
+----
+The timestep in the time-evolution calculation is inversely proportional to the maximum transition energy {{TAG|OMEGAMAX}} and the number of steps is inversely proportional to the broadening {{TAG|CSHIFT}}. Depending on the {{TAG|BSEPREC}}  stable these parameters are scaled depending on the precision tag {{TAG|BSEPREC}}.
+
+{| cellpadding="5" cellspacing="0" border="1"
+! BSEPREC !! OMEGAMAX !! CSHIFT
+|-
+| Accurate (a) || <math>\times 4</math> || <math>\times 1/10</math>
+|-
+| High (h) || <math>\times 3</math> || <math>\times 1/7.5</math>
+|-
+| Medium (m) || <math>\times 2.5</math> || <math>\times1/6.25</math>
+|-
+| Low (l)  || <math>\times 2</math> || <math>\times1/5</math>
+|}
+
+For example, the number of steps <math>N_{\rm steps}</math> for {{TAG|BSEPREC}} = Low can be found via <math>N_{\rm steps}=\frac{{\rm OMEGAMAX}\times 2}{{\rm CSHIFT}/5}</math>
+== Related tag and articles ==
+{{TAG|IBSE}},
+{{TAG|NBANDSV}},
+{{TAG|NBANDSO}},
+{{TAG|CSHIFT}},
+{{TAG|OMEGAMAX}},
+[[BSE calculations]],
+[[Time-dependent density-functional theory calculations]],
+[[Bethe-Salpeter equations]]
+----
+[[Category:INCAR tag]] [[Category:Many-body perturbation theory]][[Category:Bethe-Salpeter equations]]

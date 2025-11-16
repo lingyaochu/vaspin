@@ -1,0 +1,18 @@
+{{TAGDEF|EPSILON|[real]|1}}
+
+Description: {{TAG|EPSILON}} sets the dielectric constant of the medium.
+----
+VASP uses this flag only to scale the calculated [[Monopole Dipole and Quadrupole corrections|monopole and dipole corrections]]. {{TAG|EPSILON}} defaults to 1, which is the proper value for isolated atoms and molecules. For solids, the screening properties can and should be determined using the linear response routines of VASP (see {{TAG|LEPSILON}} and/or {{TAG|LCALCEPS}}). Ionic contributions to the dielectric tensor should be included, if the ions are allowed to relax. Ionic contributions to the dielectric tensor can be calculated using {{TAG|IBRION}}=8.
+
+== Related tags and articles ==
+{{TAG|Monopole Dipole and Quadrupole corrections}},
+{{TAG|NELECT}},
+{{TAG|DIPOL}},
+{{TAG|IDIPOL}},
+{{TAG|LDIPOL}},
+{{TAG|LMONO}},
+{{TAG|EFIELD}}
+
+{{sc|EPSILON|Examples|Examples that use this tag}}
+----
+[[Category:INCAR tag]][[Category:Molecules]][[Category:Electrostatics]]

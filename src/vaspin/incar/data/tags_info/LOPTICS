@@ -1,0 +1,60 @@
+{{TAGDEF|LOPTICS|.TRUE. {{!}} .FALSE.|.FALSE.}}
+
+Description: {{TAG|LOPTICS}}=.TRUE. calculates the frequency dependent dielectric matrix after the electronic ground state has been determined.
+----
+The imaginary part is determined by a summation over empty states using the equation:
+
+<span id="epsilon">
+:<math>
+\epsilon^{(2)}_{\alpha \beta}\left(\omega\right) = \frac{4\pi^2 e^2}{\Omega}
+\mathrm{lim}_{q \rightarrow 0} \frac{1}{q^2} \sum_{c,v,\mathbf{k}} 2 w_\mathbf{k} \delta( \epsilon_{c\mathbf{k}} - \epsilon_{v\mathbf{k}} - \omega)
+  \times   \langle u_{c\mathbf{k}+\mathbf{e}_\alpha q}  | u_{v\mathbf{k}} \rangle
+             \langle u_{v\mathbf{k}} | u_{c\mathbf{k}+\mathbf{e}_\beta q} \rangle
+</math>
+</span>
+
+here the indices ''c'' and ''v'' refer to conduction and valence band states respectively, and ''u''<sub>''c'''''k'''</sub> is the cell periodic part of the orbitals at the k-point '''k'''. The real part of the dielectric tensor  &epsilon;<sup>(1)</sup> is obtained by the usual Kramers-Kronig
+transformation
+
+<span id="kramerskronig">
+:<math>
+\epsilon^{(1)}_{\alpha \beta} (\omega) = 1 + \frac{2}{ \pi} P \int_0^{\infty}
+ \frac{ \epsilon^{(2)}_{\alpha \beta} (\omega') \omega'}{ \omega'^2- \omega^2 + i \eta } d \omega'
+</math>
+</span>
+
+where ''P'' denotes the principle value. The method is explained in detail in the paper by Gajdoš ''et al.'' (see Eqs. 15, 29, and 30).<ref name="gajdos:prb:06"/> The complex shift &eta; is determined by the parameter {{TAG|CSHIFT}}.
+
+Note that local field effects, i.e. changes of the cell periodic part of the potential are neglected in this approximation.  These can be evaluated using either the implemented density functional perturbation theory ({{TAG|LEPSILON}}=.TRUE.), or the GW routines.
+
+The method selected using {{TAG|LOPTICS}}=.TRUE. requires an appreciable number of empty conduction band states. Reasonable results are usually only obtained, if the parameter {{TAG|NBANDS}} is roughly doubled or tripled in the {{FILE|INCAR}} file with respect to the VASP default.
+Furthermore it is emphasized that the routine works properly even for [[:Category:Hybrid_functionals|HF and screened exchange type calculations and hybrid functionals]]. In this case, finite differences are used to determine the derivatives of the Hamiltonian with respect to '''k'''.
+
+Note that the number of frequency grid points is determined by the parameter {{TAG|NEDOS}}. In many cases it is desirable to increase this parameter significantly from its default value. Values around {{TAG|NEDOS}}=2000 are strongly recommended.
+
+VASP posses multiple other routines to calculate the frequency dependent dielectric function.
+Specifically, one can use {{TAG|ALGO}} = TDHF (Casida/[[BSE calculations]]), {{TAG|ALGO}} = GW ([[GW calculations]]) and {{TAG|ALGO}} = TIMEEV ([[Time Evolution]]: apply a delta kick and follow the induced dipoles).
+Compared to {{TAG|LOPTICS}}=.TRUE., all those routines have the advantage to include
+effects beyond the independent particle approximation, however, they are usually
+also much more expensive than {{TAG|LOPTICS}}=.TRUE.
+=== Spectral broadening ===
+The dielectric function calculated with {{TAG|LOPTICS}} includes broadening due to the smearing method {{TAG|ISMEAR}} and the Lorentzian broadening due to the complex shift in the Kramers-Kronig transformation. For example, the combination of {{TAG|LOPTICS}}=.TRUE.  and  {{TAG|ISMEAR}}=0  produces the dielectric function broadened by a Gaussian with the width {{TAG|SIGMA}} and a Lorentzian with the width {{TAG|CSHIFT}}. To avoid using two different broadening methods imultaneously and only include the Lorentzian broadening, one should set {{TAG|SIGMA}} to a much smaller value than {{TAG|CSHIFT}}.
+{{NB|warning|Note that {{TAG|LOPTICS}} {{=}} .TRUE. with {{TAG|ISMEAR}} {{=}} -2 is currently not supported.}}
+{{NB|mind|Furthermore the combination of {{TAG|LOPTICS}} {{=}} .TRUE. and {{TAG|ISMEAR}} selecting the tetrahedron method is only supported as of VASP 6.3.}}
+
+== Related tags and articles ==
+{{TAG|CSHIFT}},
+{{TAG|LNABLA}},
+{{TAG|LEPSILON}},
+[[Time Evolution]],
+{{TAG|WPLASMAI}}
+
+See also: {{sc|LOPTICS|Examples|Examples that use this tag}}
+
+== References ==
+<references>
+<ref name="gajdos:prb:06">[http://link.aps.org/doi/10.1103/PhysRevB.73.045112 M. Gajdoš, K. Hummer, G. Kresse, J. Furthmüller, and F. Bechstedt, Phys. Rev. B 73, 045112 (2006).]</ref>
+</references>
+----
+
+[[Category:INCAR tag]][[Category:Linear response]][[Category:Dielectric properties]]

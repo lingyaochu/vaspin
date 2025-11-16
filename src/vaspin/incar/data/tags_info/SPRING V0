@@ -1,0 +1,30 @@
+{{DISPLAYTITLE:SPRING_V0}}
+{{TAGDEF|SPRING_V0|[real (array)]}}
+{{DEF|SPRING_V0|0|for all coordinates with <code>status{{=}}8</code> in {{FILE|ICONST}}.}}
+
+Description: Rate at which the bias potential is shifted in <math>uc/fs</math>.
+----
+Consider the bias potential for a [[:Category:Molecular dynamics|molecular-dynamics]] (MD) run of the form:
+
+::<math>
+\tilde{V}(\xi_1,\dots,\xi_{M_8}) = \sum_{\mu=1}^{M_8}\frac{1}{2}\kappa_{\mu} (\xi_{\mu}(q)-\xi_{0\mu})^2, \;
+</math>
+
+where the sum runs over all (<math>M_8</math>) coordinates the potential acts upon (<math>\xi_{\mu}(q)</math>). The coordinates are defined in the {{FILE|ICONST}} file by setting the <code>status=8</code>.
+Optionally, the position of minimum (<math>\xi_{0\mu}</math>) can be shifted at a constant rate <math>\dot{\xi}_{\mu}</math> every MD step, i.e.,
+
+::<math>
+\xi_{0\mu}(t+\Delta t) = \xi_{0\mu}(t) + \dot{\xi}_{\mu}(q)\Delta t, \;
+</math>
+
+where <math>\Delta t</math> is the time step used in MD ({{TAG|POTIM}}).
+The rate <math>\dot{\xi}_{\mu}</math> can be defined via the parameter {{TAG|SPRING_V0}} and its units are <math>uc/fs</math>, where <math>uc</math> corresponds to the units of the coordinate the potential acts upon (e.g., <math>{\AA}</math> for coordinates with <code>flag</code> R, <math>rad.</math> for coordinates with <code>flag</code> A, dimensionless for coordinates with <code>flag</code> W, etc...).
+The number of items defined via {{TAG|SPRING_V0}} must be equal to <math>M_8</math>, otherwise the calculation terminates with an error message.
+
+== Related tags and articles ==
+{{TAG|SPRING_K}},
+{{TAG|SPRING_R0}},
+{{FILE|ICONST}},
+{{TAG|Biased molecular dynamics}}
+----
+[[Category:INCAR tag]][[Category:Advanced molecular-dynamics sampling]]

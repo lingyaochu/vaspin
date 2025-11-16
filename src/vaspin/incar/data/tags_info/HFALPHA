@@ -1,0 +1,29 @@
+{{TAGDEF|HFALPHA|[real]}}
+{{DEF|HFALPHA|6/sqrt({{TAG|ENMAX}})/(2π)|if {{TAG|HFRCUT}} is 0}}
+
+Description: {{TAG|HFALPHA}} sets the decay constant used in the method of Massida, Posternak, and Baldereschi, which is activated by {{TAG|HFRCUT}}=0.
+----
+
+{{TAG|HFALPHA}} sets the decay constant in the error-function-like charge distribution for the method of Massida, Posternak, and Baldereschi{{cite|massidda:prb:93}}. The error-function-like charge distribution is used to calculate the difference between the isolated probe charge and the periodically repeated probe charge in a homogenous background. The default for {{TAG|HFALPHA}} is 6/sqrt({{TAG|ENMAX}})/(2π) in atomic units. This usually yields robust and accurate results in the range of meV compared to the Ewald summation used for a regular k-mesh. This is the default approach used to implement the convergence corrections of the [[Coulomb singularity]] in Hartree-Fock calculations. This does not work correctly for bandstructure calculations using the [[Si_HSE_bandstructure|0-weight scheme]] or {{TAG|KPOINTS_OPT}} because the correction is only applied for points in the regular grid. To overcome this problem we recommend using the Coulomb truncation methods using {{TAG|HFRCUT}}.
+
+== Related tags and articles ==
+{{TAG|AEXX}},
+{{TAG|ALDAX}},
+{{TAG|ALDAC}},
+{{TAG|AGGAX}},
+{{TAG|AGGAC}},
+{{TAG|AMGGAX}},
+{{TAG|AMGGAC}},
+{{TAG|LHFCALC}},
+{{TAG|HFRCUT}},
+{{TAG|LTHOMAS}},
+[[List of hybrid functionals]],
+[[Hybrid_functionals:_formalism|Hybrid functionals: formalism]],
+[[Coulomb singularity]]
+
+{{sc|HFALPHA|Examples|Examples that use this tag}}
+
+== References ==
+<references/>
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:Hybrid_functionals]]

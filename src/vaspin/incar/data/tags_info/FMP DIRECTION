@@ -1,0 +1,17 @@
+{{DISPLAYTITLE:FMP_DIRECTION}}
+{{TAGDEF|FMP_DIRECTION|1 {{!}} 2 {{!}} 3 | 3}}
+
+Description: Index of the lattice vector <math>\mathbf{a}_i</math> along which the temperature gradient is created in the ([[Müller-Plathe method]]).
+
+-----
+
+{{TAG|FMP_DIRECTION}} defines the index of the lattice vector <math>\mathbf{a}_i</math> along which the gradient <math>\partial T/\partial \mathbf{a}_i </math> is created during the reverse nonequilibrium molecular-dynamics run using the [[Müller-Plathe method]].
+{{NB|mind|This tag will only be available from VASP 6.4.4}}
+== Related tags and articles ==
+[[Müller-Plathe method]],
+{{TAG|FMP_ACTIVE}},
+{{TAG|FMP_SNUMBER}},
+{{TAG|FMP_SWAPNUM}},
+{{TAG|FMP_PERIOD}}
+
+[[Category:INCAR tag]][[Category:Molecular dynamics]][[Category:Ensemble properties]]

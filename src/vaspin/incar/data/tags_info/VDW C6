@@ -1,0 +1,18 @@
+{{DISPLAYTITLE:VDW_C6}}
+{{TAGDEF|VDW_C6|[real (array)]}}
+
+Description: {{TAG|VDW_C6}} defines the <math>C_6</math> parameters (<math>\mathrm{Jnm}^{6}\mathrm{mol}^{-1}</math>) for each species defined in the {{TAG|POSCAR}} file.
+----
+{{TAG|VDW_C6}} sets the <math>C_6</math> parameters (<math>\mathrm{Jnm}^{6}\mathrm{mol}^{-1}</math>) for each species defined in the {{TAG|POSCAR}} file for the [[DFT-D2]], [[DFT-ulg]], [[Tkatchenko-Scheffler_method|Tkatchenko-Scheffler]], and [[Many-body dispersion energy|Many-body dispersion energy]] methods.
+
+== Related tags and articles ==
+{{TAG|VDW_C6AU}},
+[[DFT-D2]],
+[[DFT-ulg]],
+[[Tkatchenko-Scheffler_method|Tkatchenko-Scheffler method]],
+[[Many-body dispersion energy|Many-body dispersion energy]]
+
+{{sc|VDW_C6|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:van der Waals functionals]]

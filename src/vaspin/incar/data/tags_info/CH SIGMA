@@ -1,0 +1,14 @@
+{{DISPLAYTITLE:CH_SIGMA}}
+{{TAGDEF|CH_SIGMA|[real]|0.3}}
+
+Description: This tag specifies the width of the Gaussian broadening in eV of the imaginary dielectric function within the supercell core-hole method.
+----
+At the moment only Gaussian broadening of the dielectric function is implemented within the supercell core-hole method.
+
+== Related tags and articles ==
+{{TAG|CH_LSPEC}}, {{TAG|CH_NEDOS}}, {{TAG|CH_AMPLIFICATION}}, {{TAG|ICORELEVEL}}, {{TAG|CLNT}}, {{TAG|CLN}}, {{TAG|CLL}}, {{TAG|CLZ}}
+
+{{sc|CH_SIGMA|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Linear response]][[Category:Dielectric properties]][[Category:XAS]]

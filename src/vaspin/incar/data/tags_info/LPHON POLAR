@@ -1,0 +1,24 @@
+{{DISPLAYTITLE:LPHON_POLAR}}
+{{TAGDEF|LPHON_POLAR|.TRUE. {{!}} .FALSE.|.FALSE.}}
+
+Description: {{TAG|LPHON_POLAR}} includes dipole-dipole corrections in the computation of the phonon dispersion. For this mode, {{TAG|PHON_DIELECTRIC}} and {{TAG|PHON_BORN_CHARGES}} must also be set.
+----
+
+If the material is non-metallic and polar (i.e. two or more atoms in the unit cell carry nonzero Born effective charge tensors), a special treatment of the long-range dipole-dipole interaction is required to obtain a smooth phonon dispersion.
+This is activated by setting {{TAG|LPHON_POLAR}}=.TRUE. and supplying the static dielectric tensor ({{TAG|PHON_DIELECTRIC}}) and the Born-effective charges ({{TAG|PHON_BORN_CHARGES}}) which can be obtained in a separate VASP calculation using the {{TAG|LEPSILON}} or {{TAG|LCALCEPS}} tag.
+The dipole-dipole part of the interatomic force-constants is evaluated using an Ewald summation with the number of <math>\mathbf{G}</math> vectors determined by the cutoff length ({{TAG|PHON_G_CUTOFF}}).
+
+In the case of metals, the dielectric function is infinite, for nonpolar semiconductors the Born effective charges are zero which in both cases means that the [[Phonons:_Theory#Long-range_interatomic_force_constants_.28LO-TO_splitting.29|long-range interatomic force-constants]] are zero and this dipole-dipole correction does not need to be applied.
+{{NB|mind| Only available as of VASP 6.3.2.}}
+
+==Related tags and articles==
+{{FILE| QPOINTS}},
+{{TAG | LPHON_DISPERSION}},
+{{TAG | PHON_NWRITE}},
+{{TAG | PHON_DIELECTRIC}},
+{{TAG | PHON_BORN_CHARGES}},
+{{TAG | PHON_G_CUTOFF}}
+
+{{sc|LPHON_POLAR|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Phonons]]

@@ -1,0 +1,13 @@
+{{TAGDEF|MINROT|[real]|0.01}}
+
+Description: The flag {{TAG|MINROT}} defines the value for which the dimer is rotated only if the predicted rotation angle is greater than {{TAG|MINROT}} (rad.) in the {{TAG|Improved Dimer Method}}.
+
+----
+
+== Related tags and articles ==
+{{TAG|Improved Dimer Method}}
+
+{{sc|MINROT|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Transition states]][[Category:Molecules]]

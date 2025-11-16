@@ -1,0 +1,22 @@
+{{TAGDEF|LFXC|.TRUE. {{!}} .FALSE.}}
+{{DEF|LFXC|.FALSE.|}}
+
+Description: {{TAG|LFXC}} enables the local exchange-correlation kernel in [[BSE calculations|TD-DFT]] and [[BSE calculations|TDHF]] calculations.
+----
+The local exchange-correlation kernel is determined via {{cite|sander:prb:15}}
+
+::<math>
+f^{\rm loc}_{\mathrm{xc}}\left(\mathbf{r}, \mathbf{r}'\right) =
+\frac{\delta^{2}\left\{E_{\mathrm{c}}^{\mathrm{DFT}}+\left(1-c_{\rm x}\right)
+E_{\mathrm{x}}^{\mathrm{DFT}}\right\}}{\delta \rho(\mathbf{r}) \delta
+\rho\left(\mathbf{r}'\right)}
+</math>,
+where <math>c_{\rm x}</math> is the fraction of the exchange interaction set by {{TAG|AEXX}}.
+== Related tags and articles==
+[[BSE calculations]]
+
+== References ==
+<references/>
+----
+
+[[Category:INCAR tag]][[Category:Many-body perturbation theory]][[Category:Bethe-Salpeter equations]]

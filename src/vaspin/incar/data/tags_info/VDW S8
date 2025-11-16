@@ -1,0 +1,15 @@
+{{DISPLAYTITLE:VDW_S8}}
+{{TAGDEF|VDW_S8|[real]}}
+{{DEF|VDW_S8|1.0|for [[DFT-D3]]}}
+
+Description: {{TAG|VDW_S8}} defines the damping function parameter <math>s_{8}</math>.
+----
+{{TAG|VDW_S8}} sets the damping function parameter <math>s_{8}</math> in the [[DFT-D3]] and [[DFT-D4]] methods.
+
+== Related tags and articles ==
+[[DFT-D3]],[[DFT-D4]]
+
+{{sc|VDW_S8|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:van der Waals functionals]]

@@ -1,0 +1,23 @@
+{{TAGDEF|SHAKETOL|[Real]|<math>10^{-5}</math>}}
+
+Description: {{TAG|SHAKETOL}} specifies the tolerance for the SHAKE algorithm (in case VASP was compiled with [[Precompiler options#-Dtbdyn|-Dtbdyn]]).
+----
+Constrained molecular dynamics ({{TAG|MDALGO}}=1 {{!}} 2) are performed using a [[MDALGO#SHAKE|SHAKE algorithm]].<ref name="Ryckaert77"/>
+
+{{TAG|SHAKETOL}} specifies the tolerance for the SHAKE algorithm.
+If the error for all geometric constraints does not decrease below this predefined tolerance within the allowed number of iterations ({{TAG|SHAKEMAXITER}}), VASP terminates with an error message.
+
+== Related tags and articles ==
+{{TAG|SHAKEMAXITER}},
+{{TAG|MDALGO}}
+
+{{sc|SHAKETOL|Examples|Examples that use this tag}}
+
+== References ==
+<references>
+<ref name="Ryckaert77">[http://dx.doi.org/10.1016/0021-9991(77)90098-5 J. P. Ryckaert, G. Ciccotti, and H. J. C. Berendsen, J. Comp. Phys. 23, 327 (1977).]</ref>
+</references>
+
+----
+
+[[Category:INCAR tag]][[Category:Advanced molecular-dynamics sampling]]

@@ -1,0 +1,116 @@
+{{TAGDEF|ALGO|Normal {{!}} VeryFast {{!}} Fast {{!}} Conjugate {{!}} All {{!}} Damped {{!}} Subrot {{!}} Eigenval {{!}} Exact {{!}} None {{!}} Nothing {{!}} CHI {{!}} G0W0 {{!}} GW0 {{!}} GW {{!}} scGW0 {{!}} scGW {{!}} G0W0R {{!}} GW0R {{!}} GWR {{!}} scGW0R {{!}} scGWR {{!}} ACFDT {{!}} RPA {{!}} ACFDTR {{!}} RPAR {{!}} BSE {{!}} TDHF | Normal }}
+
+Description: the {{TAG|ALGO}} tag is a convenient option to specify the electronic minimization algorithm (as of VASP.4.5) and/or to select the type of [[GW calculations]].
+----
+*{{TAG|ALGO}}=Normal selects {{TAG|IALGO}}=38 ([[Blocked-Davidson algorithm|blocked-Davidson-iteration scheme]]).
+
+*{{TAG|ALGO}}=VeryFast selects {{TAG|IALGO}}=48 ([[RMM-DIIS]]). This algorithm has been updated for vasp.6 to increase robustness. To select the version that was available in vasp.5, select "Old VeryFast". [[:Category:Hybrid functionals|hybrid functionals]] are not supported for {{TAG|ALGO}}=VeryFast. The algorithm can be combined with {{TAG|LDIAG}}=.FALSE. to conserve the initial orbital order (when orbitals are read from the {{TAG|WAVECAR}} file).
+
+*{{TAG|ALGO}}=Old VeryFast (or "ov" or "vo") selects {{TAG|IALGO}}=48 ([[RMM-DIIS]]). This option is available in vasp.6 and selects the version of the [[RMM-DIIS]] algorithm that was available in vasp.5.
+
+*{{TAG|ALGO}}=Fast selects a fairly robust mixture of the [[Blocked-Davidson algorithm|blocked-Davidson]] and [[RMM-DIIS]] algorithms. In this case, [[Blocked-Davidson algorithm|blocked Davidson]] ({{TAG|IALGO}}=38) is used for the initial phase, and then VASP switches to [[RMM-DIIS]] ({{TAG|IALGO}}=48). Subsequently, for each ionic update, one {{TAG|IALGO}}=38 sweep is performed for each ionic step (except the first one).  This algorithm has been updated for vasp.6 to increase robustness. To select the version that was available in vasp.5, select "Old Fast".
+
+*{{TAG|ALGO}}=Old Fast (or "of" or "fo"). This option is available in vasp.6 and selects the {{TAG|ALGO}}=Fast algorithm that was available in vasp.5.
+
+*{{TAG|ALGO}}=Conjugate or {{TAG|ALGO}}=All selects an "all band simultaneous update of orbitals" ({{TAG|IALGO}}=58, both tags are synonymous). Recommended to be used with the improved line-search algorithm ({{TAG|ISEARCH}} = 1).
+
+*{{TAG|ALGO}}=Damped selects a damped velocity friction algorithm ({{TAG|IALGO}}=53). The algorithm can be combined with {{TAG|LDIAG}}=.FALSE. to conserve the initial orbital order (when orbitals are read from the {{TAG|WAVECAR}} file).
+
+*{{TAG|ALGO}}=Exact performs an exact diagonalization ({{TAG|IALGO}}=90).
+
+*{{TAG|ALGO}}=Subrot selects subspace rotation or diagonalization in the sub-space spanned by the orbitals ({{TAG|IALGO}}=4).
+
+*{{TAG|ALGO}}=Eigenval allows to recalculate one-electron energies, the density of state and perform selected postprocessing using the current orbitals ({{TAG|IALGO}}=3) e.g. read from the {{FILE|WAVECAR}} file.
+
+*{{TAG|ALGO}}=None or {{TAG|ALGO}}=Nothing allows to recalculate the density of states or perform selected postprocessing, using the current orbitals and one electron energies ({{TAG|IALGO}}=2) e.g. read from the {{FILE|WAVECAR}} file.
+
+More details can be found under the documentation for the tag {{TAG|IALGO}}.
+{{NB|tip|Except for 'None', 'Nothing', 'Exact' and 'Eigenval' (which must be spelled out), the first letter determines the applied algorithm.}}
+Conjugate, Subrot, Eigenval, None and Nothing are only supported by vasp.5.2.9 and newer versions.
+{{NB|warning|For fast convergence, {{TAG|LMAXMIX}} must be set appropriately. E.g. {{TAG|LMAXMIX}}{{=}}6 for systems including f electrons.}}
+
+<span id="GWALGOS">
+
+==ALGO for response functions and [[GW calculations]] and [[ACFDT/RPA calculations]]==
+The following tags are available as of VASP.5.X.
+
+*{{TAG|ALGO}}=CHI calculates the response functions only.
+
+*{{TAG|ALGO}}=TDHF selects TDHF calculations using the VASP internal Cassida code see [[BSE calculations]], (available as of VASP.5.2.12)
+
+*{{TAG|ALGO}}=BSE selects BSE calculations using the VASP internal Cassida code see [[BSE calculations]], (available as of VASP.5.4.1)
+
+*{{TAG|ALGO}}=Timeev performs a delta-pulse in time and then performs [[timepropagation]]
+
+*{{TAG|ALGO}}=ACFDT selects RPA total energy calculations see [[ACFDT/RPA calculations]]
+
+*{{TAG|ALGO}}=RPA synonymous to ACFDT see [[ACFDT/RPA calculations]] (available as of VASP.5.3.1)
+
+GW tags have been renamed in VASP as follows
+<span id="ALGO_VASP6">
+{| class="wikitable"
+|-
+! < 5.2.12
+| scGW
+| scGW0
+| GW
+| GW0
+| N/A
+| N/A
+|-
+! >= 5.2.12, < 6
+| QPGW
+| QPGW0
+| GW
+| GW0
+| N/A
+| N/A
+|-
+! >= 6
+| QPGW
+| QPGW0
+| EVGW
+| EVGW0
+| GWR
+| GW0R
+|}
+</span>
+
+*{{TAG|ALGO}}=EVGW0 selects single-shot ''G''<sub>0</sub>''W''<sub>0</sub> calculations or partially self-consistent ''GW'' calculations. The orbitals (wavefunctions) of the previous groundstate calculations are maintained, and [[GW calculations#G0W0|G0W0 calculations]] are performed. If {{TAG|NELM}} is set, several iterations are performed, and the QP energies are updated in the calculation of ''G'' (for details, see [[GW calculations#gw0|EVGW0 calculations]]).
+
+*{{TAG|ALGO}}=EVGW selects single-shot ''G''<sub>0</sub>''W''<sub>0</sub> calculations or partially self-consistent ''GW'' calculations. The orbitals of the previous groundstate calculations are maintained, and [[GW calculations#G0W0|G0W0 calculations]] are performed. If {{TAG|NELM}} is set, several iterations are performed, and the QP energies are updated in the calculation of ''G'' AND ''W'' (for details, see [[GW calculations#qpgw|self-consistent EVGW and QPGW calculations]]).
+
+*{{TAG|ALGO}}=QPGW0 selects self-consistent ''GW'' calculations including off-diagonal components of the selfenergy. A full update of the QP energies AND one-electron orbitals is performed in the calculation of ''G'' only (for details see [[GW calculations#qpgw0|QPGW0 calculations]]).
+
+*{{TAG|ALGO}}=QPGW selects self-consistent ''GW'' calculations, including off-diagonal components of the selfenergy. A full update of the QP energies AND one-electron orbitals is performed in the calculations of ''G'' AND ''W'' (for details, see [[GW calculations#qpgw|QPGW calculations]]).
+
+Following tags are available as of VASP.6
+
+*{{TAG|ALGO}}=RPAR selects low scaling RPA total energy calculations (for details see [[ACFDT/RPA calculations#ACFDTR/RPAR|ACFDT/RPA calculations]])
+
+*{{TAG|ALGO}}=ACFDTR synonym for RPAR (for details see [[ACFDT/RPA calculations#ACFDTR/RPAR|ACFDT/RPA calculations]])
+
+*{{TAG|ALGO}}=ACFDTRK in combination with LMP2LT = .TRUE. selects the low scaling MP2 total energy calculations (for details see the [[MP2_ground_state_calculation_-_Tutorial|MP2 ground state Tutorial]])
+
+*{{TAG|ALGO}}=GW0R selects self-consistent GW<sub>0</sub> calculations, where only the Green's function ''G'' is updated from the corresponding Dyson. The screened potential ''W'' remains unchanged after the first iteration. {{TAG|NELM}} iteration cycles are performed (see [[GW calculations#scGW0R|self-consistent GW calculations]]).
+
+*{{TAG|ALGO}}=GWR selects self-consistent GW calculations, where both, ''G'' and ''W'' are updated from the corresponding Dyson equation. {{TAG|NELM}} iteration cycles are performed. (for details see [[GW calculations#scGWR|self-consistent GW calculations]]).
+
+*{{TAG|ALGO}}=G0W0R selects single-shot GW calculations, non-interacting ''G'' and ''W'' are determined from Kohn-Sham system and {{TAG|NELM}} tag is ignored. Use this tag for single-shot QP energies and first-order corrections to the density matrix (for details, see [[GW calculations#G0W0R|single-shot GW calculations]]).
+{{NB|important|Changes as of VASP.6.3:}}
+*{{TAG|NELMGW}} replaces {{TAG|NELM}} in [[GW calculations#scGWR|self-consistent GW calculations]].
+
+*{{TAG|ALGO}}=CRPA selects [[Constrained–random-phase–approximation_formalism|constrained RPA alculations]].
+{{NB|important|available as of VASP.6.4:}}
+*{{TAG|ALGO}}=EVGW0R selects the low-scaling analog of EVGW0, that is the low-scaling partially self-consistent GW calculations, where non-interacting ''G'' and ''W'' are determined from Kohn-Sham system and {{TAG|NELMGW}} specifies the number of self-consistent loops for ''G''. ''W'' is kept on the Kohn-Sham level.
+</span>
+
+== Related tags and sections ==
+{{TAG|IALGO}},
+{{TAG|LDIAG}},
+[[:Category:Electronic minimization|Electronic minimization]]
+
+{{sc|ALGO|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Electronic minimization]][[Category:Many-body perturbation theory]][[Category:GW]][[Category:Bethe-Salpeter equations]]

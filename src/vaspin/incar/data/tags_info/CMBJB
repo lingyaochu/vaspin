@@ -1,0 +1,22 @@
+{{TAGDEF|CMBJB|[real]}}
+{{DEF|CMBJB|1.023 | if {{TAG|METAGGA}}{{=}}MBJ | 0.5 | if {{TAG|METAGGA}}{{=}}LMBJ}}
+
+Description: sets the <math>\beta</math> parameter in the MBJ and LMBJ potentials.
+----
+See the description of the {{TAG|METAGGA}} tag.
+
+== Related tags and articles ==
+{{TAG|METAGGA}},
+{{TAG|CMBJ}},
+{{TAG|CMBJA}},
+{{TAG|CMBJE}},
+{{TAG|SMBJ}},
+{{TAG|RSMBJ}},
+{{TAG|LASPH}},
+{{TAG|LMAXTAU}},
+{{TAG|LMIXTAU}}
+
+{{sc|CMBJB|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]]

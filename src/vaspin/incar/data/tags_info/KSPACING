@@ -1,0 +1,24 @@
+{{TAGDEF|KSPACING|[real]|0.5}}
+
+Description: The tag  {{TAG|KSPACING}} determines the number of k points if the {{TAG|KPOINTS}} file
+is not present.
+
+----
+
+{{TAG|KSPACING}} is the smallest allowed spacing between k points in units of <math>\AA^{-1}</math>. The number of k points increases when the spacing is decreased.
+The number of k points in the direction of the first, second and third reciprocal lattice vector is determined by <math> N_i= \mathrm{max}(1, \mathrm{ceiling}( | \mathbf{b}_i| 2\pi / \mathrm{KSPACING} ))</math>
+with <math>\mathrm{ceiling}( x )</math> being the ceiling function which returns the least integer that is equal or larger than <math>x</math>. In this equation, <math> \mathbf{b}_i  </math> are the reciprocal lattice vectors <math> \mathbf{b}_i \mathbf{a}_j = \delta_{ij} </math>.
+The generated grid is centered at the <math>\Gamma</math> point if {{TAG|KGAMMA}}=True (default), i.e., includes the <math>\Gamma</math> point. For {{TAG|KGAMMA}}=False, the grid is shifted away from the <math>\Gamma</math> point as done for Monkhorst-Pack grids.
+{{NB|mind|This implementation is not entirely identical with the deprecated [[KPOINTS#Automatic_k-point_mesh|automatic k-point generation]] used in the {{FILE|KPOINTS}} file.}}
+If the k points are generated using the [[KPOINTS#Automatic_k-point_mesh|automatic mode]] in the {{FILE|KPOINTS}} file, <math> N_i</math>  is calculated as
+<math> N_i= \mathrm{int}(\mathrm{max}(1, R_k| \mathbf{b}_i| + 0.5)) </math> with <math>R_k=2\pi/\mathrm{KSPACING}</math>
+and rounding it to the nearest integer.  We recommend using the {{TAG|KSPACING}} tag in the {{FILE|INCAR}} file
+and avoiding the automatic mode via the {{FILE|KPOINTS}} file.
+
+== Related tags and articles ==
+{{TAG|KGAMMA}}, {{FILE|KPOINTS}}
+
+{{sc|KSPACING|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Crystal momentum]]

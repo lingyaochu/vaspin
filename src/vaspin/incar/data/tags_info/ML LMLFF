@@ -1,0 +1,15 @@
+{{DISPLAYTITLE:ML_LMLFF}}
+{{TAGDEF|ML_LMLFF|[logical]|.FALSE.}}
+
+Description: Main control tag which enables/disables the use of machine learning force fields.
+{{NB|mind|Machine learning force fields is available in {{VASP}} as of version 6.3.0}}
+----
+If {{TAG|ML_LMLFF}} = .FALSE. machine learning force fields are disabled and all related {{FILE|INCAR}} tags, i.e. all tags starting with "'''ML_'''", are ignored. If machine learning force fields are used by setting {{TAG|ML_LMLFF}} = .TRUE., the {{VASP}} mode of operation depends on the choice of {{TAG|ML_MODE}}. If {{TAG|ML_MODE}} is not supplied in the {{FILE|INCAR}} file then the default mode of operation is to run an MD simulation with on-the-fly machine learning, i.e., {{TAG|ML_MODE|train}}. This training is started "from scratch" if no {{FILE|ML_AB}} file is provided, otherwise a continuation run is performed.
+
+== Related tags and articles ==
+{{TAG|ML_MODE}}, {{TAG|ML_IALGO_LINREG}}, {{TAG|ML_IWEIGHT}}, {{TAG|ML_ICRITERIA}}, {{TAG|ML_IREG}}, {{TAG|ML_LSPARSDES}}, {{TAG|ML_ISCALE_TOTEN}}, {{TAG|ML_LCOUPLE}}, {{TAG|ML_LHEAT}}, {{TAG|ML_LEATOM}}, {{TAG|ML_MB}}, {{TAG|ML_MCONF}}
+
+{{sc|ML_LMLFF|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

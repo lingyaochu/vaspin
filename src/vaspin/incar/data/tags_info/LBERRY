@@ -1,0 +1,136 @@
+{{TAGDEF|LBERRY|[logical]|.FALSE.}}
+
+Description: This tag is used in the the evaluation of the Berry phase expression for the electronic polarization of an insulating system.
+
+----
+
+As of VASP.5.2, calculating the macroscopic polarization and Born effective charges along the lines of the following example (using {{TAG|LBERRY}}=''.TRUE.'' etc) is unnecessary. The use of {{TAG|LCALCPOL}} or {{TAG|LCALCEPS}} is much more convenient.
+
+Setting {{TAG|LBERRY}}=''.TRUE.'' in the {{TAG|INCAR}} file switches on the evaluation of the Berry phase expression for the electronic polarization of an insulating system, as modified for the application of USPP's and PAW datasets <ref name="berryformalism1"/><ref name="berryformalism2"/><ref name="berryformalism3"/><ref name="berryformalism4"/><ref name="berryformalism5"/><ref name="berryultrasoft"/><ref name="berrymmars"/>.
+In addition, the following keywords must be specified in order to generate the mesh of k-points:
+
+ IGPAR = 1|2|3
+{{TAG|IGPAR}} tag specifies the socalled parallel or <math>\bold{G}_{\parallel}</math> direction in the integration over the reciprocal space unit cell.
+
+ NPPSTR = number of points on the strings in the IGPAR direction
+{{TAG|NPPSTR}} specifies the number of k-points on the strings <math>\bold{k}_{j} = \bold{k}_{\perp} + j\bold{G}_{\parallel}/\mathrm{NPPSTR} </math> (with <math> j=0,..,\mathrm{NPPSTR}-1</math>).
+
+ DIPOL = center of cell (fractional coordinates)
+{{TAG|DIPOL}} specifies the origin with respect to which the ionic contribution to the dipole moment in the cell is calculated. When comparing changes in this contribution due to the displacement of an ion, this center should be chosen in such a way that the ions in the distorted and the undistorted structure remain on the same side of {{TAG|DIPOL}} (in terms of a minimum image convention).
+
+
+== An example: The fluorine displacement dipole (Born effective charge) in NaF ==
+
+First one needs to determine the electronic polarization of the undistorted NaF.
+
+Caluclation1:
+It is usually convenient to calculate the self-consistent Kohn-Sham potential of the undistorted structure, using a symmetry reduced <math>6\times6\times6</math> Monkhorst-Pack sampling of the Brillouin zone. Using for instance the following {{TAG|INCAR}} file:
+ PREC   = Med
+ ISMEAR = 0
+ EDIFF  = 1E-6
+{{TAG|KPOINTS}} file:
+ 6x6x6
+  0
+ Gamma
+  6 6 6
+  0 0 0
+{{TAG|POSCAR}} file:
+ NaF
+  4.5102
+  0.0 0.5 0.5
+  0.5 0.0 0.5
+  0.5 0.5 0.0
+ 1 1
+ Direct
+   0.0000000000000000  0.0000000000000000  0.0000000000000000
+   0.5000000000000000  0.5000000000000000  0.5000000000000000
+and LDA Na_sv and F PAW datasets.
+
+
+Calculation 2:
+To calculate the electronic contribution to the polarization, along the reciprocal lattice vector <math>\bold{G}_{1}</math> (i.e. <math> \bold{P} \cdot \bold{G}_{1} </math>), add the following lines to the {{TAG|INCAR}} file:
+ LBERRY = .TRUE.
+ IGPAR  = 1
+ NPPSTR = 8
+ DIPOL = 0.25 0.25 0.25
+
+Setting {{TAG|LBERRY}}=''.TRUE.'' automatically sets {{TAG|ICHARG}}=11, i.e., the charge density of the previous calculation is read and kept fixed, and only the orbitals and one-electron eigenenergies are recalculated for the new k-point set. This is advantageous, since the number of k-points used to evaluate the Berry phase expression can be quite large, and precalculating the charge density ({{TAG|ICHARG}}=11) saves significant CPU time.
+
+The {{TAG|OUTCAR}} will now contain the following lines:
+                                 e<r>_ev=(     0.00000     0.00000     0.00000 ) e*Angst
+                                 e<r>_bp=(     0.00000     0.00000     0.00000 ) e*Angst
+
+  Total electronic dipole moment: p[elc]=(     0.00000     0.00000     0.00000 ) e*Angst
+
+             ionic dipole moment: p[ion]=(     2.25510     2.25510     2.25510 ) e*Angst
+
+
+Calculations 3 and 4:
+The procedure mentioned under Calculation 2 now has to be repeated with {{TAG|IGPAR}}=2 and {{TAG|IGPAR}}=3 (again using the charge density obtained from Calculation 1), to obtain the contributions to the electronic polarization along <math>\bold{G}_2</math> and <math>\bold{G}_{3}</math>, respectively.
+
+
+Calculations 5 to 8:
+To calculate the change in the electronic polarization of NaF due to the displacement of the fluorine sublattice, one should repeat Calculations 1 to 4, using the following {{TAG|POSCAR}} file:
+ NaF
+  4.5102
+  0.0 0.5 0.5
+  0.5 0.0 0.5
+  0.5 0.5 0.0
+ 1 1
+ Direct
+   0.0000000000000000  0.0000000000000000  0.0000000000000000
+   0.5100000000000000  0.5100000000000000  0.4900000000000000
+This corresponds to a displacement of the F ion by <math>0.01\times 4.51\AA</math> along the <math>\hat{z}</math> direction. The output of the Berry phase calculation using {{TAG|IGPAR}}=1 should now look similar to:
+                                 e<r>_ev=(     0.00000     0.00000     0.00004 ) e*Angst
+                                 e<r>_bp=(     0.00000     0.18028     0.18028 ) e*Angst
+
+  Total electronic dipole moment: p[elc]=(     0.00000     0.18028     0.18031 ) e*Angst
+
+             ionic dipole moment: p[ion]=(     2.25510     2.25510     1.93939 ) e*Angst
+
+
+Collecting the results:
+The change in the electronic contribution to the polarization due to the F-sublattice displacement should be calculated as follows:
+*Take the average of the <math>e<\mathrm{r}>_\mathrm{ev}</math> terms obtained in calculations 2 to 4. Lets call this <math>e<\mathrm{r}>_{\mathrm{ev,undist}}</math>
+
+*Add the <math>e<\mathrm{r}>_{\mathrm{bp}} </math> terms obtained in calculations 2 to 4. Lets call this <math>e<\mathrm{r}>_{\mathrm{bp,undist}}</math>
+
+*The electronic polarization of the undistorted structure is then given by:
+
+<math> e<\mathrm{r}>_{\mathrm{el,undist}}=e<\mathrm{r}>_{\mathrm{ev,undist}}+e<\mathrm{r}>_{\mathrm{bp,undist}} </math>
+
+*Repeat the above three steps for the results obtained using the distorted structure (Calculations 6 to 8), to evaluate <math>e<\mathrm{r}>_{\mathrm{ev,dist}}</math>, <math>e<\mathrm{r}>_{\mathrm{bp,dist}}</math>, and <math>e<\mathrm{r}>_{\mathrm{el,dist}}</math>
+
+*The change in the electronic contribution to the polarization due to the F-sublattice displacement, <math>e\Delta<\mathrm{r}>_\mathrm{el}</math> is then given by <math>e<\mathrm{r}>_{\mathrm{el,dist}}-e<\mathrm{r}>_{\mathrm{el,undist}}</math>
+
+
+To calculate the total change in polarization, <math>e\Delta<\mathrm{r}> </math>, one should account for the ionic contribution to this change. This contribution can be calculated from p[ion] as given above from
+Calculations 2 and 5:
+<math> \Delta\mathrm{p[ion]}=\mathrm{p[ion]}_{\mathrm{dist}}-\mathrm{p[ion]}_{\mathrm{undist}} </math>.
+
+<math> e\Delta<\mathrm{r}> </math> is then given by <math> \Delta \mathrm{p[ion]}+e\Delta<\mathrm{r}>_\mathrm{el} </math>. In this example we find <math> e\Delta<\mathrm{r}>=0.04489</math> electrons <math>\AA</math>. Considering that the moved F-sublattice was displaced by 0.045102 <math>\AA </math>, this calculation yields a Born effective charge for fluorine in NaF of <math>Z^{*}=-0.995 </math>.
+
+N.B.(I) In the case of spinpolarized calculations ({{TAG|ISPIN}}=2),the Berry phase of the orbitals is evaluated separately for each spin direction. This means a ''grep'' on "<math><\mathrm{r}> </math>" will yield two sets of <math> <\mathrm{r}>_{\mathrm{ev}} </math> and <math> <\mathrm{r}>_{\mathrm{bp}}</math> terms, which have to be added to oneanother to obtain the total electronic polarization of the system.
+
+N.B.(II) One should take care of the fact that the calculated "Berry phase" term <math> <\mathrm{r}>_{\mathrm{bp}}</math> along <math>\mathbf{G}_{i}</math> is, in principle, obtained modulo a certain period, determined by the lattice vector <math> \mathbf{R}_{i} </math> (<math>\mathbf{R}_{i} \cdot \mathbf{G}_{i} = 2 \pi </math>), the spin multiplicity of the orbitals, the volume of the unit cell, the number of k-point in the "perpendicular" grid, and some aspects of the symmetry of the system. More information on this particular aspect of the Berry phase calculations can be found in references <ref name="berryformalism1"/><ref name="berryformalism2"/><ref name="berryformalism3"/><ref name="berryformalism4"/><ref name="berryformalism5"/><ref name="berrymmars"/>.
+
+
+== Related tags and articles ==
+
+{{TAG|IGPAR}}, {{TAG|DIPOL}}, {{TAG|NPPSTR}}, {{TAG|LCALCPOL}}, {{TAG|LCALCEPS}}, {{TAG|LCALCEPS}}, {{TAG|ICHARG}}, {{TAG|ISPIN}}
+
+{{sc|LBERRY|Examples|Examples that use this tag}}
+
+== References ==
+<references>
+<ref name="berryformalism1">[http://journals.aps.org/prb/abstract/10.1103/PhysRevB.47.1651 R. D. King-Smith and D. Vanderbilt, Phys. Rev. B 47, 1651 (1993).]</ref>
+<ref name="berryformalism2">[http://journals.aps.org/prb/abstract/10.1103/PhysRevB.48.4442 D. Vanderbilt and R. D. King-Smith, Phys. Rev. B 48, 4442 (1993).]</ref>
+<ref name="berryformalism3">[http://www.tandfonline.com/doi/abs/10.1080/00150199208016065 R. Resta, Ferroelectrtics 136, 51 (1992).]</ref>
+<ref name="berryformalism4">[http://journals.aps.org/rmp/abstract/10.1103/RevModPhys.66.899 R. Resta, Rev. Mod. Phys. 66, 899 (1994).]</ref>
+<ref name="berryformalism5">[R. Resta, in Berry Phase in Electronic Wavefunctions, Troisième Cycle de la Physique en Suisse Romande, Année Academique 1995-96, (1996).]</ref>
+<ref name="berryultrasoft">[D. Vanderbilt and R. D. King-Smith, in Electronic polarization in the ultrasoft pseudopotential formalism, Unpublished report, (1998).]</ref>
+<ref name="berrymmars">[Available online at http://cms.mpi.univie.ac.at/vasp/Welcome.html.]</ref>
+</references>
+----
+
+[[Category:INCAR tag]][[Category:Linear response]][[Category:Dielectric properties]][[Category:Berry phases]][[Category:Howto]]

@@ -37,14 +37,14 @@ efnv = "vaspin.cli.efnv:main"
 vaspin = { workspace = true }
 
 [tool.codespell]
-write-change = true
-skip = "src/vaspin/utils/constants.py"
+write-changes = true
+skip = "src/vaspin/incar/data/tags_info/*,src/vaspin/utils/constants.py"
 
 [tool.ruff]
 line-length = 88
 
 [tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["F401"]
+"__init__.py" = ["F401", "D104"]
 
 [tool.ruff.lint]
 select = [
@@ -67,6 +67,15 @@ convention = "google"
 
 [tool.ruff.lint.mccabe]
 max-complexity = 10
+
+[tool.coverage.run]
+source = ["src"]
+
+[tool.coverage.report]
+exclude_also = [
+    'if __name__ == .__main__.:',
+    'if TYPE_CHECKING:',
+]
 
 [build-system]
 requires = ["setuptools"]

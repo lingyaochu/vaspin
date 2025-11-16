@@ -1,0 +1,16 @@
+{{TAGDEF|ELPH_KSPACING|[real]|0.5}}
+
+Description: The tag {{TAG|ELPH_KSPACING}} determines the <b>k</b> point mesh if the {{FILE|KPOINTS_ELPH}} file
+is not present.
+{{Available|6.5.0}}
+
+----
+
+For additional details of how the <b>k</b> point mesh is generated, see the documentation of the {{TAG|KSPACING}} tag.
+
+== Related tags and articles ==
+* {{TAG|ELPH_RUN}}
+* {{FILE|KPOINTS_ELPH}}
+* {{TAG|KPOINTS_OPT_MODE}}
+
+[[Category:INCAR tag]][[Category:Electron-phonon_interactions]]

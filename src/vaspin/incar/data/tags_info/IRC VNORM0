@@ -1,0 +1,18 @@
+{{DISPLAYTITLE:IRC_VNORM0}}
+{{TAGDEF|IRC_VNORM0|real | 0.002}}
+
+Description: The constant velocity vector (in &Aring;/fs) in an [[IRC calculations|IRC calculation]].
+
+-----
+
+In the damped-velocity-Verlet algorithm for [[IRC calculations]], the damping is realized via rescaling the velocity vector to a constant value (in &Aring;/fs) defined via the parameter {{TAG|IRC_VNORM0}}.
+
+== Related tags and articles ==
+{{TAG|IRC calculations}},
+{{TAG|IRC_DIRECTION }},
+{{TAG|IRC_STOP}},
+{{TAG|IRC_DELTA0}},
+{{TAG|IRC_MINSTEP}},
+{{TAG|IRC_MAXSTEP}}
+
+[[Category:INCAR tag]][[Category: Transition states]]

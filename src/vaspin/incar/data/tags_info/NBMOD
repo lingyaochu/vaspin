@@ -1,0 +1,40 @@
+{{TAGDEF|NBMOD|-3 {{!}} -2 {{!}} -1 {{!}} 0 {{!}} [positive integer]}}
+{{DEF|NBMOD|n| if {{TAG|IBAND}} is set and contains n values |-2| if {{TAG|EINT}} is set and {{TAG|IBAND}} is not set |-1| if neither {{TAG|EINT}} nor {{TAG|IBAND}} are set}}
+
+Description: {{TAG|NBMOD}} controls how bands are selected when computing [[Band-decomposed charge densities|partial charge densities]].
+
+----
+
+{{TAG|NBMOD}} is used with other tags to define the mode of band selection for partial charge densities in {{FILE|PARCHG}}, {{FILE|vaspout.h5}}, or {{FILE|CHGCAR}} files. There are several ways to set this tag.
+* {{TAG|NBMOD}} = n: Use n bands
+:If a positive integer is passed, {{TAG|NBMOD}} represents the number of values in the array {{TAG|IBAND}}. If {{TAG|IBAND}} is specified, {{TAG|NBMOD}} is set automatically to the number of values passed in {{TAG|IBAND}}.
+{{NB|tip|There is no good reason to set {{TAG|NBMOD}} to a positive integer since it will be overwritten regardless if {{TAG|IBAND}} is set or not. Use the {{TAG|IBAND}} tag alone to enter this mode.|:}}
+
+* {{TAG|NBMOD}} = 0: Use all bands
+:All bands, even unoccupied ones, are contributing to calculating the partial charge density. E.g. the resulting partial charge density in the {{FILE|PARCHG}} file will sum up to twice the value of the number of total bands {{TAG|NBANDS}}.
+
+* {{TAG|NBMOD}} = -1: Use all occupied bands
+: This mode writes the charge density of all occupied states to the {{FILE|CHGCAR}} file, and no {{FILE|PARCHG}} file is produced. In contrast to producing a {{FILE|CHGCAR}} file from the {{FILE|WAVECAR}} input without the partial charges methodology (e.g. by setting {{TAG|LPARD}} = .FALSE., {{TAG|ALGO}} = None, and {{TAG|NELM}} = 1), the [[Projector-augmented-wave_formalism#The_compensation_or_augmentation_density|augmentation occupancies]] is not included in the produced {{FILE|CHGCAR}} file for {{TAG|NBMOD}} = -1. However, the fine FFT grid's valence charge density is equivalent.
+
+* {{TAG|NBMOD}} = -2: Use an absolute energy interval to select contributing bands
+: The partial charge density is calculated for electrons in the energy interval specified by {{TAG|EINT}}.
+
+* {{TAG|NBMOD}} = -3: Use an energy interval to select contributing bands and add the Fermi energy <math>\epsilon_f</math> to the passed values
+: The partial charge density is calculated for electrons in the energy interval specified by {{TAG|EINT}}. In this mode, the values in {{TAG|EINT}} are interpreted as relative to the Fermi energy <math>\epsilon_f</math>. E.g. if {{TAG|EINT}} = -0.1 0.5 and <math>\epsilon_f</math> = 2.43, the chosen energy interval will range from 2.33 to 2.93 eV.
+
+== Related tags and articles ==
+{{TAG|LPARD}},
+{{TAG|IBAND}},
+{{TAG|EINT}},
+{{TAG|KPUSE}},
+{{TAG|LSEPB}},
+{{TAG|LSEPK}},
+{{TAG|LPARDH5}},
+{{FILE|PARCHG}},
+{{FILE|vaspout.h5}},
+[[Band-decomposed charge densities]]
+
+{{sc|NBMOD|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Charge density]]

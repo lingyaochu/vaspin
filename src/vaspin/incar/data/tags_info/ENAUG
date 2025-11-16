@@ -1,0 +1,20 @@
+{{TAGDEF|ENAUG|[real]|largest ''EAUG'' read from the {{FILE|POTCAR}} file}}
+
+Description: Specifies the cutoff energy of the plane-wave representation of the augmentation charges in eV.
+----
+{{TAG|ENAUG}} determines {{TAG|NGXF}}, {{TAG|NGYF}}, and {{TAG|NGZF}} in accordance with the {{TAG|PREC}} tag.
+{{NB|deprecated|{{TAG|ENAUG}} is considered as deprecated and should not be used anymore.}}
+{{NB|warning|Setting {{TAG|ENAUG}} has an effect only if {{TAG|PREC}} is set to one of the old settings (Low, Medium or High), otherwise it is ignored.}}
+
+== Related tags and articles ==
+{{TAG|NGXF}},
+{{TAG|NGYF}},
+{{TAG|NGZF}},
+{{TAG|ENCUT}},
+{{TAG|PREC}},
+{{TAG|PRECFOCK}}
+
+{{sc|ENAUG|Examples|Examples that use this tag}}
+
+
+[[Category:INCAR tag]][[Category:Projector-augmented-wave method]]

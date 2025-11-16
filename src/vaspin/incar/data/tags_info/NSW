@@ -1,0 +1,19 @@
+{{TAGDEF|NSW|[integer]|0}}
+
+Description: {{TAG|NSW}} sets the maximum number of ionic steps.
+----
+
+{{TAG|IBRION}} = 0:
+:{{TAG|NSW}} gives the number of steps in all [[molecular dynamics]] runs. It ''has'' to be supplied, otherwise VASP exits immediately after having started. We recommend splitting long MD runs containing ab-initio calculations into multiple calculations with {{TAG|NSW}}&lessapprox;20000. For {{TAG|ML_MODE}}=run larger values of {{TAG|NSW}} should be possible, but consider setting {{TAG|ML_OUTBLOCK}}.
+{{TAG|IBRION}} != 0:
+:In all minimization algorithms (quasi-Newton, conjugate gradient, and damped molecular dynamics) {{TAG|NSW}} defines the maximum number of ionic steps.
+
+Within each ionic step at most {{TAG|NELM}} electronic steps are performed. It is fewer if the convergence criterium set by {{TAG|EDIFF}} is met before. Forces and stresses are calculated according to the setting of {{TAG|ISIF}} for each ionic step.
+
+==Related tags and articles==
+
+[[structure optimization]], {{TAG|NBLOCK}}, {{TAG|KBLOCK}}, {{TAG|ML_OUTBLOCK}}
+
+{{sc|NSW|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Ionic minimization]][[Category:Molecular dynamics]]

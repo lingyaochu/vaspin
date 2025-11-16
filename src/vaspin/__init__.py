@@ -5,4 +5,5 @@ A Python package for handling VASP input/output files and structures.
 """
 
 from .core import Poscar, VaspOutcarParser
+from .incar import Incar
 from .utils import PosData, StrainTensor

@@ -1,0 +1,21 @@
+{{TAGDEF|HFSCREEN|[real]|0 (none)}}
+
+Description: {{TAG|HFSCREEN}} (in &Aring;<sup>-1</sup>) specifies the range-separation parameter in [[Hybrid functionals: formalism|range-separated hybrid functionals]].
+----
+In case {{TAG|LHFCALC}}=.TRUE., in combination with PBE potentials (or {{TAG|GGA}}=PE), attributing a value to {{TAG|HFSCREEN}} will switch from the PBE0 functional to, e.g., the closely related [[list_of_hybrid_functionals#HSE03|HSE03]] ({{TAG|HFSCREEN}}=0.3) or [[list_of_hybrid_functionals#HSE06|HSE06]] ({{TAG|HFSCREEN}}=0.2) functionals. It also needs to be set for dielectric-dependent hybrid functionals (DDH) and doubly screened hybrid (DSH) functionals, see {{TAG|LMODELHF}}.
+
+== Related tags and articles ==
+{{TAG|LMODELHF}},
+{{TAG|AEXX}},
+{{TAG|ALDAX}},
+{{TAG|ALDAC}},
+{{TAG|AGGAX}},
+{{TAG|AGGAC}},
+{{TAG|LTHOMAS}},
+{{TAG|LRHFCALC}},
+[[list_of_hybrid_functionals|List of hybrid functionals]],
+[[Hybrid_functionals:_formalism|Hybrid functionals: formalism]]
+
+{{sc|HFSCREEN|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:Hybrid_functionals]]

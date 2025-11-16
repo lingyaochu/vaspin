@@ -1,0 +1,24 @@
+{{TAGDEF|AMGGAC|[real]}}
+{{DEF|AMGGAC|1.0 | if {{TAG|LHFCALC}}<math>=</math>.FALSE. or {{TAG|AEXX}}<math>\neq</math>1.0 | 0.0 | if {{TAG|LHFCALC}}<math>=</math>.TRUE. and {{TAG|AEXX}}<math>=</math>1.0}}
+
+Description: {{TAG|AMGGAC}} is a parameter that multiplies the meta-GGA correlation functional (available as of VASP.6.4.0).
+----
+{{TAG|AMGGAC}} can be used as the fraction of  meta-GGA correlation in a Hartree-Fock/DFT hybrid functional.
+{{NB|mind|Note the difference with respect to {{TAG|AGGAC}}: {{TAG|AMGGAC}} multiplies the whole meta-GGA correlation functional, while {{TAG|AGGAC}} multiplies only the gradient-correction term of a GGA correlation functional.}}
+
+== Related tags and articles ==
+{{TAG|AEXX}},
+{{TAG|ALDAX}},
+{{TAG|ALDAC}},
+{{TAG|AGGAX}},
+{{TAG|AGGAC}},
+{{TAG|AMGGAX}},
+{{TAG|LHFCALC}},
+[[list_of_hybrid_functionals|List of hybrid functionals]],
+[[Hybrid_functionals:_formalism|Hybrid functionals: formalism]]
+
+{{sc|AMGGAC|Examples|Examples that use this tag}}
+
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:Hybrid_functionals]]

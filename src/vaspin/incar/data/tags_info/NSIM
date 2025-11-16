@@ -1,0 +1,20 @@
+{{TAGDEF|NSIM|[integer]|4}}
+
+Description: {{TAG|NSIM}} sets the number of bands that are optimized simultaneously by the RMM-DIIS algorithm.
+----
+The RMM-DIIS algorithm ({{TAG|IALGO}}=48) works in a blocked mode. {{TAG|NSIM}} bands are optimized at the same time. This allows to use matrix-matrix operations instead of matrix-vector operation for the evaluations of the non local projection operators in real space, and might speed up calculations on some machines. There should be no difference in the total energy and the convergence behavior between {{TAG|NSIM}}=1 and {{TAG|NSIM}}>1, only the performance should improve.
+
+== Related tags and articles ==
+{{TAG|IALGO}},
+{{TAG|NCORE}},
+{{TAG|NPAR}},
+{{TAG|LPLANE}},
+{{TAG|LSCALU}},
+{{TAG|KPAR}},
+{{TAG|LSCALAPACK}},
+{{TAG|LSCAAWARE}}
+
+{{sc|NSIM|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Performance]][[Category:parallelization]]

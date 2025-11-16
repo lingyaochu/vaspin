@@ -1,0 +1,124 @@
+{{TAGDEF|GGA|PE {{!}} RP {{!}} PS {{!}} AM {{!}} LIBXC {{!}} ...}}
+
+Default: The functional specified by {{TAG|LEXCH}} in the {{FILE|POTCAR}} if {{TAG|METAGGA}} and {{TAG|XC}} are also not specified.
+
+Description: Selects a LDA or GGA [[Exchange-correlation_functionals|exchange-correlation functional]].
+----
+<!--
+This tag was added to perform GGA calculations with pseudopotentials generated with conventional LDA reference configurations.
+-->
+{{NB| important| VASP recalculates the exchange-correlation energy inside the PAW sphere and corrects the atomic energies given by the {{FILE|POTCAR}} file. For this to work, the original LEXCH tag must not be modified in the {{FILE|POTCAR}} file.}}
+{{NB|mind|
+*When the OR, BO, MK, ML or CX GGA is used in combination with the nonlocal vdW-DF functional of Dion ''et al.''{{cite|dion:prl:2004}}, the GGA component of the correlation should in principle be turned off with {{TAG|AGGAC}}{{=}}0 (see {{TAG|nonlocal vdW-DF functionals}}).
+*The {{TAG|XC}} tag, available since VASP.6.4.3, can be used to specify any linear combination of LDA, {{TAG|GGA}} and {{TAG|METAGGA}} exchange-correlation functionals.}}
+<!--
+*The options in the last table allow to select range-separated ACFDT calculations, where a short-range local (DFT-like) exchange and correlation kernel is added to the long-range exchange and RPA correlation energy.
+-->
+
+==  Available functionals  ==
+
+This table lists the LDA and GGA functionals available in VASP. The names of functionals which end with "_X" and "_C" correspond to exchange-only and correlation functionals, respectively.
+
+{| class="sortable wikitable"
+|-
+! style="text-align:center;" style=width:6em | GGA= !! style="text-align:center;" style=width:3.5em | Type !! class="unsortable" | Description
+
+|-
+| style="text-align:center;"| LIBXC (or LI) || style="text-align:center;"| LDA/GGA || Any LDA or GGA from the external library Libxc.{{cite|marques:cpc:2012}}{{cite|lehtola:sx:2018}}{{cite|libxc}} It is necessary to have [[Makefile.include#Libxc_.28optional.29|Libxc >= 5.2.0 installed]] and VASP.6.3.0 or higher compiled with [[Precompiler_options#-DUSELIBXC|precompiler options]]. The {{TAG|LIBXC1}} and {{TAG|LIBXC2}} tags (where examples are shown) are also required.
+
+|-
+| style="text-align:center;"| CA (or PZ)<span style="color:blue"><sup>(1)</sup></span> || style="text-align:center;"| LDA || Slater exchange{{cite|dirac:mpcps:1930}} + Perdew-Zunger parametrization of Ceperley-Alder Monte Carlo correlation data.{{cite|ceperley1980}}{{cite|perdewzunger1981}}
+
+|-
+| style="text-align:center;"| PW92<span style="color:blue"><sup>(1)</sup></span> || style="text-align:center;"| LDA || Slater exchange{{cite|dirac:mpcps:1930}} + Perdew-Wang parametrization of Ceperley-Alder Monte Carlo correlation data.{{cite|ceperley1980}}{{cite|perdew1992}} Available since VASP.6.5.0.
+
+|-
+| style="text-align:center;"| SL<span style="color:blue"><sup>(1)</sup></span> || style="text-align:center;"| LDA || Slater exchange only.{{cite|dirac:mpcps:1930}} Available since VASP.6.4.3.
+
+|-
+| style="text-align:center;"| CA_C (or PZ_C) || style="text-align:center;"| LDA || Correlation-only Perdew-Zunger parametrization of Ceperley-Alder Monte Carlo correlation data.{{cite|ceperley1980}}{{cite|perdewzunger1981}} Available since VASP.6.4.3.
+
+|-
+| style="text-align:center;"| PW92_C || style="text-align:center;"| LDA || Correlation-only Perdew-Wang parametrization of Ceperley-Alder Monte Carlo correlation data.{{cite|ceperley1980}}{{cite|perdew1992}} Available since VASP.6.5.0.
+
+|-
+| style="text-align:center;"| VW<span style="color:blue"><sup>(1)</sup></span> || style="text-align:center;"| LDA || Slater exchange{{cite|dirac:mpcps:1930}} + Vosko-Wilk-Nusair correlation (VWN5).{{cite|vosko1980}}
+
+|-
+| style="text-align:center;"| HL<span style="color:blue"><sup>(1)</sup></span> || style="text-align:center;"| LDA || Slater exchange{{cite|dirac:mpcps:1930}} + Hedin-Lundqvist correlation.{{cite|hedin1971}}
+
+|-
+| style="text-align:center;"| WI<span style="color:blue"><sup>(1)</sup></span> || style="text-align:center;"| LDA || Slater exchange{{cite|dirac:mpcps:1930}} + Wigner correlation{{cite|Wigner:tfs:1938}} (Eq. (3.2) in Ref. {{cite|pines:ssp:1955}}).
+
+|-
+| style="text-align:center;"| PE || style="text-align:center;"| GGA || Perdew-Burke-Ernzerhof (PBE).{{cite|perdew:prl:1996}}
+
+|-
+| style="text-align:center;"| PBE_X || style="text-align:center;"| GGA || Exchange-only Perdew-Burke-Ernzerhof.{{cite|perdew:prl:1996}} Available since VASP.6.4.3.
+
+|-
+| style="text-align:center;"| PBE_C || style="text-align:center;"| GGA || Correlation-only Perdew-Burke-Ernzerhof.{{cite|perdew:prl:1996}} Available since VASP.6.4.3.
+
+|-
+| style="text-align:center;"| RE || style="text-align:center;"| GGA || Revised PBE from Zhang and Yang (revPBE).{{cite|zhang1998}}
+
+|-
+| style="text-align:center;"| RP || style="text-align:center;"| GGA || Revised PBE from Hammer ''et al''. (RPBE).{{cite|hammer1999}}
+
+|-
+| style="text-align:center;"| PS || style="text-align:center;"| GGA || Revised PBE for solids (PBEsol).{{cite|perdew:prl:2008}}
+
+|-
+| style="text-align:center;"| AM || style="text-align:center;"| GGA || Armiento-Mattsson (AM05).{{cite|armiento:prb:05}}{{cite|mattson:jcp:08}}{{cite|mattson:prb:09}}
+
+|-
+| style="text-align:center;"| 91<span style="color:blue"><sup>(1)</sup></span> || style="text-align:center;"| GGA || Perdew-Wang (PW91).{{cite|perdew:prb:1991}}
+
+|-
+| style="text-align:center;"| B3<span style="color:blue"><sup>(1)</sup></span> || style="text-align:center;"| GGA || B3LYP{{cite|stephens:jpc:1994}} with VWN3{{cite|vosko1980}} for LDA correlation.
+
+|-
+| style="text-align:center;"| B5<span style="color:blue"><sup>(1)</sup></span> || style="text-align:center;"| GGA || B3LYP{{cite|stephens:jpc:1994}} with VWN5{{cite|vosko1980}} for LDA correlation.
+
+|-
+| style="text-align:center;"| OR<span style="color:blue"><sup>(2)</sup></span> || style="text-align:center;"| GGA || optPBE exchange{{cite|klimes:jpcm:2010}} + PBE correlation.{{cite|perdew:prl:1996}}
+
+|-
+| style="text-align:center;"| BO<span style="color:blue"><sup>(2)</sup></span> || style="text-align:center;"| GGA || optB88 exchange{{cite|klimes:jpcm:2010}} + PBE correlation.{{cite|perdew:prl:1996}} {{TAGBL|PARAM1}}=0.1833333333 for <math>\beta</math> and {{TAGBL|PARAM2}}=0.22 for <math>\mu</math> also need to be specified.
+
+|-
+| style="text-align:center;"| MK<span style="color:blue"><sup>(2)</sup></span> || style="text-align:center;"| GGA || optB86b exchange{{cite|klimes:prb:2011}} + PBE correlation.{{cite|perdew:prl:1996}} The {{TAGBL|PARAM1}} and {{TAGBL|PARAM2}} tags can be used to modify the parameters <math>\mu</math> and <math>\kappa</math>, respectively.
+
+|-
+| style="text-align:center;"| ML<span style="color:blue"><sup>(2)</sup></span> || style="text-align:center;"| GGA || PW86R exchange{{cite|lee:prb:2010}} + PBE correlation.{{cite|perdew:prl:1996}}
+
+|-
+| style="text-align:center;"| CX<span style="color:blue"><sup>(2)</sup></span> || style="text-align:center;"| GGA || CX (LV-PW86r) exchange{{cite|berland:prb:2014}} + PBE correlation.{{cite|perdew:prl:1996}}
+
+|-
+| style="text-align:center;"| BF || style="text-align:center;"| GGA || BEEF (requires VASP compiled with [[Precompiler_options#-Dlibbeef|-Dlibbeef]]).{{cite|beef2012}}
+
+|}
+
+<span style="color:blue">(1)</span> The Slater LDA exchange includes relativistic effects.{{cite|macdonald:jpc:1979}}
+
+<span style="color:blue">(2)</span> The exchange component was designed in particular to be used as the exchange component of {{TAG|Nonlocal vdW-DF functionals}} and with {{TAG|AGGAC}}=0 such that only LDA is used for the local correlation, see [[Nonlocal_vdW-DF_functionals#List_of_nonlocal_vdW-DF_functionals|list of nonlocal vdW-DF functionals]].
+
+== Related tags and articles ==
+{{TAG|LIBXC1}},
+{{TAG|LIBXC2}},
+{{TAG|ALDAX}},
+{{TAG|ALDAC}},
+{{TAG|AGGAX}},
+{{TAG|AGGAC}},
+{{TAG|METAGGA}},
+{{TAG|XC}}
+
+{{sc|GGA|Examples|Examples that use this tag}}
+
+== References ==
+<references/>
+
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]]

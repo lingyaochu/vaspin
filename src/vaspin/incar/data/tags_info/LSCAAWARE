@@ -1,0 +1,23 @@
+{{TAGDEF|LSCAAWARE|[logical]}}
+{{DEF|LSCAAWARE|.TRUE.|if VASP is compiled with scaLAPACK support (precompiler flag -DscaLAPACK)|.FALSE.|otherwise}}
+
+Description: {{TAG|LSCAAWARE}} controls the distribution of the Hamilton matrix.
+
+----
+
+For {{TAG|LSCAAWARE}}=.TRUE., VASP distributes the Hamilton matrix among the MPI ranks.
+For {{TAG|LSCAAWARE}}=.FALSE., each MPI ranks allocates the complete Hamiltonain. In both cases {{TAG|LSCALAPACK}} decides if ScaLAPACK routines are used for diagonalization.
+
+== Related tags and articles ==
+{{TAG|NPAR}},
+{{TAG|NCORE}},
+{{TAG|LPLANE}},
+{{TAG|NSIM}},
+{{TAG|KPAR}},
+{{TAG|LSCALU}},
+{{TAG|LSCALAPACK}}
+
+{{sc|LSCAAWARE|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Performance]][[Category:parallelization]]

@@ -1,0 +1,15 @@
+{{DISPLAYTITLE:ML_LEATOM}}
+{{TAGDEF|ML_LEATOM|[logical]|.FALSE.}}
+
+Description: This term specifies whether the total atomic energy is written out or not.
+----
+
+This tag specifies whether the total atomic energy (potential energy plus kinetic energy) for each MD step is written out to the  {{TAG|ML_EATOM}} file. It also writes the atomic positions and lattice parameters at every MD step to this file.
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_WTOTEN}}
+
+{{sc|ML_LEATOM|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

@@ -1,0 +1,27 @@
+{{TAGDEF|AGGAC|[real]}}
+{{DEF|AGGAC|1.0 | if {{TAG|LHFCALC}}<math>=</math>.FALSE. or {{TAG|AEXX}}<math>\neq</math>1.0 | 0.0 | if {{TAG|LHFCALC}}<math>=</math>.TRUE. and {{TAG|AEXX}}<math>=</math>1.0}}
+
+Description: {{TAG|AGGAC}} is a parameter that multiplies the gradient correction in the GGA correlation functional.
+----
+{{TAG|AGGAC}} can be used as the fraction of gradient correction in the GGA correlation in a Hartree-Fock/DFT hybrid functional.
+{{NB|mind|
+*{{TAG|AGGAC}} is implemented for all functionals listed at {{TAG|GGA}} except AM05.
+*{{TAG|AGGAC}} is implemented for the functionals from Libxc (see {{TAG|LIBXC1}} for details).
+}}
+
+== Related tags and articles ==
+{{TAG|AEXX}},
+{{TAG|ALDAX}},
+{{TAG|ALDAC}},
+{{TAG|AGGAX}},
+{{TAG|AMGGAX}},
+{{TAG|AMGGAC}},
+{{TAG|LHFCALC}},
+[[list_of_hybrid_functionals|List of hybrid functionals]],
+[[Hybrid_functionals:_formalism|Hybrid functionals: formalism]]
+
+{{sc|AGGAC|Examples|Examples that use this tag}}
+
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:Hybrid_functionals]]

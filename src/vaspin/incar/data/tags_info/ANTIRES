@@ -1,0 +1,23 @@
+{{TAGDEF|ANTIRES|0 {{!}} 1 {{!}} 2|0}}
+
+Description: {{TAG|ANTIRES}} determines whether the Tamm-Dancoff approximation is used or not.
+
+----
+*{{TAG|ANTIRES}}=0 Tamm-Dancoff approximation (TDA)
+*{{TAG|ANTIRES}}=1 yields exact results at &omega;{{=}}0 at roughly the same cost  as TDA
+*{{TAG|ANTIRES}}=2 beyond Tamm-Dancoff, coupling between positive and negative frequencies
+
+VASP uses the procedures outlined in reference <ref name="Sander"/> to include contributions beyond TDA. Beyond-TDA calculations increase the computational time and memory requirements by typically a factor of 2.
+
+== Related tags and articles ==
+{{TAG|BSE calculations}}
+
+{{sc|ANTIRES|Examples|Examples that use this tag}}
+
+== References ==
+<references>
+<ref name="Sander">[http://journals.aps.org/prb/abstract/10.1103/PhysRevB.92.045209 T. Sander, E. Maggio and G. Kresse, Phys. Rev. B 92, 045209 (2015).]</ref>
+</references>
+----
+
+[[Category:INCAR tag]][[Category:Many-body perturbation theory]][[Category:Bethe-Salpeter equations]]

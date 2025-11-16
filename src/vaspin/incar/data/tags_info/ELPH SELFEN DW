@@ -1,0 +1,27 @@
+{{DISPLAYTITLE:ELPH_SELFEN_DW}}
+{{TAGDEF|ELPH_SELFEN_DW|[logical]|.FALSE.}}
+
+Description: Controls whether the Debye-Waller contribution is included in the calculation of the phonon-induced electron self-energy.
+{{Available|6.5.0}}
+
+----
+
+The phonon-induced electron self-energy has two contributions at second order in perturbation theory, the Fan-Migdal self-energy and the real-valued Debye-Waller self-energy.
+{{TAG|ELPH_SELFEN_DW}} controls the computation of the latter, while the former can be computed via {{TAG|ELPH_SELFEN_FAN}}.
+
+The result is reported individually for each self-energy accumulator in the {{FILE|vaspout.h5}} file as
+<pre>
+/results/electron_phonon/electrons/self_energy_1/selfen_dw
+</pre>
+{{NB|mind|The Debye-Waller self-energy is computed using the rigid-ion approximation{{cite|giustino:rmp:2017}}.}}
+
+==Related tags and articles==
+* [[Bandgap renormalization due to electron-phonon coupling|Bandstructure renormalization]]
+* [[Transport coefficients including electron-phonon scattering|Transport calculations]]
+* {{TAG|ELPH_RUN}}
+* {{TAG|ELPH_SELFEN_GAPS}}
+* {{TAG|ELPH_SELFEN_FAN}}
+
+[[Category:INCAR tag]][[Category:Electron-phonon_interactions]]
+
+== References ==

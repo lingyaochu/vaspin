@@ -1,0 +1,17 @@
+{{DISPLAYTITLE:VDW_S6}}
+{{TAGDEF|VDW_S6|[real]}}
+
+Description: {{TAG|VDW_S6}} defines the global scaling factor <math>s_{6}</math>.
+----
+{{TAG|VDW_S6}} sets the global scaling factor <math>s_{6}</math> for the [[DFT-D2]], [[DFT-D4]], [[DFT-ulg]], and [[Tkatchenko-Scheffler_method|Tkatchenko-Scheffler]] methods.
+
+== Related tags and articles ==
+[[DFT-D2]],
+[[DFT-D4]],
+[[DFT-ulg]],
+[[Tkatchenko-Scheffler_method|Tkatchenko-Scheffler method]]
+
+{{sc|VDW_S6|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:van der Waals functionals]]

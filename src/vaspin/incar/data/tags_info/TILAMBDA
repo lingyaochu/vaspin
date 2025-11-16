@@ -1,0 +1,11 @@
+{{DISPLAYTITLE:TILAMBDA}}
+{{TAGDEF|TILAMBDA|real  | 0.0}}
+
+Description: {{TAG|TILAMBDA}} defines the coupling parameter <math>\lambda</math> used in [[Thermodynamic integration#Thermodynamic integration with harmonic reference|Thermodynamic integration with harmonic reference]]. The value of <math>\lambda</math> must be from the inverval <math>\langle 0, 1 \rangle</math>.
+
+How to run thermodynamic integration calculations is given [[Thermodynamic integration calculations#Alternative way of thermodynamic integration for harmonic solid|here]].
+
+== Related tags and articles ==
+{{TAG|HESSEMAT}}, [[ICONST]], [[REPORT]]
+
+[[Category:INCAR tag]][[Category:Advanced molecular-dynamics sampling]]

@@ -1,0 +1,15 @@
+{{TAGDEF|IGPAR|[integer]}}
+
+Description: {{TAG|NPPSTR}} specifies the number of k-points on the strings in the {{TAG|IGPAR}} direction.
+
+----
+
+{{TAG|NPPSTR}} specifies the number of k-points on the strings <math>\bold{k}_{j} = \bold{k}_{\perp} + j\bold{G}_{\parallel}/\mathrm{NPPSTR} </math> (with <math> j=0,..,\mathrm{NPPSTR}-1</math>). See also {{TAG|LBERRY}}.
+
+== Related tags and articles ==
+{{TAG|IGPAR}}, {{TAG|LBERRY}}
+
+{{sc|NPPSTR|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Linear response]][[Category:Dielectric properties]][[Category:Berry phases]]

@@ -1,0 +1,32 @@
+{{DISPLAYTITLE:ELPH_SELFEN_KPTS}}
+{{TAGDEF|ELPH_SELFEN_KPTS|[real array]|All k-points}}
+
+Description: Computes the electron self-energy due to electron-phonon for a list of k-points specified by their fractional coordinates.
+{{Available|6.5.0}}
+
+----
+
+For example, to select 4 different <b>k</b>-points we specify their coordinates in the {{FILE|INCAR}} file
+ {{TAGBL|ELPH_SELFEN_KPTS}} = \
+   0.0  0.0  0.0 \
+   0.5  0.5  0.0 \
+   0.5  0.5  0.0 \
+   0.5  0.75 0.25
+
+The matching of the user input coordinates with the ones generated from the {{FILE|KPOINTS_ELPH}} file in VASP is done by looking at the closest point in the full Brillouin zone, which is then mapped to the point in the irreducible Brillouin zone.
+The user should always check whether the matching found and reported in the {{FILE|OUTCAR}} is correct.
+
+This tag can be used in combination with {{TAG|ELPH_SELFEN_BAND_START}} and {{TAG|ELPH_SELFEN_BAND_STOP}} to select the calculation of the electron-phonon self-energy for a particular set of <b>k</b> points and bands.
+
+Instead of specifying the reduced coordinates, one can specify the index of the <b>k</b> point appearing the in irreducible Brillouin zone list using {{TAG|ELPH_SELFEN_IKPT}}.
+
+==Related tags and articles==
+* {{TAG|ELPH_RUN}}
+* {{FILE|KPOINTS_ELPH}}
+* {{TAG|ELPH_SELFEN_GAPS}}
+* {{TAG|ELPH_SELFEN_BAND_START}}
+* {{TAG|ELPH_SELFEN_BAND_STOP}}
+* {{TAG|ELPH_SELFEN_IKPT}}
+
+
+[[Category:INCAR tag]][[Category:Electron-phonon_interactions]]

@@ -1,0 +1,30 @@
+{{TAGDEF|CMBJ|[real (array)]|calculated self-consistently}}
+
+Description: defines the <math>c</math> parameter in the MBJ potential.
+----
+
+The {{TAG|CMBJ}} tag can be set in the following ways:
+*Specify a constant that is used at every point of space <math>\mathbf{r}</math><pre>CMBJ = c</pre>
+
+*Specify one entry per atomic type<pre>CMBJ = c_1 c_2 .. c_n</pre> where the order and number <math>n</math> is in accordance with atomic types in your {{FILE|POSCAR}} file. The MBJ exchange potential at a point <math>\mathbf{r}</math> will then be calculated using the parameter <math>c_{i}</math> belonging to the atomic species of the atomic site nearest to <math>\mathbf{r}</math>.
+
+If {{TAG|CMBJ}} is not set, <math>c</math> is calculated at each electronic step as the average of <math>\left\vert\nabla n\right\vert/n</math> in the unit cell, as explained in the description of the {{TAG|METAGGA}} tag.
+
+== Related tags and articles ==
+{{TAG|METAGGA}},
+{{TAG|CMBJA}},
+{{TAG|CMBJB}},
+{{TAG|CMBJE}},
+{{TAG|SMBJ}},
+{{TAG|RSMBJ}},
+{{TAG|LASPH}},
+{{TAG|LMAXTAU}},
+{{TAG|LMIXTAU}}
+
+{{sc|CMBJ|Examples|Examples that use this tag}}
+
+== References ==
+<references/>
+
+----
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]]

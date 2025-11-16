@@ -1,0 +1,22 @@
+{{DISPLAYTITLE:SPRING_K}}
+{{TAGDEF|SPRING_K|[real (array)]}}
+
+Description: Force constant for harmonic bias potential.
+----
+The parameter {{TAG|SPRING_K}} defines force constants (<math>\kappa_{\mu}</math>) for the harmonic bias of the following form:
+
+::<math>
+\tilde{V}(\xi_1,\dots,\xi_{M_8}) = \sum_{\mu=1}^{M}\frac{1}{2}\kappa_{\mu} (\xi_{\mu}(q)-\xi_{0\mu})^2 \;
+</math>
+
+where the sum runs over all (<math>M_8</math>) coordinates the potential acts upon (<math>\xi_{\mu}(q)</math>), which are defined in the {{FILE|ICONST}} file by setting the <code>status</code> to 8.
+The units of <math>\kappa_{\mu}</math> are <math>eV/uc</math> where <math>uc</math> units of coordinate the potential acts upon (e.g., <math>{\AA}</math> for coordinates with <code>flag</code> R, <math>rad.</math> for coordinates with <code>flag</code> A, dimensionless for coordinates with <code>flag</code> W, etc...)
+The number of items defined via {{TAG|SPRING_K}} must be equal to <math>M_8</math>, otherwise the calculation terminates with an error message.
+
+== Related tags and articles ==
+{{TAG|SPRING_R0}},
+{{TAG|SPRING_V0}},
+{{FILE|ICONST}},
+{{TAG|Biased molecular dynamics}}
+----
+[[Category:INCAR tag]][[Category:Advanced molecular-dynamics sampling]]

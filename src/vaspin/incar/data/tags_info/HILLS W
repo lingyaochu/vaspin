@@ -1,0 +1,24 @@
+{{DISPLAYTITLE:HILLS_W}}{{TAGDEF|HILLS_W|[Real]|<math>10^{-3}</math>}}
+
+Description: {{TAG|HILLS_W}} specifies the width of the Gaussian hill (in units of the corresponding collective variable) used in metadynamics (in case VASP was compiled with [[Precompiler_flags|-Dtbdyn]]).
+----
+In [[Metadynamics|metadynamics]] ({{TAG|MDALGO}}=11 {{!}} 21), the bias potential is given as
+:<math>
+\tilde{V}(t,\xi) = h \sum_{i=1}^{\lfloor t/t_G \rfloor} \exp{\left\{ -\frac{|\xi^{(t)}-\xi^{(i \cdot t_G)}|^2}{2
+w^2} \right\}}.
+</math>
+Thre parameters ({{TAG|HILLS_H}}, {{TAG|HILLS_W}}, and {{TAG|HILLS_BIN}}) must be provided by the user.
+
+The width of the Gaussian hills  <math>w</math> (in units of the corresponding collective variable) is set by {{TAG|HILLS_W}}.
+
+== Related tags and articles ==
+[[:Category:Metadynamics|Metadynamics]],
+{{TAG|HILLS_H}},
+{{TAG|HILLS_BIN}},
+{{FILE|HILLSPOT}},
+{{TAG|MDALGO}}
+
+{{sc|HILLS_W|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Advanced molecular-dynamics sampling]]

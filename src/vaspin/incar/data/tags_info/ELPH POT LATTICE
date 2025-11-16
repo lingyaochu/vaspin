@@ -1,0 +1,26 @@
+{{DISPLAYTITLE:ELPH_POT_LATTICE}}
+{{TAGDEF|ELPH_POT_LATTICE|[3x3 real]}}
+
+Description: Allows specifying an alternative primitive cell for the mapping of the electron-phonon potential.
+{{Available|6.5.0}}
+
+----
+
+Once the electron-phonon potential [[Electron-phonon_potential_from_supercells|has been computed in the supercell]], it needs to be mapped to the primitive cell.
+This is done via {{TAGO|ELPH_POT_GENERATE|True}}.
+By default, VASP performs the mapping for the primitive cell that is found by the symmetry routines and that is reported in the {{FILE|OUTCAR}} file.
+In cases where the primitive cell needs to be specified manually, {{TAG|ELPH_POT_LATTICE}} can be used.
+
+{{TAGO|ELPH_POT_LATTICE|a1x a1y a1z a2x a2y a2z a3x a3y a3z}} specifies the three primitive lattice vectors <math>\mathbf{a}_1</math>, <math>\mathbf{a}_2</math> and <math>\mathbf{a}_3</math> in Cartesian coordinates.
+These lattice vectors are then used to construct the primitive-cell information in the {{FILE|phelel_params.hdf5}} file.
+{{NB|mind|The supplied lattice vectors must span a valid primitive cell of the supercell or the code will exit with an error.}}
+{{NB|tip|The primitive cell used for mapping is also written to the {{FILE|CONTCAR_ELPH}} file, which can conveniently be used as the {{FILE|POSCAR}} input for the subsequent electron-phonon calculation. This ensures that the primitive-cell calculation is consistent with the information in the {{FILE|phelel_params.hdf5}} file.}}
+
+==Related tags and articles==
+* {{TAG | ELPH_POT_GENERATE}}
+* {{TAG | ELPH_POT_FFT_MESH}}
+* {{FILE | phelel_params.hdf5}}
+* {{FILE | CONTCAR_ELPH}}
+* [[Electron-phonon potential from supercells]]
+
+[[Category:INCAR tag]][[Category:Electron-phonon_interactions]]

@@ -1,0 +1,15 @@
+{{DISPLAYTITLE:ML_ICOUPLE}}
+{{TAGDEF|ML_ICOUPLE|[integer array]}}
+
+Description: This tag specifies the atoms where the coupling parameter is introduced to calculate the chemical potential within the machine learning force field method.
+----
+
+Atom are ordered according to the {{FILE|POSCAR}} file and indices start with index 1. For thermodynamic integration calculations please have a look at the tag {{TAG|ML_LCOUPLE}}.
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_LCOUPLE}}, {{TAG|ML_NATOM_COUPLED}}, {{TAG|ML_RCOUPLE}}
+
+{{sc|ML_ICOUPLE|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]

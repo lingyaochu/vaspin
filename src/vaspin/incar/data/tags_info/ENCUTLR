@@ -1,0 +1,21 @@
+{{DISPLAYTITLE:ENCUTLR}}
+{{TAGDEF|ENCUTLR|[real]| 50 eV}}
+
+Description: Reciprocal space cutoff for the treatment of the long-range contribution.
+{{Available|6.5.0}}
+
+----
+
+Similar to the [[Phonons:_Theory#Long-range_interatomic_force_constants_(LO-TO_splitting)|treatment of the long-range part of the force-constants]], the potential and the PAW strengths also require a special treatment{{cite|engel:prb:2022}} in polar materials.
+The correction scheme involves an Ewald summation over reciprocal lattice vectors that converges rapidly in reciprocal space.
+{{TAG|ENCUTLR}} controls the number of G-vectors included in the Ewald sum in the same way as {{TAG|ENCUT}} controls the number of G-vectors (plane-wave components) of the electronic Kohn-Sham orbitals.
+
+==Related tags and articles==
+* {{TAG|IFC_LR}}
+* {{TAG|ELPH_LR}}
+* {{TAG|PHON_G_CUTOFF}}
+
+[[Category:INCAR tag]][[Category:Electron-phonon_interactions]]
+
+== References ==
+<references/>

@@ -1,0 +1,38 @@
+{{TAGDEF|LHFCALC|.TRUE. {{!}} .FALSE. |.FALSE.}}
+
+Description: {{TAG|LHFCALC}} specifies whether a Hartree-Fock/DFT hybrid functional type calculation is performed.
+----
+If one does not specifically request a particular hybrid functional (see {{TAG|AEXX}}, {{TAG|ALDAX}}, {{TAG|ALDAC}}, {{TAG|AGGAX}}, {{TAG|AGGAC}}, {{TAG|AMGGAX}}, {{TAG|AMGGAC}}, and the [[list_of_hybrid_functionals|list_of_hybrid_functionals]]) VASP will default to the [[list_of_hybrid_functionals#PBE0|PBE0 hybrid functional]].
+
+It is recommended to select a "direct optimization" algorithm for HF/DFT hybrid functonal type calculations, i.e., {{TAG|ALGO}}=Damped ({{TAG|IALGO}}=53) or {{TAG|ALGO}}=All ({{TAG|IALGO}}=58) in the {{FILE|INCAR}} file.
+
+The blocked-Davidson algorithm {{TAG|ALGO}}=Normal is, with certain caveat, also supported, whereas calculations for the other algorithms ({{TAG|ALGO}}=Fast) are not properly supported (note: no warning is printed). The blocked-Davidson algorithm ({{TAG|ALGO}}=Normal) is generally rather slow, and in many cases the Pulay mixer will be unable to determine the proper ground-state. We hence recommend to select the blocked-Davidson algorithm only in combination with straight mixing or a Kerker like mixing (see the [[density_mixing|section on mixing]]). The following combination have been successfully applied for small and medium sized systems
+
+ {{TAG|LHFCALC}} = .TRUE. ; {{TAG|ALGO}} = Normal ; {{TAG|IMIX}} = 1 ; {{TAG|AMIX}} = a
+
+Decrease the parameter a until convergence is reached.
+
+In most cases, however, it is recommended to use the "Damped" algorithm with suitably chosen timestep. The following setup for the electronic optimization works reliably in most cases:
+
+ {{TAG|LHFCALC}} = .TRUE. ; {{TAG|ALGO}} = Damped ; {{TAG|TIME}} = 0.5
+
+If convergence is not obtained, it is recommended to reduce the timestep {{TAG|TIME}}.
+
+== Related tags and articles ==
+{{TAG|AEXX}},
+{{TAG|ALDAX}},
+{{TAG|ALDAC}},
+{{TAG|AGGAX}},
+{{TAG|AGGAC}},
+{{TAG|AMGGAX}},
+{{TAG|AMGGAC}},
+{{TAG|HFSCREEN}},
+{{TAG|LTHOMAS}},
+{{TAG|LRHFCALC}},
+[[list_of_hybrid_functionals|List of hybrid functionals]],
+[[Hybrid_functionals:_formalism|Hybrid functionals: formalism]]
+
+{{sc|LHFCALC|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:Hybrid_functionals]]

@@ -1,0 +1,18 @@
+{{DISPLAYTITLE:LNMR_SYM_RED}}
+{{TAGDEF|LNMR_SYM_RED| .TRUE. {{!}} .FALSE. | .FALSE.}}
+
+Description: discard symmetry operations that are not consistent with the way ''k''-space derivatives are calculated in the linear-response calculations of chemical shifts.
+----
+
+The star on which the ''k''-space derivative is calculated is oriented along the cartesian directions in ''k'' space. If the symmetry operations in ''k'' space do not map this star onto itself, erroneous results can be obtained. To check for such operations, set {{TAG|LNMR_SYM_RED}}=.TRUE.. VASP then disregards such operations, and the resulting first Brillouin zone (IBZ) is larger. This is only relevant if the use of symmetry is switched on, i.e. {{TAGO|ISYM|0|op=>}}. In case of any doubt, set {{TAG|LNMR_SYM_RED}}=.TRUE.
+{{NB|warning|It matters how the real-space-lattice vectors are set up relative to the cartesian coordinates in the {{FILE|POSCAR}} file.}} It determines the orientation of the ''k''-space star and, hence, can affect the efficiency via the number of ''k''-points in the IBZ.
+
+== Related tags and articles ==
+{{TAG|LCHIMAG}},
+{{TAG|DQ}},
+{{TAG|ICHIBARE}},
+{{TAG|NLSPLINE}}
+
+{{sc|LNMR_SYM_RED|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:NMR]][[Category:Symmetry]]

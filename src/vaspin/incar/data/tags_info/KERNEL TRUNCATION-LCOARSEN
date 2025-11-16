@@ -1,0 +1,17 @@
+{{TAGDEF|KERNEL_TRUNCATION/LCOARSEN| .True. {{!}} .False.|.True.}}
+
+Description: {{TAG|KERNEL_TRUNCATION/LCOARSEN}} speeds up computation of the local potential in the kernel truncation method by coarsening the charge density before padding it
+----
+
+Kernel truncation methods pad the computational cell with vacuum.
+This padded cell is expensive to compute due to FFTs being performed on a larger grid.
+The {{TAG|KERNEL_TRUNCATION/LCOARSEN}} method selectively replaces the long range potential with the truncated potential instead of computing the entire potential on a padded grid.
+This selective replacement of the potential bypasses the need for padding, speeding up the computation of the kernel truncation methods.
+{{NB|mind|IF {{TAG|KERNEL_TRUNCATION/LTRUNCATE}} is switched off, all other KERNEL_TRUNCATION tags, i.e. {{TAG|KERNEL_TRUNCATION/IDIMENSIONALITY}}, {{TAG|KERNEL_TRUNCATION/LCOARSEN}}, and {{TAG|KERNEL_TRUNCATION/ISURFACE}} will be ignored.}}
+
+== Related tags and articles ==
+{{TAG|KERNEL_TRUNCATION/LTRUNCATE}},
+{{TAG|KERNEL_TRUNCATION/IDIMENSIONALITY}},
+{{TAG|KERNEL_TRUNCATION/ISURFACE}}
+
+[[Category:INCAR tag]][[Category:Electrostatics]]

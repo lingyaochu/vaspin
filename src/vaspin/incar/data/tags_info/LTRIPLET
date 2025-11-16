@@ -1,0 +1,32 @@
+{{TAGDEF|LTRIPLET|.TRUE. {{!}} .FALSE.}}
+{{DEF|LTRIPLET|.FALSE.|}}
+
+Description: {{TAG|LTRIPLET}} selects a triplet ansatz for [[:Category:Bethe-Salpeter equations|Bethe-Salpeter-equations]] (BSE) calculations. This is synonymous to  {{TAG|LHARTREE}} = .FALSE.
+----
+
+For a usual BSE calculation ({{TAG|LHARTREE}}=.TRUE.; {{TAG|LTRIPLET}} = .FALSE.), the excited state corresponds to a singlet if the ground state is not spin-polarized ({{TAG|ISPIN}}=1) or anti-ferromagnetic ({{TAG|ISPIN}}=2, total magnetic moment 0). This is so because the ansatz for the BSE calculation involves a hole and an electron pair prepared within each spin channel. For instance, an electron with up spin is removed from the ground-state determinant and placed with the same spin into a previously unoccupied orbital. If there are no separate spin channels this ansatz results in a net spin-zero, which corresponds to a singlet state.
+
+If {{TAG|LTRIPLET}}=.TRUE., VASP assumes that an ''up'' electron is removed from the ground-state determinant and placed as a ''down'' electron into a previously unoccupied orbital (spin flip). This ansatz corresponds to a triplet state as it has a net spin of one. Without spin-orbit coupling ({{TAG|LSORBIT}} = .FALSE.), the transition probability from the singlet ground state to the triplet solutions will be exactly zero. These excitations correspond to dark, potentially long-lived triplet excitons. However, VASP calculates the transition probabilities incorrectly, by assuming that a spin-flip excitation has the same transition probabilities as a usual singlet excitation.
+The reported transition probabilities ("optical transitions" in {{TAG|vasprun.xml}}) are hence incorrect; they should be all zero. Likewise, the contributions to the dielectric function are zero for triplet excitations,
+and incorrectly reported in the {{TAG|vasprun.xml}} file.
+
+If a non-magnetic material is calculated using {{TAG|ISPIN}}=2 for both the groundstate and BSE calculation, and a usual BSE calculation is performed ({{TAG|LHARTREE}}=.TRUE.; {{TAG|LTRIPLET}} = .FALSE.), all
+singlet transitions as well as one set of the triplet excitations (those with <math> m_S=0</math> ) are calculated. All triplet transitions will have zero transition probabilities. If {{TAG|LTRIPLET}} = .TRUE. is set for the BSE calculation, the other two sets of triplet excitations (those with <math> m_S=1</math> and <math> m_S=-1</math>) are determined. Note that as for {{TAG|ISPIN}}=1 for {{TAG|ISPIN}}=2 and  {{TAG|LTRIPLET}} = .FALSE., incorrect non-zero transition probabilities are reported in the {{TAG|vasprun.xml}} file (they should be all exactly zero, since the underlying pair states fed into the BSE can not be excited by light).
+
+To obtain meaningful transition probabilities for the singlet and triplet excitations, include spin-orbit coupling by setting {{TAG|LSORBIT}} = .TRUE. in the {{FILE|INCAR}} file throughout the calculation, i.e., for the ground-state and BSE calculation.  In this case, the singlet and all three sets of triplet excitations are calculated simultaneously, and proper transition probabilities are assigned to each transition. Small transition probabilities might be observed even for triplet excitations as a result of spin-orbit coupling. {{TAG|LTRIPLET}} = .TRUE. should not be used for calculations including spin-orbit coupling.
+{{NB|warning| {{TAG|LTRIPLET}}{{=}}.TRUE. has not been extensively tested in combination with spin-polarized ground states ({{TAG|ISPIN}}{{=}}2).}}
+{{NB|warning| We are not sure whether the [[BSEFATBAND]] approach can be combined with the {{TAG|LTRIPLET}} tag.}}
+
+== Related tags and articles==
+{{TAG|LHARTREE}},
+{{TAG|ISPIN}},
+{{TAG|LSORBIT}},
+[[BSE calculations]]
+
+{{sc|LTRIPLET|Examples|Examples that use this tag}}
+
+== References ==
+<references/>
+----
+
+[[Category:INCAR tag]][[Category:Many-body perturbation theory]][[Category:Bethe-Salpeter equations]]

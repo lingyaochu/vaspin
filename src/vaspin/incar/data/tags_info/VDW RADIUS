@@ -1,0 +1,19 @@
+{{DISPLAYTITLE:VDW_RADIUS}}
+{{TAGDEF|VDW_RADIUS|[real]|50}}
+
+Description: Defines the cutoff radius (in <math>\AA</math>) for the van der Waals pair interactions.
+----
+
+{{TAG|VDW_RADIUS}} sets the cutoff radius for the van der Waals pair interactions in <math>\AA</math> for the [[DFT-D2]], [[DFT-D3]], [[DFT-ulg]], [[DDsC_dispersion_correction|DDsC]], and [[Tkatchenko-Scheffler_method|Tkatchenko-Scheffler]] methods.
+
+== Related tags and articles ==
+[[DFT-D2]],
+[[DFT-D3]],
+[[DFT-ulg]],
+[[DDsC_dispersion_correction|DDsC]],
+[[Tkatchenko-Scheffler_method|Tkatchenko-Scheffler method]]
+
+{{sc|VDW_RADIUS|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:van der Waals functionals]]

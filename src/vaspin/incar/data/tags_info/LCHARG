@@ -1,0 +1,11 @@
+{{TAGDEF|LCHARG|[logical]|.NOT.{{TAG|LH5}}}}
+
+Description: {{TAG|LCHARG}} determines whether the charge densities (files {{FILE|CHGCAR}} and {{FILE|CHG}}) are written.
+
+== Related tags and articles ==
+{{TAG|LWAVE}}, {{TAG|LWAVEH5}}, {{TAG|LCHARGH5}}, {{TAG|LH5}}
+
+
+{{sc|LCHARG|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Charge density]]

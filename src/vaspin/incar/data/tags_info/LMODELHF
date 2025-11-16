@@ -1,0 +1,71 @@
+{{TAGDEF|LMODELHF|.TRUE. {{!}} .FALSE.|.FALSE.}}
+
+Description: {{TAG|LMODELHF}} selects dielectric-dependent hybrid functionals  with full exchange in the short-range, and {{TAG|AEXX}} in the long-range.
+----
+{{TAG|LMODELHF}}=.TRUE. selects the range separated hybrid functional suggested in Ref. {{cite|chen2018nonempirical}}
+and Ref. {{cite|cui2018doubly}} under the name dielectric-dependent hybrid functionals (DDH) and  doubly screened hybrid (DSH) functionals, respectively. These two hybrid functionals are both based on a common model for the dielectric function, but differ in the way how the range-separation parameters are obtained from first principles calculations. Their connection and performance have been discussed for instance in Ref. {{cite|liu2019assessing}}. In principle,
+they can be considered to be a smartly constructed approximation to COH-SEX (local Coulomb hole plus screened exchange),
+albeit fulfilling many important constraints that the exact exchange correlation functional must observe.
+
+The corresponding functional has been available in VASP since VASP.5.2 released in 2009 (before the two publications), although the gradient contribution had been erroneously implemented in all VASP.5 releases and is only correct in VASP.6. The related bug fix has been made available by the authors of Ref. {{cite|cui2018doubly}}. The nonlocal exchange part of the functional has also been used and documented in Ref. {{cite|bokdam:scr:2016}} and is covered in [[Improving the dielectric function]].
+
+Typically the user will need to set the following tags in the INCAR file:
+
+ {{TAGBL|LHFCALC}} = .TRUE.
+ {{TAGBL|LMODELHF}} = .TRUE.
+ {{TAGBL|HFSCREEN}} = 1.26
+ {{TAGBL|AEXX}} = 0.1
+
+In this case, {{TAG|AEXX}} specifies the amount of exact exchange in the long range, that is for short wave vectors (<math> \mathbf{G} \to 0 </math>). In the short range, that is for large wave vectors, always the full nonlocal exchange is used. The {{TAG|HFSCREEN}} determines how quickly the nonlocal exchange changes from {{TAG|AEXX}} to 1.
+{{NB|mind|If {{TAG|LMODELHF}}{{=}}.TRUE., then {{TAG|LHFCALC}}{{=}}.TRUE. is automatically set.}}
+
+Specifically, in VASP, the  Coulomb kernel <math> 4 \pi e^2 / (\mathbf{q}+\mathbf{G})^2</math> in the exact exchange is multiplied by a model for the dielectric function <math> \epsilon^{-1} (\mathbf{q}+\mathbf{G})</math>:
+
+:<math> \epsilon^{-1} (\mathbf{q}+\mathbf{G})=1-(1-{{\varepsilon}_{\infty}^{-1}})\text{exp}(-\frac{|\mathbf{q+G}|^2}{4{\mu}^2})</math>.
+
+where <math> \mu  </math> corresponds to {{TAG|HFSCREEN}}, and  <math> {{\varepsilon}_{\infty}^{-1}} </math> is specified by {{TAG|AEXX}}. In real space this correspond to a Coulomb kernel
+:<math> V(r) =(1-(1-{{\varepsilon}_{\infty}^{-1}})\text{erf}( {\mu} r)) \frac{e^2}{r} </math>.
+
+
+The remaining part of the exchange is handled by an appropriate semi-local exchange correlation functional. For further detail we refer to the literature listed below.
+
+Typical values for {{TAG|HFSCREEN}} are listed in the table below
+ AlP  1.24
+ AlAs 1.18
+ AlSb 1.13
+ BN   1.7
+ CdO  1.34
+ CdS  1.19
+ CdSe 1.18
+ CdTe 1.07
+ C    1.70
+ GaN  1.39
+ GaP  1.24
+ GaAs 1.18
+ GaSb 1.12
+ Ge   1.18
+ InP  1.14
+ InAs 1.09
+ InSb 1.05
+ LiF  1.47
+ MgO  1.39
+ SiC  1.47
+ Si   1.26
+ ZnO  1.34
+ ZnS  1.27
+ ZnSe 1.20
+ ZnTe 1.12
+These values have been obtained from fits of the dielectric function using the Nanoquanta kernel and partially self-consistent GW calculations as used in Ref. {{cite|grueneis2014ionization}}. The values can be also estimated from simple dimensional scaling relations of the valence electron density. Furthermore band gap predictions are not very sensitive to the choice of {{TAG|HFSCREEN}}.
+== Related tags and articles ==
+{{TAG|LHFCALC}},
+{{TAG|HFSCREEN}},
+{{TAG|AEXX}},
+[[Hybrid functionals: formalism#Thomas-Fermi exponential screening with short-range Hartree-Fock exchange|Thomas-Fermi screening]],
+[[list_of_hybrid_functionals|List of hybrid functionals]],
+[[Hybrid_functionals:_formalism|Hybrid functionals: formalism]],
+
+== References ==
+<references/>
+
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]][[Category:Hybrid_functionals]]

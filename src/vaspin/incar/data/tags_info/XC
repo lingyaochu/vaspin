@@ -1,0 +1,61 @@
+{{TAGDEF|XC|Combination of functionals}}
+{{DEF|XC|{{TAG|GGA}}|if the {{TAG|GGA}} tag is used|{{TAG|METAGGA}}|if the {{TAG|METAGGA}} tag is used|The functional specified by {{TAG|LEXCH}} in the {{TAG|POTCAR}} file|if neither {{TAG|GGA}} nor {{TAG|METAGGA}} is used}}
+
+Description: Specifies a combination of exchange-correlation functionals.
+----
+A combination of semilocal (LDA, GGA, and METAGGA) functionals can be set with the {{TAG|XC}} tag, which provides much more flexibility in the choice of the functional compared to the {{TAG|GGA}} and {{TAG|METAGGA}} tags. The functionals that can be combined are the functionals implemented in VASP (listed at {{TAG|GGA}} and {{TAG|METAGGA}}) and the functionals implemented in Libxc{{cite|marques:cpc:2012}}{{cite|lehtola:sx:2018}}{{cite|libxc}} (listed on the Libxc website{{cite|libxc_list}}). The combination can consist of up to 100 components; for each, a multiplication factor can be set with the {{TAG|XC_C}} tag.
+{{NB|mind|This tag is available since VASP.6.4.3.}}
+
+== Examples of {{FILE|INCAR}} ==
+
+*50% of PBE{{cite|perdew:prl:1996}} and 50% of PBEsol{{cite|perdew:prl:2008}}
+ {{TAG|XC}} = PE PS
+ {{TAG|XC_C}} = 0.5 0.5
+
+*SCAN exchange{{cite|sun:prl:15}} combined with PBE correlation{{cite|perdew:prl:1996}}
+ {{TAG|XC}} = SCAN_X PBE_C
+
+*70% of B88{{cite|becke:pra:1988}} (from Libxc) and 30% of PBE{{cite|perdew:prl:1996}} for exchange and 100% of LYP (from Libxc) for correlation{{cite|lee:prb:1988}}
+ {{TAG|XC}} = GGA_X_B88 PBE_X GGA_C_LYP
+ {{TAG|XC_C}} = 0.7 0.3 1.0
+
+*15% of HF, 63.75% of PBE{{cite|perdew:prl:1996}}, and 21.25% of B88{{cite|becke:pra:1988}} (from Libxc) for exchange and 75% of PBE{{cite|perdew:prl:1996}} and 25% of LYP{{cite|lee:prb:1988}} (from Libxc) for correlation
+ {{TAG|LHFCALC}} = .TRUE.
+ {{TAG|XC}}      = PE GGA_X_B88 GGA_C_LYP
+ {{TAG|XC_C}}    = 0.75 0.25 0.25
+ {{TAG|AEXX}}    = 0.15
+ {{TAG|AGGAX}}   = 0.85
+
+:The PBE exchange is multiplied by <math>0.75\times0.85=0.6375</math> and the B88 exchange by <math>0.25\times0.85=0.2125</math>.
+
+*15% of HF, 63.75% of PBE{{cite|perdew:prl:1996}}, and 21.25% of SCAN{{cite|sun:prl:15}} for exchange and 75% of PBE{{cite|perdew:prl:1996}} and 25% of SCAN{{cite|sun:prl:15}} for correlation
+ {{TAG|LHFCALC}} = .TRUE.
+ {{TAG|XC}}      = PE SCAN
+ {{TAG|XC_C}}    = 0.75 0.25
+ {{TAG|AEXX}}    = 0.15
+ {{TAG|AGGAX}}   = 0.85
+ {{TAG|AMGGAX}}  = 0.85
+
+:The PBE exchange is multiplied by <math>0.75\times0.85=0.6375</math> and the SCAN exchange by <math>0.25\times0.85=0.2125</math>. {{TAG|AGGAX}} and {{TAG|AMGGAX}} multiply the exchange part of PBE and SCAN, respectively.
+
+== Related tags and articles ==
+{{TAG|XC_C}},
+{{TAG|GGA}},
+{{TAG|METAGGA}}
+{{TAG|LIBXC1}},
+{{TAG|LIBXC2}},
+{{TAG|ALDAX}},
+{{TAG|ALDAC}},
+{{TAG|AGGAX}},
+{{TAG|AGGAC}},
+{{TAG|AMGGAX}},
+{{TAG|AMGGAC}}
+
+{{sc|XC|Examples|Examples that use this tag}}
+
+== References ==
+<references/>
+
+----
+
+[[Category:INCAR tag]][[Category:Exchange-correlation functionals]]

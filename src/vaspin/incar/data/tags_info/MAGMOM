@@ -1,0 +1,71 @@
+{{TAGDEF|MAGMOM|[real array]}}
+{{DEF|MAGMOM|NIONS * 1.0|for {{TAG|ISPIN}}{{=}}2|3 * NIONS * 1.0 |for noncollinear magnetic systems ({{TAG|LNONCOLLINEAR}}{{=}}.TRUE.)}}
+
+Description: Initial magnetic moment for each atom if no magnetization density is present. Considered when symmetry is determined.
+----
+
+* For a '''magnetic calculation from scratch''' ({{TAG|ISTART}}=0), {{TAG|MAGMOM}} specifies (i) the initial on-site magnetic moment for each atom, and (ii) lowers the symmetry of the system (as of VASP.4.4.4). A magnetic calculation could be either a spin-polarized calculation ({{TAG|ISPIN}}=2) or noncollinear calculation ({{TAG|LNONCOLLINEAR}}=T). If the {{TAG|MAGMOM}} line breaks a symmetry of the crystal, the corresponding symmetry operation is removed and not applied during the symmetrization of, e.g., charges and forces.
+
+* When '''restarting a magnetic calculation''', {{TAG|MAGMOM}} is only used to determine the symmetry of the system and not to set the on-site magnetic moment. Therefore, if you remove the {{TAG|MAGMOM}} tag before restarting from a converged {{FILE|WAVECAR}} or {{FILE|CHGCAR}}, the magnetization is likely to be symmetrized away.
+
+* {{TAG|MAGMOM}} also specifies the initial on-site magnetic moments when a '''magnetic calculation''' ({{TAG|ISPIN}}=2 or {{TAG|LNONCOLLINEAR}}=T) is '''started from a non-spin-polarized calculation''' ({{TAG|ISPIN}}=1 and {{TAG|LNONCOLLINEAR}}=F). This implies restarting with {{TAG|ICHARG}}=1 while the {{TAG|CHGCAR}} file contains no magnetization density. Starting magnetic calculations from a non-spin-polarized calculation can improve convergence.
+The {{TAG|I_CONSTRAINED_M}} tag can constrain the on-site magnetic moments.
+{{NB|tip|To converge to the magnetic ground state, we recommend setting the magnetic moments slightly larger than the expected values, e.g., using the experimental magnetic moment multiplied by 1.2-1.5. A growing collection of experimental data is available at the Bilbao crystallographic server.{{Cite|bilbao.crystal.server}} If no experimental data is available, {{TAG|MAGMOM}} can be defined according to the procedure outlined in the Huebsch et al. 2021.{{Cite|huebsch:prx:11}}|}}
+{{NB|important|The final magnetic state strongly depends on the initial values for {{TAG|MAGMOM}}.{{Cite|huebsch:prx:11}} This is true even if no symmetry is used ({{TAG|ISYM}}{{=}}-1), because of the many local minima that most exchange-correlation functionals have within spin-density-functional theory.|}}
+== Format and basis ==
+
+* For a spin-polarized calculation ({{TAG|ISPIN}}=2), {{TAG|MAGMOM}} is a list of NIONS positive or negative values that specify the magnitude and relative orientation of the magnetization on each ion. The on-site magnetic moments have no direction in real space, i.e., no orientation in the lattice.
+
+* For noncollinear calculation ({{TAG|LNONCOLLINEAR}}=T), the on-site magnetic moment is specified by three components for each ion. Without spin-orbit coupling ({{TAG|LSORBIT}}=False), the total energy depends only on the relative direction of the on-site magnetic moments. Hence, you can give the desired magnetic structure in Cartesian coordinates without considering how the lattice matrix or {{TAG|SAXIS}} is defined.
+
+* With spin-orbit coupling ({{TAG|LSORBIT}}=True), the three components must be specified in the basis of spinor space that is defined by {{TAG|SAXIS}}. The default is  <math>\sigma_1=\hat x</math>, <math>\sigma_2 =\hat y</math>, <math>\sigma_3 = \hat z</math>, such that {{TAG|MAGMOM}} can be given in Cartesian coordinates. The orientation of {{TAG|MAGMOM}} with respect to the lattice only matters if spin-orbit coupling is included ({{TAG|LSORBIT}}).
+
+== Examples ==
+
+* The most simple input for a bcc cell with antiferromagnetic (AFM) spin alignment would be the following.
+
+:{{TAG|POSCAR}} file:
+ AFM
+  2.80000
+  1.00000   .00000   .00000
+   .00000  1.00000   .00000
+   .00000   .00000  1.00000
+  1 1
+ Cartesian
+   .00000   .00000   .00000
+   .50000   .50000   .50000
+:with
+  {{TAG|ISPIN}} = 2
+  {{TAG|MAGMOM}} = 1.0 -1.0
+:specified in {{FILE|INCAR}}. In a perfectly AFM ordered cell, the total net magnetisation is zero, but the local magnetic moments can be written to the {{FILE|OUTCAR}} file by setting {{TAG|LORBIT}} tag (and if {{TAG|LORBIT}}<10 , the {{TAG|RWIGS}} tag in addition) in the {{FILE|INCAR}} file.
+
+* If you have problems converging to a desired magnetic solution, try to calculate first the non-magnetic ground state and continue from the generated {{TAG|WAVECAR}} and {{TAG|CHGCAR}}. To restart, e.g., a calculation with two atoms that have equally large and antiferromagnetically coupled on-site magnetic moments, you need to set the following in the {{TAG|INCAR}} file:
+ {{TAG|ICHARG}} = 1
+ {{TAG|ISPIN}} = 2
+ {{TAG|MAGMOM}} = m -m
+:or for a noncollinear
+ {{TAG|ICHARG}} = 1
+ {{TAG|LNONCOLLINEAR}} = T
+ {{TAG|MAGMOM}} = 0 0 m  0 0 -m
+
+* For systems containing many atoms, {{TAG|MAGMOM}} input on a single line can be hard to read, especially in the noncollinear case. It is possible to provide {{TAG|INCAR}} input on [[INCAR#Format|multiple lines]] using backslashes ('''\''') as linebreaks. E.g. for a noncollinear system with AFM alignment and 16 atoms (the first 8 of them magnetic), the multi-line input could look like this:
+ {{TAG|MAGMOM}} =  3.0  2.0  1.0 \
+          -3.0 -2.0 -1.0 \
+           3.0  2.0  1.0 \
+          -3.0 -2.0 -1.0 \
+           3.0  2.0  1.0 \
+          -3.0 -2.0 -1.0 \
+           3.0  2.0  1.0 \
+          -3.0 -2.0 -1.0 \
+           24*0.0
+
+== Related Tags and Sections ==
+{{TAG|ISPIN}},
+{{TAG|LNONCOLLINEAR}}, {{TAG|LSORBIT}}, {{TAG|SAXIS}},
+{{TAG|LORBIT}},
+{{TAG|I_CONSTRAINED_M}}
+
+{{sc|MAGMOM|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Magnetism]][[Category:Symmetry]]

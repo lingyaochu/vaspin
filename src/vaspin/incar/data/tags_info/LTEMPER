@@ -1,0 +1,35 @@
+{{TAGDEF|LTEMPER|[logical]|.FALSE.}}
+
+Description: {{TAG|LTEMPER}} specified whether parallel tempering is used. The flag must be used in combination with  {{TAG|IMAGES}}.
+
+----
+VASP supports various modes where simultaneous calculations for different INCAR, KPOINTS, POTCAR, or POSCAR files are performed.
+The parallel tempering mode is explained in this section, however, please read the section {{TAG|IMAGES}} first. Parallel tempering is also known as replica-exchange molecular dynamics.<ref name="sugi99"/>
+
+If the tags {{TAG| IMAGES}}=nn and  {{TAG| LTEMPER}}=.TRUE. are set in the {{TAG| INCAR}} file, VASP performs parallel tempering calculations. In this case, it is expedient to supply different {{TAG| INCAR}} and {{TAG| POSCAR}} files in each subdirectory 01, 02, 03, ..., nn. For each subdiretory a different simulation temperature should be supplied using the tags  {{TAG| TEBEG}} in the INCAR files 01/INCAR, 02/INCAR ... nn/INCAR.
+
+In the course of the simulations, VASP will attempt to swap the temperatures between the images. Swapping attempts are made every
+{{TAG|NTEMPER}} MD steps and accepted with a likelyhood of
+
+:<math> p = \min \left( 1, \frac{ \exp \left( -\frac{E_j}{kT_i} - \frac{E_i}{kT_j} \right) }{ \exp \left( -\frac{E_i}{kT_i} - \frac{E_j}{kT_j} \right) } \right) = \min \left( 1, e^{(E_i - E_j) \left( \frac{1}{kT_i} - \frac{1}{kT_j} \right)} \right) ,</math>
+
+
+where <math> E_i, E_j</math> and <math> T_i, T_j </math> are the energies and temperatures of the considered two replicas. Note that VASP swaps the temperatures and not the positions between images. This means that the temperatures in each subdirectory change as the MD progresses. Information on the current temperatures for each image can be found in the {{TAG|OUTCAR}} files around the lines (all OUTCAR files will show the same information):
+
+ parallel tempering new
+
+The average acceptance ratios are also written to the {{TAG|OUTCAR}} file. For efficient parallel tempering the acceptance ratio should not fall much below 0.2-0.3. If the acceptance ratio is too small, one usually needs to increase the number of images. However, too many images can also decrease the probability that all images visit all allowed temperatures.
+
+== Related tags and articles ==
+{{TAG|IMAGES}},
+{{TAG|NTEMPER}}
+
+{{sc|IMAGES|Examples|Examples that use this tag}}
+
+== References ==
+<references>
+<ref name="sugi99">[http://dx.doi.org/10.1016/S0009-2614(99)01123-9 Y. Sugita and Y. Okamoto, Chemical Physics Letters. 314, 141 (1999).]</ref>
+</references>
+----
+
+[[Category:INCAR tag]][[Category:Parallel Tempering]]

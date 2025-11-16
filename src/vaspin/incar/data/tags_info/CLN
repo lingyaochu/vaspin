@@ -1,0 +1,23 @@
+{{TAGDEF|CLN|[integer]}}
+{{DEF|CLN| 1 | }}
+
+Description: {{TAG|CLN}} selects the main quantum number <math>n</math> of the excited core electron when using {{TAG|ICORELEVEL}}>0.
+----
+{{NB|mind|Currently the spin-orbit coupling is only supported in the valence and conduction states but not in the core states. Hence, the splitting of an absorption edge with the orbital quantum number L>0 is not captured. For example, the splitting to ''L2'' and ''L3''-edges is not captured in the calculations and instead, a single ''L''-edge is shown.}}
+
+== Related tags and articles ==
+{{TAG|ICORELEVEL}},
+{{TAG|CLNT}},
+{{TAG|CLN}},
+{{TAG|CLL}}
+{{TAG|LADDER}},
+{{TAG|LHARTREE}},
+{{TAG|NBANDSV}},
+{{TAG|NBANDSO}},
+{{TAG|OMEGAMAX}},
+{{TAG|ANTIRES}}
+
+{{sc|CLN|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Linear response]][[Category:Dielectric properties]][[Category:XAS]]

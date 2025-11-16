@@ -1,0 +1,36 @@
+{{DISPLAYTITLE:BMIX_MAG}}
+{{TAGDEF|BMIX_MAG|[real]|1.0}}{{DISPLAYTITLE:BMIX_MAG}}
+
+Description: Sets the cutoff wave vector for Kerker mixing scheme ({{TAG|IMIX}}=1 and/or {{TAG|INIMIX}}=1) for the magnetization density {{Cite|kerker:prb:1981}}.
+----
+The default mixing parameters for spinpolarized calculations are:
+:{{TAG|IMIX}}=4, {{TAG|AMIX}}=0.4, {{TAG|AMIN}}=min(0.1,{{TAG|AMIX}},{{TAG|AMIX_MAG}}), {{TAG|BMIX}}=1.0, {{TAG|AMIX_MAG}}=1.6, and {{TAG|BMIX_MAG}}=1.0.
+
+These settings are consistent with an (initial) spin enhancement factor of 4, which is usually a reasonable approximation.
+
+There are only a few other parameter combinitions which can be tried, if convergence turns out to be very slow. In particular, for slabs, magnetic systems and insulating systems (e.g. molecules and clusters), an initial "linear mixing" can result in faster convergence than the Kerker model function {{Cite|kerker:prb:1981}}. One can therefore try to use the following setting
+
+ {{TAG|AMIX}}     = 0.2
+ {{TAG|BMIX}}     = 0.0001 ! almost zero, but 0 will crash some versions
+ {{TAG|AMIX_MAG}} = 0.8
+ {{TAG|BMIX_MAG}} = 0.0001 ! almost zero, but 0 will crash some versions
+
+'''Mind''': For spinpolarized calculations the defaults for the mixing parameters {{TAG|AMIX}} and {{TAG|BMIX}} are different than for the non-spinpolarized case.
+
+== Related tags and articles ==
+{{TAG|IMIX}},
+{{TAG|INIMIX}},
+{{TAG|MAXMIX}},
+{{TAG|AMIX}},
+{{TAG|BMIX}},
+{{TAG|AMIX_MAG}},
+{{TAG|AMIN}},
+{{TAG|MIXPRE}},
+{{TAG|WC}}
+
+{{sc|BMIX_MAG|Examples|Examples that use this tag}}
+
+== References ==
+
+
+[[Category:INCAR tag]][[Category:Density mixing]][[Category:Magnetism]]

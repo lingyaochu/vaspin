@@ -1,0 +1,40 @@
+{{TAGDEF|LDIPOL|.TRUE. {{!}} .FALSE.|.FALSE.}}
+
+Description: {{TAG|LDIPOL}} switches on corrections to the potential and forces. Can be applied for charged molecules and slabs with a net dipole moment.
+----
+
+The presence of a dipole in combination with periodic boundary conditions leads to a slow convergence of the total energy with the size of the supercell.
+Furthermore, finite-size errors affect the potential and the forces.
+This effect can be counterbalanced by setting {{TAG|LDIPOL}}=.TRUE. in the {{FILE|INCAR}} file.
+For {{TAG|LDIPOL}}=.TRUE., a linear correction, and for charged cells, a quadratic electrostatic potential is added to the local potential in order to correct the errors introduced by the periodic boundary conditions. When activating this tag the tag {{TAG|IDIPOL}} has to be specified, and optionally the tag {{TAG|DIPOL}} as well.
+{{NB|mind| This is in the spirit of Neugebauer ''et al.'' {{cite|neugebauer:prb:1992}}, though more general. Note that the total energy is correctly implemented, whereas Ref. {{cite|neugebauer:prb:1992}} contains an erroneous factor 2 in the total energy. }}
+
+The biggest advantage of this mode is that leading errors in the forces are corrected and that the work function can be evaluated for asymmetric slabs. The disadvantage is that the convergence to the electronic ground state might slow down considerably, i.e., more electronic iterations might be required to obtain the required precision.
+{{NB|warning| For charged systems, the potential correction is currently only implemented for cubic supercells. VASP will stop if the supercell is not cubic and {{TAG|LDIPOL}} is used. }}
+<!---
+
+== Tips for improving convergence ==
+
+1. Use this mode only after pre-converging the orbitals without the {{TAG|LDIPOL}} tag
+
+2. The center of charge should be set in the {{FILE|INCAR}} file ({{TAG|DIPOL}}= center of mass)
+
+3. Ensure that the cell is sufficiently large to determine the dipole moment with sufficient accuracy (see {{TAG|DIPOL}}). If the cell is too small, the charge might slash through the vacuum, causing very slow convergence. Often, convergence improves with the size of the supercell.
+
+-->
+
+== Related tags and articles ==
+{{TAG|Monopole Dipole and Quadrupole corrections}},
+{{TAG|NELECT}},
+{{TAG|EPSILON}},
+{{TAG|IDIPOL}},
+{{TAG|DIPOL}},
+{{TAG|LMONO}},
+{{TAG|EFIELD}}
+
+{{sc|LDIPOL|Examples|Examples that use this tag}}
+
+== References ==
+
+
+[[Category:INCAR tag]][[Category:Ionic minimization]][[Category:Forces]][[Category:Electrostatics]]

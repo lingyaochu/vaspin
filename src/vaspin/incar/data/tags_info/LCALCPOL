@@ -1,0 +1,99 @@
+{{TAGDEF|LCALCPOL|.TRUE. {{!}} .FALSE.|.FALSE.}}
+
+Description: {{TAG|LCALCPOL}}=.TRUE.  switches on the evaluation of the Berry phase expressions for the macroscopic electronic polarization in accordance with the so-called [[Berry_phases_and_finite_electric_fields#Modern_Theory_of_Polarization|Modern Theory of Polarization]].
+----
+For {{TAG|LCALCPOL}}=.TRUE., VASP calculates the electronic contribution to the polarization, along the three reciprocal lattice vectors '''G'''<sub>i</sub>, i=1,2,3,  (i.e. &Sigma;<sub>i</sub> '''P'''&middot;'''G'''<sub>i</sub>) in a single run (unlike {{TAG|LBERRY}}=.TRUE.).
+
+=== An example: The fluorine displacement dipole (Born effective charge) in NaF ===
+
+*With {{FILE|INCAR}} file:
+
+ {{TAGBL|PREC}} = Med
+ {{TAGBL|EDIFF}}= 1E-6
+
+ {{TAGBL|ISMEAR}} = 0
+ {{TAGBL|DIPOL}}  = 0.25 0.25 0.25
+
+ {{TAGBL|LCALCPOL}} = .TRUE.
+
+*{{FILE|KPOINTS}} file:
+
+ 6x6x6
+  0
+ Gamma
+  6 6 6
+  0 0 0
+
+*{{FILE|POSCAR}} file:
+
+ NaF
+  4.5102
+  0.0 0.5 0.5
+  0.5 0.0 0.5
+  0.5 0.5 0.0
+ 1 1
+ Direct
+   0.0000000000000000  0.0000000000000000  0.0000000000000000
+   0.5000000000000000  0.5000000000000000  0.5000000000000000
+
+*and LDA Na_sv and F PAW datasets.
+
+The {{FILE|OUTCAR}} file should now contain the following lines:
+
+             Ionic dipole moment: p[ion]=(     2.25510     2.25510     2.25510 ) electrons Angst
+
+  Total electronic dipole moment: p[elc]=(     0.00000     0.00000     0.00000 ) electrons Angst
+Here the units "electrons Angst" denote <math>e\AA=-1.602 10^{-19}C\AA</math>.
+
+To calculate the change in the electronic polarization of NaF due to the displacement of the fluorine sublattice we repeat the previous calculation with the following {{FILE|POSCAR}} file:
+
+ NaF
+  4.5102
+  0.0 0.5 0.5
+  0.5 0.0 0.5
+  0.5 0.5 0.0
+ 1 1
+ Direct
+   0.0000000000000000  0.0000000000000000  0.0000000000000000
+   0.5100000000000000  0.5100000000000000  0.4900000000000000
+
+The {{FILE|OUTCAR}} should now contain something very similar to the following lines:
+
+             Ionic dipole moment: p[ion]=(     2.25510     2.25510     1.93939 ) electrons Angst
+
+  Total electronic dipole moment: p[elc]=(     0.00000     0.00000     0.36061 ) electrons Angst
+
+From the above one easily recognizes that the change in the electronic dipole moment due to the F-sublattice displacement is:
+
+<math>\Delta\mathrm{p[elc]}=0.3606\hat{z}\;e\AA</math>
+
+and the corresponding change in the ionic dipole moment:
+
+<math>\Delta\mathrm{p[ion]}=1.93939-2.25510=-0.31571\hat{z}\;e\AA</math>
+
+Thus the total change is found to be:
+
+<math>\Delta\mathrm{p[tot]}=0.36061-0.31571=0.0449\hat{z}\;e\AA</math>
+
+and considering that the F-sublattice was displaced by 0.045102 &Aring; these calculations yield a Born effective charge for fluorine of
+
+<math>Z^*=0.0449/0.045102=-0.995|e|\;</math>.
+
+The socalled parallel or <math>\bold{G}_{\parallel}</math>
+direction in the integration over the reciprocal space unit cell is set in {{TAG|IGPAR}}.
+
+== Related tags and articles ==
+{{TAG|LCALCEPS}},
+{{TAG|EFIELD_PEAD}},
+{{TAG|LPEAD}},
+{{TAG|IPEAD}},
+{{TAG|LBERRY}},
+{{TAG|IGPAR}},
+{{TAG|NPPSTR}},
+{{TAG|DIPOL}},
+[[Berry_phases_and_finite_electric_fields|Berry phases and finite electric fields]]
+
+{{sc|LCALCPOL|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Linear response]][[Category:Dielectric properties]][[Category:Berry phases]]

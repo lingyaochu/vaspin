@@ -1,0 +1,23 @@
+{{TAGDEF|LVHAR|[logical]|.FALSE.}}
+
+Description: Determines whether the local potential <math>V_{\text{ionic}}(\mathbf{r}) +V_{\text{hartree}}(\mathbf{r}) </math> (in eV) is written to the {{FILE|LOCPOT}} file.
+----
+<math>
+V_{\text{ionic}}(\mathbf{r})+V_{\text{hartree}}(\mathbf{r}) =
+V_{\text{ionic}}(\mathbf{r}) +
+\int \frac{n(\mathbf{r'})}{|\mathbf{r}-\mathbf{r'}|}d\mathbf{r'}
+</math>
+
+where <math>V_{\text{ionic}}(\mathbf{r})</math> is the ionic potential as mimicked by the pseudopotentials and <math>V_{\text{hartree}}(\mathbf{r})</math> is the Hartree potential.
+
+The local potential is written to the {{FILE|LOCPOT}} file and hence to the same file as the local potential for {{TAG|LVTOT}}=T. Carefully check that the {{FILE|LOCPOT}} file contains the potential you expect.
+{{TAG|WRT_POTENTIAL}} also gives access to the ionic and Hartree potentials and offers more options.
+{{NB|warning|Setting {{TAG|LVHAR}}{{=}}True will set {{TAG|LVTOT}}{{=}}False.}}
+See {{TAG|LOCPOT}} to find out how to write <math>V_{\text{ionic}}(\mathbf{r}) +V_{\text{hartree}}(\mathbf{r}) </math> in VASP < 5.2.12.
+
+== Related tags and articles ==
+[[Computing the work function]], {{TAG|LVTOT}}, {{FILE|LOCPOT}}, {{TAG|WRT_POTENTIAL}}, {{TAG|LVACPOTAV}}
+
+{{sc|LVHAR|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Electrostatics]][[Category:Potential]]

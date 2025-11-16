@@ -1,0 +1,48 @@
+{{TAGDEF|ICHARG|0 {{!}} 1 {{!}} 2 {{!}} 4 {{!}} 5}}
+{{DEF|ICHARG|2|if {{TAG|ISTART}}{{=}}0|0|else}}
+
+Description: {{TAG|ICHARG}} determines how VASP constructs the ''initial'' charge density.
+----
+*{{TAG|ICHARG}}=0
+:Calculate the charge density from initial wave functions.
+:If {{TAG|ISTART}} is ''internally reset'' due to an invalid {{FILE|WAVECAR}} file, {{TAG|ICHARG}} will be set to {{TAG|ICHARG}}=2.
+
+*{{TAG|ICHARG}}=1
+:Read the charge density from {{FILE|CHGCAR}} file, and extrapolate from the old positions (on {{FILE|CHGCAR}}) to the new positions using a linear combination of atomic charge densities.
+:In the [[Projector-augmented-wave_formalism|PAW method]], there is, however, one important point to keep in mind: For the on-site densities (that is, the densities within the PAW sphere), only l-decomposed charge densities up to {{TAG|LMAXMIX}} are written. Upon restart, the energies might, therefore, differ slightly from the fully converged energies. The discrepancies can be large for the DFT+U method. In this case, one might need to increase {{TAG|LMAXMIX}} to 4 (d-elements) or even 6 (f-elements).
+{{NB|tip|To improve convergence and reduce the number of electronic steps, it is recommended to set ICHARG {{=}} 1 when starting calculations repeatedly with small changes in the input parameters.|:}}
+*{{TAG|ICHARG}}=2
+:Take superposition of atomic charge densities.
+
+*{{TAG|ICHARG}}=4
+:Read potential from file {{FILE|POT}}. The local potential on the file {{FILE|POT}} is written by the optimized-effective-potential methods (OEP), if the flag {{TAG|LVTOT}}=.TRUE. is supplied in the {{FILE|INCAR}} file. Supported as of VASP.5.1.
+
+*{{TAG|ICHARG}}=5
+:External charge-density-update mode to read in and add an external correction to the Kohn-Sham (KS) occupations in every SCF step of the [[electronic minimization]]. The initialization of the charge density is done as in {{TAG|ICHARG}}=1, and after {{TAG|NELMDL}} steps VASP reads the occupations from a user-supplied text file {{FILE|GAMMA}} (or {{FILE|vaspgamma.h5}} if compiled with [[:Category:HDF5 support|HDF5 support]]) for each k point in each SCF step. The procedure described in Ref.{{cite|schueler:jpcm:30}} Eq. (30)-(32) is then used to construct a new charge density from the combined occupations (KS occupations + {{FILE|GAMMA}} file), from which the next KS potential is constructed. The [[electronic minimization|DFT workflow]] continues after a user-supplied {{FILE|vasp.lock}} file is read. Additionally, with {{TAG|ICHARG}}=5 after each SCF step VASP writes out all with {{TAG|LOCPROJ}} defined wave function projections. The {{TAG|ICHARG}}=5 mode can be used with an external code that modifies the occupations, and requires extra output after each SCF step. The TRIQS software package{{cite|parcollet:cpc:196}} makes use of it to perform charge self-consistent DFT plus dynamical mean field theory (DMFT) calculations{{cite|merkel:joss:7}}{{cite|aichhorn:cpc:204}}. See the [[DFT%2BDMFT_calculations|DFT+DMFT]] howto page for a tutorial.
+
+*{{TAG|ICHARG}}=10
+:non-selfconsistent calculations: Adding 10 to the value of {{TAG|ICHARG}}, e.g., {{TAG|ICHARG}}=11 or 12 (or the less convenient value 10) means that the charge density will be kept constant during the ''entire electronic minimization''.
+
+:There are several reasons why to keep the charge density constant:
+:*{{TAG|ICHARG}}=11
+::To obtain the eigenvalues (for band-structure plots) or the density of states (DOS) of a given charge density read from {{FILE|CHGCAR}}. The self-consistent {{FILE|CHGCAR}} file must be determined beforehand by a fully self-consistent calculation with a k-point grid spanning the entire Brillouin zone.
+
+:*{{TAG|ICHARG}}=12
+::Non-self-consistent calculations for a superposition of atomic charge densities. This is in the spirit of the non-self-consistent [[Harris-Foulkes functional|Harris-Foulkes functional]]. The stress and the forces calculated by VASP are correct, and it is possible to perform an ab-initio MD for the non-selfconsistent [[Harris-Foulkes functional|Harris-Foulkes functional]].
+{{NB|tip|If {{TAG|ICHARG}} is set to 11 or 12, it is strongly recommended to set {{TAG|LMAXMIX}} to twice the maximum l-quantum number in the pseudopotentials. Thus, for s and p elements {{TAG|LMAXMIX}} should be set to 2, for d elements {{TAG|LMAXMIX}} should be set to 4, and for f elements {{TAG|LMAXMIX}} should be set to 6.|:}}
+
+The initial charge density is of importance in the following cases:
+
+*If {{TAG|ICHARG}}&ge;10 the charge density remains constant during the run.
+
+*For all algorithms except {{TAG|IALGO}}=5X the initial charge density is used to set up the initial Hamiltonian that is used in the first few non-selfconsistent steps, c.f., {{TAG|NELMDL}} tag.
+
+== Related tags and articles ==
+
+{{FILE|CHGCAR}}, {{TAG|ISTART}}, {{TAG|LCHARG}}, {{TAG|LMAXMIX}}, {{TAG|NELMDL}}, {{TAG|INIWAV}}, {{FILE|GAMMA}}, {{FILE|vaspgamma.h5}}
+
+{{sc|ICHARG|Examples|Examples that use this tag}}
+
+----
+
+[[Category:INCAR tag]][[Category:Electronic minimization]][[Category:Electronic ground-state properties]][[Category:Charge density]][[Category:Electronic occupancy]]

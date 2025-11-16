@@ -1,0 +1,37 @@
+{{DISPLAYTITLE:PHON_DOS}}
+{{TAGDEF|PHON_DOS| 0 {{!}} 1 {{!}} 2 }}
+{{DEF|PHON_DOS|0|}}
+
+Description: Select the approach to use when computing the phonon density-of-states (DOS).
+
+----
+
+The possible values are
+
+{| class="wikitable"
+|-
+! PHON_DOS !! Function
+|-
+| 0 || The phonon DOS computation is not performed.
+|-
+| 1 || A gaussian broadening function with a width specified by {{TAG|PHON_SIGMA}} is used.
+|-
+| 2 || The tetrahedron method is used.
+|}
+
+To get a representative density of states the {{FILE|QPOINTS}} file should specify a regular mesh.
+When line mode in the {{FILE|QPOINTS}} file and gaussian smearing (PHON_DOS=1) is used, the phonon density of states will still be computed but the results are not reliable.
+{{NB|mind| Only available as of VASP 6.4.0.}}
+==Related tags and articles==
+{{FILE| QPOINTS}},
+{{TAG | PHON_NWRITE}},
+{{TAG | LPHON_POLAR}},
+{{TAG | PHON_DIELECTRIC}},
+{{TAG | PHON_BORN_CHARGES}},
+{{TAG | PHON_G_CUTOFF}},
+{{TAG | PHON_SIGMA}},
+{{TAG | PHON_NEDOS}}
+
+{{sc|LPHON_DISPERSION|Examples|Examples that use this tag}}
+
+[[Category:INCAR tag]][[Category:Phonons]]

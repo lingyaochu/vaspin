@@ -1,0 +1,22 @@
+{{DISPLAYTITLE:ELPH_SELFEN_NW}}
+{{TAGDEF|ELPH_SELFEN_NW|[integer]|1}}
+
+Description: Number of energies to use when computing the phonon-induced electron self-energy.
+{{Available|6.5.0}}
+
+----
+
+The electron self-energy, <math>\Sigma_{n \mathbf{k}}(\omega)</math>, depends on the frequency <math>\omega</math> (or energy <math>\hbar \omega</math>).
+{{TAG|ELPH_SELFEN_NW}} controls the number and location of frequencies when computing the self-energy in the following way:
+; {{TAGO|ELPH_SELFEN_NW|0|op=>}}
+: The self-energy is computed at {{TAG|ELPH_SELFEN_NW}} equally spaced energies between <math>\varepsilon_{n \mathbf{k}} - \frac{1}{2} E^{\text{W}}</math> and <math>\varepsilon_{n \mathbf{k}} + \frac{1}{2} E^{\text{W}}</math>. The interval is centered around each Kohn-Sham eigenvalue, <math>\varepsilon_{n \mathbf{k}}</math>, and its width, <math>E^{\text{W}}</math>, is controlled via {{TAG|ELPH_SELFEN_WRANGE}}. If {{TAG|ELPH_SELFEN_NW}} is an even number, it is automatically increased by one so that the center-most energy in each interval always coincides with the corresponding Kohn-Sham eigenvalue.
+; {{TAGO|ELPH_SELFEN_NW|0|op=<}}
+: The self-energy is computed at |{{TAG|ELPH_SELFEN_NW}}| equally spaced energies between <math>\varepsilon^{\text{min}}_{\mathbf{k}} - \frac{1}{2} E^{\text{W}}</math> and <math>\varepsilon^{\text{max}}_{\mathbf{k}} + \frac{1}{2} E^{\text{W}}</math>, where <math>\varepsilon^{\text{min}}_{\mathbf{k}}</math> and <math>\varepsilon^{\text{max}}_{\mathbf{k}}</math> are the minimum and maximum Kohn-Sham eigenvalues of the calculation, respectively. Once again, <math>E^{\text{W}}</math> is controlled via {{TAG|ELPH_SELFEN_WRANGE}} and allows to extend the interval in both directions.
+
+==Related tags and articles==
+* {{TAG|ELPH_RUN}}
+* {{TAG|ELPH_SELFEN_FAN}}
+* {{TAG|ELPH_SELFEN_DW}}
+* {{TAG|ELPH_SELFEN_WRANGE}}
+
+[[Category:INCAR tag]][[Category:Electron-phonon_interactions]]

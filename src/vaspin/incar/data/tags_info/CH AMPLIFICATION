@@ -1,0 +1,13 @@
+{{DISPLAYTITLE:CH_AMPLIFICATION}}
+{{TAGDEF|CH_AMPLIFICATION|[real]|1.0}}
+
+Description: This tag is used to scale (amplify) the calculated dielectric function within the supercell core-hole method and the BSE+GW method for core electrons.
+----
+
+== Related tags and articles ==
+{{TAG|CH_LSPEC}}, {{TAG|CH_NEDOS}}, {{TAG|ICORELEVEL}}, {{TAG|CLNT}}, {{TAG|CLN}}, {{TAG|CLL}}, {{TAG|CLZ}}, {{TAG|CH_SIGMA}}
+
+{{sc|CH_SIGMA|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Linear response]][[Category:Dielectric properties]][[Category:XAS]]

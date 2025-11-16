@@ -1,0 +1,27 @@
+{{TAGDEF|LPARD|[logical]|.FALSE.}}
+
+Description: Determines whether partial (band and/or '''k'''-point-decomposed) charge densities are evaluated.
+----
+An {{TAG|LPARD}} run is a postprocessing step that requires a pre-converged calculation. It writes the partial density, or multiple partial charge densities, to one {{FILE|PARCHG}} file or several PARCHG.*.* files, depending on the setting of {{TAG|LSEPB}} and {{TAG|LSEPK}}.
+If {{TAG|LPARDH5}} = .TRUE., the output is redirected from {{FILE|PARCHG}} to {{FILE|vaspout.h5}}.
+{{NB|warning| The orbitals read from the {{FILE|WAVECAR}} file must be converged in a prior VASP run.}}
+{{NB|warning| {{TAG|LPARD}} is not supported for noncollinear calculations ({{TAG|LNONCOLLINEAR}}{{=}}true).}}
+There are various ways to divide the partial charge density. You can pick the contributing bands either by index (refer to {{TAG|NBMOD}} and {{TAG|IBAND}}) or by energy range (refer to {{TAG|EINT}}), and select contributing '''k''' points through {{TAG|KPUSE}}.
+{{NB|mind|If only the {{TAG|LPARD}} tag is set, without any other tags to specify the separation of charge, then the {{TAG|NBMOD}} tag defaults to -1. The valence charge density (without the augmentation charges) is then written to the {{FILE|CHGCAR}} file, and no other partial charge output is generated.}}
+
+== Related tags and articles ==
+{{TAG|IBAND}},
+{{TAG|EINT}},
+{{TAG|NBMOD}},
+{{TAG|KPUSE}},
+{{TAG|LSEPB}},
+{{TAG|LSEPK}},
+{{TAG|LPARDH5}},
+{{FILE|PARCHG}},
+{{FILE|vaspout.h5}},
+[[Band-decomposed charge densities]]
+
+{{sc|LPARD|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Charge density]]

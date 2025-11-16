@@ -1,0 +1,16 @@
+{{TAGDEF|DQ|[real]| 0.001}}
+
+Description: step size for the finite difference ''k''-space derivative in the linear response calculation of chemical shifts.
+----
+Typical values for {{TAG|DQ}} are in the range [0.001 - 0.003]. The default is often sufficient.
+
+== Related tags and articles ==
+{{TAG|LCHIMAG}},
+{{TAG|ICHIBARE}},
+{{TAG|LNMR_SYM_RED}},
+{{TAG|NLSPLINE}}
+
+{{sc|DQ|Examples|Examples that use this tag}}
+
+----
+[[Category:INCAR tag]][[Category:NMR]]

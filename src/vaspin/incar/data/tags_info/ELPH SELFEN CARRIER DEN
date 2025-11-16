@@ -1,0 +1,48 @@
+{{DISPLAYTITLE:ELPH_SELFEN_CARRIER_DEN}}
+{{TAGDEF|ELPH_SELFEN_CARRIER_DEN|[real array]|0.0}}
+
+Description: List of additional carrier densities in units of <math>cm^{-3}</math> at which to compute the phonon-mediated electron self-energy and transport coefficients.
+{{Available|6.5.0}}
+
+----
+
+From each carrier density specified in the array, a positive (electron doping) or negative (hole doping) number of electrons is added to the value of {{TAG|NELECT}} and the chemical potential computed for the list of temperatures specified by {{TAG|ELPH_SELFEN_TEMPS}}.
+
+For example, if {{TAGO|ELPH_SELFEN_CARRIER_DEN|1e+16 1e+17 1e+18}} the <tt>Chemical potential</tt> section in the {{FILE|OUTCAR}} file might show something like
+
+                   Number of electrons per cell
+                   ----------------------------
+ T=      0.00000000    18.00000048    18.00000477    18.00004770
+ T=    100.00000000    18.00000048    18.00000477    18.00004770
+ T=    200.00000000    18.00000048    18.00000477    18.00004770
+ T=    300.00000000    18.00000048    18.00000477    18.00004770
+ T=    400.00000000    18.00000048    18.00000477    18.00004770
+ T=    500.00000000    18.00000048    18.00000477    18.00004770
+                   ----------------------------
+                       Chemical potential
+                   ----------------------------
+ T=      0.00000000     3.59844447     3.63257112     3.70609450
+ T=    100.00000000     3.59030071     3.62874001     3.70431410
+ T=    200.00000000     3.56867975     3.61741491     3.69897926
+ T=    300.00000000     3.56382644     3.60063388     3.69013925
+ T=    400.00000000     3.57552043     3.59226062     3.67812706
+ T=    500.00000000     3.58994519     3.59815865     3.66491104
+                   ----------------------------
+
+In the above tables, the number of elements in {{TAG|ELPH_SELFEN_CARRIER_DEN}} determines the number of columns, while the number of elements in {{TAG|ELPH_SELFEN_TEMPS}} determines the number of rows.
+Specifying more than one carrier density in {{TAG|ELPH_SELFEN_CARRIER_DEN}} creates additional [[Electron-phonon accumulators | electron-phonon accumulators]].
+
+Instead of specifying a carrier density, it is possible to explicitly specify the additional number of electrons to be added by using the {{TAG|ELPH_SELFEN_CARRIER_PER_CELL}} tag. Alternatively, one can specify the chemical potential directly and determine the carrier concentration using {{TAG|ELPH_SELFEN_MU}}.
+
+The information related to the chemical potential calculation can be found under the <tt>Chemical potential calculation</tt> section in the {{FILE|OUTCAR}}.
+
+==Related tags and articles==
+* [[Transport coefficients including electron-phonon scattering|Transport calculations]]
+* [[Electron-phonon accumulators]]
+* {{TAG|ELPH_RUN}}
+* {{TAG|ELPH_SELFEN_CARRIER_PER_CELL}}
+* {{TAG|ELPH_SELFEN_MU}}
+* {{TAG|ELPH_SELFEN_TEMPS}}
+* {{TAG|NELECT}}
+
+[[Category:INCAR tag]][[Category:Electron-phonon_interactions]]

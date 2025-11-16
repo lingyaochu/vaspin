@@ -1,0 +1,15 @@
+{{DISPLAYTITLE:ML_RCOUPLE}}
+{{TAGDEF|ML_RCOUPLE|[real]|1.0}}
+
+Description: This tag specifies the value of the coupling parameter for the calculation of the chemical potential within the machine learning force field method.
+----
+
+For thermodynamic integration calculations please have a look at the tag {{TAG|ML_LCOUPLE}}.
+
+== Related tags and articles ==
+{{TAG|ML_LMLFF}}, {{TAG|ML_LCOUPLE}}, {{TAG|ML_NATOM_COUPLED}}, {{TAG|ML_ICOUPLE}}
+
+{{sc|ML_RCOUPLE|Examples|Examples that use this tag}}
+----
+
+[[Category:INCAR tag]][[Category:Machine-learned force fields]]
