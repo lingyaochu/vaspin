@@ -4,8 +4,10 @@
 Contains functionality for handling VASP POSCAR files and structure manipulation.
 """
 
+from __future__ import annotations
+
 from collections import defaultdict
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from itertools import product
 from typing import List, Literal, Self, Tuple
 
@@ -124,7 +126,7 @@ class Poscar:
         return self.calculate_volume(self.lattice)
 
     @property
-    def edit(self) -> "PoscarEditAccessor":
+    def edit(self) -> PoscarEditAccessor:
         """Provides access to change Poscar methods through a namespaced accessor."""
         return PoscarEditAccessor(self)
 
@@ -510,6 +512,23 @@ class LatticeEditAccessor:
         """Initialize the accessor with a Poscar object."""
         self._poscar = poscar
 
+    def transform(self, matrix: FloatArray) -> Poscar:
+        """Transform the lattice vectors according to the given matrix.
+
+        Args:
+            matrix: Transformation matrix in 3D space.
+
+        Returns:
+            A new Poscar object with the transformed lattice.
+        """
+        if matrix.size != 9:
+            raise ValueError("Transformation matrix must be 3*3")
+        matrix = matrix.reshape(3, 3)
+
+        new_lattice = self._poscar.lattice @ matrix.T
+        new_posdata = replace(self._poscar.data, lattice=new_lattice, coe=1.0)
+        return Poscar(new_posdata)
+
     def apply_strain(self, strain: StrainTensor) -> Poscar:
         """Apply strain to the lattice and return a new Poscar object.
 
@@ -521,16 +540,7 @@ class LatticeEditAccessor:
         """
         strain_matrix = strain.get_matrix_unsym()
         deform_matrix = np.eye(3) + strain_matrix
-        new_lattice = self._poscar.lattice @ deform_matrix.T
-        new_posdata = PosData(
-            comment=self._poscar.comment,
-            coe=1.0,
-            lattice=new_lattice,
-            species=self._poscar.data.species,
-            number=self._poscar.data.number,
-            frac=self._poscar.coor_frac,
-        )
-        return Poscar(new_posdata)
+        return self.transform(deform_matrix)
 
     def rotate(self, matrix_rot: FloatArray) -> Poscar:
         """Rotate the lattice vector of the Poscar object.
@@ -541,26 +551,13 @@ class LatticeEditAccessor:
         Returns:
             A new Poscar object with the rotated lattice.
         """
-        if matrix_rot.size != 9:
-            raise ValueError("Rotation matrix must be 3x3")
-        matrix_rot = matrix_rot.reshape(3, 3)
-
         det = np.linalg.det(matrix_rot)
         if not np.isclose(abs(det), 1.0):
             raise ValueError(
                 f"Invalid rotation matrix, determinant should be ±1, but got {det}"
             )
 
-        new_lattice = self._poscar.lattice @ matrix_rot.T
-        new_posdata = PosData(
-            comment=self._poscar.comment,
-            coe=1.0,
-            lattice=new_lattice,
-            species=self._poscar.data.species,
-            number=self._poscar.data.number,
-            frac=self._poscar.coor_frac,
-        )
-        return Poscar(new_posdata)
+        return self.transform(matrix_rot)
 
 
 class SuperCellAccessor:

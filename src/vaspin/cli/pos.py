@@ -24,14 +24,14 @@ parser.add_argument(
     "--length",
     default=0.0,
     type=float,
-    help="the length of random displacement, only for job=distort",
+    help="the length of random displacement, only for job=disp",
 )
 parser.add_argument(
     "-m",
     "--method",
     default="cate",
     choices=["cate", "sphere"],
-    help="the method to distort the structure, only for job=distort",
+    help="the method to distort the structure, only for job=disp",
 )
 args = parser.parse_args()
 
@@ -45,9 +45,7 @@ def write_json() -> None:
 
 def get_lattice() -> None:
     """Get the lattice parameters from POSCAR file"""
-    write_json()
-
-    pos = Poscar(args.directory + "/pos.json")
+    pos = Poscar.from_file(args.directory + "/POSCAR")
     a = "{:.7f}".format(pos.abc["a"])
     b = "{:.7f}".format(pos.abc["b"])
     c = "{:.7f}".format(pos.abc["c"])
@@ -58,9 +56,7 @@ def pos_disp(
     length: float = args.length, method: Literal["cate", "sphere"] = args.method
 ) -> None:
     """Randomly distort the structure by length"""
-    write_json()
-
-    pos = Poscar(args.directory + "/pos.json")
+    pos = Poscar.from_file(args.directory + "/POSCAR")
     cate = pos.coor_cate + pos.random_disp(magnitude=length, method=method)
     pos.write_poscar(
         coor_frac=pos.cate2frac(cate), directory=args.directory, name="POSCAR_disp"

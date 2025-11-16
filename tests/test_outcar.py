@@ -104,6 +104,7 @@ class TestSpinOUTCAR:
             "A_ps": [-0.310, -0.310, -0.310, 21.364, 21.364, 21.364, 5.691],
             "A_ae": [-9.042, -9.042, -9.042, 165.189, 165.189, 165.189, 13.576],
             "A_c": [0.120, 0.120, 0.120, -34.766, -34.766, -34.766, -7.416],
+            "A_tot": [-9.034, -9.034, -9.034, 165.057, 165.057, 165.057, 13.574],
         }
         assert parsed_data.hyperfine_fermi == pytest.approx(
             sample_data_hyperfine_fermi, abs=FLOAT_TOL
@@ -261,6 +262,12 @@ class TestOutcarErrorHandling:
         """Test that VaspOutcarParser raises TypeError for non-string paths."""
         with pytest.raises(TypeError, match="The OUTCAR path must be a string."):
             VaspOutcarParser(123)  # type: ignore[arg-type]
+
+    def test_parser_initialization_with_nonexistent_file(self, tmp_path):
+        """Test that VaspOutcarParser raises FileNotFoundError for non-existent file."""
+        outcar_file = tmp_path / "OUTCAR"
+        with pytest.raises(FileNotFoundError, match=f"File not found: {outcar_file}"):
+            VaspOutcarParser(str(outcar_file))
 
     def test_set_handlers_with_empty_list(self, tmp_path):
         """Test that set_handlers raises ValueError for an empty list."""
