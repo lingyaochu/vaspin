@@ -50,6 +50,12 @@ class IncarValidator:
 
         The poscar, potcar, and kpoints arguments are not used in the base
         implementation but are kept for future rules that might need them.
+
+        Args:
+            incar: The INCAR object to validate.
+
+        Returns:
+            The check result containing errors, warnings, and suggestions.
         """
         errors: list[ValidationResult] = []
         warnings: list[ValidationResult] = []
