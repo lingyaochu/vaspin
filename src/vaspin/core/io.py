@@ -18,7 +18,7 @@ from vaspin.types.array import FloatArray, StrArray
 if TYPE_CHECKING:
     from vaspin.incar.tags import Tag
 
-from ..utils.utils import clean
+from ..utils.utils import createdir
 
 
 def read_file(filepath: str, fallback: Callable[[str], str]) -> dict[str, Any]:
@@ -130,8 +130,6 @@ def write_poscar(
     Returns:
         None
     """
-    from ..utils.utils import createdir
-
     # Convert lattice data to string
     lattice_str = ""
     for i in range(3):
@@ -278,7 +276,7 @@ def write_incar(tags: list[Tag], directory: str = ".", name: str = "INCAR") -> N
         name: Name of the INCAR file, defaults to "INCAR".
     """
     file_path = Path(directory) / name
-    clean(directory)
+    createdir(directory)
 
     incar_string = "\n".join(str(tag) for tag in tags)
     with open(file_path, "w") as f:
