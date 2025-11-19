@@ -9,8 +9,6 @@ from vaspin.core.io import read_incar, write_incar
 
 from .tags import Tag
 
-# from .validator import IncarCheckResult, IncarValidator
-
 
 class Incar:
     """A class to represent the INCAR file."""

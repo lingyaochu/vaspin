@@ -10,6 +10,7 @@ authors = [
 ]
 dependencies = [
     "numpy>=1.24.0,<=2.1.0",
+    "rich>=14.2.0",
     "scipy>=1.15.3",
     "uniplot>=0.20.1",
 ]
@@ -32,6 +33,7 @@ pos = "vaspin.cli.pos:main"
 force = "vaspin.cli.force:main"
 loc = "vaspin.cli.loc:main"
 efnv = "vaspin.cli.efnv:main"
+incar = "vaspin.cli.incar:main"
 
 [tool.uv.sources]
 vaspin = { workspace = true }
