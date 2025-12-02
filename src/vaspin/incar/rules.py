@@ -157,6 +157,8 @@ def hse_sym(incar: Incar) -> bool:
     """Checks if symmetry is set right when using hybrid functionals"""
     hybrid = incar.get("LHFCALC", False)
     isym = incar.get("ISYM", None)
+    if isym is None:
+        return True
     return hybrid and isym not in [-1, 0, 3]
 
 
