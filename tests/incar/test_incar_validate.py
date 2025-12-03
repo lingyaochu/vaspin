@@ -105,8 +105,16 @@ class TestIncarRulesSingle:
         )
         assert result.errors == [expected_result]
 
-        incar["ISYM"] = 0
+    @pytest.mark.parametrize("isym", [-1, 0, 3, None])
+    def test_hse_symmetry_compatible(self, isym):
+        """Test the 'hse-symmetry-incompatible' validation rule for compatible ISYM."""
+        tags = {"LHFCALC": True}
+        if isym is not None:
+            tags["ISYM"] = isym
+        incar = Incar(tags)
+        validator = IncarValidator(include_rules=["hse-symmetry-incompatible"])
         result = validator.validate(incar)
+
         assert result.errors == []
 
     def test_potim_too_large(self):
