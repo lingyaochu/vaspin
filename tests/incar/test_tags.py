@@ -34,7 +34,8 @@ class TestTags:
     def test_enum_validation_wrong_type(self):
         """Test enum validation with wrong type."""
         with pytest.raises(
-            TypeError, match="Tag 'ISMEAR' expects type int for ENUM, but got str."
+            TypeError,
+            match=re.escape("Tag 'ISMEAR' expects type int for ENUM, but got str."),
         ):
             _tag = Tag(name="ISMEAR", value="0")
 
@@ -78,6 +79,7 @@ class TestTags:
         """Test handling of a wrong or very rare tag."""
         wrong_tag = {"name": "WRONGTAG", "value": "wrong"}
         with pytest.raises(
-            ValueError, match="Tag 'WRONGTAG' seems to be invalid or very rare."
+            ValueError,
+            match=re.escape("Tag 'WRONGTAG' seems to be invalid or very rare."),
         ):
             Tag(**wrong_tag)

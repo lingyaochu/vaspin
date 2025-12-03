@@ -1,5 +1,7 @@
 """Test about strain tensor."""
 
+import re
+
 import numpy as np
 import pytest
 
@@ -101,7 +103,9 @@ def test_invalid_type():
 def test_invalid_length(sample_strain_input_list):
     """Test build strain tensor from invalid sequence length"""
     invalid_input = [*sample_strain_input_list, 0.1]
-    with pytest.raises(ValueError, match="Too many values provided for StrainTensor."):
+    with pytest.raises(
+        ValueError, match=re.escape("Too many values provided for StrainTensor.")
+    ):
         StrainTensor.from_sequence(invalid_input)
 
 
