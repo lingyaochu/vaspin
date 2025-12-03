@@ -1,5 +1,7 @@
 """Test module for INCAR validator."""
 
+import re
+
 import pytest
 
 from vaspin import Incar
@@ -179,12 +181,14 @@ class TestRegistry:
 
     def test_check_names_empty(self):
         """Test behavior when no rule names are provided."""
-        with pytest.raises(ValueError, match="No rule names provided."):
+        with pytest.raises(ValueError, match=re.escape("No rule names provided.")):
             ValidationRuleRegistry.check_names([])
 
     def test_check_names_invalid(self):
         """Test behavior when invalid rule names are provided."""
-        with pytest.raises(ValueError, match="Rules noregistered are not registered."):
+        with pytest.raises(
+            ValueError, match=re.escape("Rules noregistered are not registered.")
+        ):
             ValidationRuleRegistry.check_names(["noregistered"])
 
     @pytest.mark.parametrize(
@@ -235,7 +239,8 @@ class TestIncarValidator:
     def test_init_validator_error(self):
         """Initialize IncarValidator with both include and exclude rules"""
         with pytest.raises(
-            ValueError, match="Cannot specify both include_rules and exclude_rules."
+            ValueError,
+            match=re.escape("Cannot specify both include_rules and exclude_rules."),
         ):
             IncarValidator(
                 include_rules=["encut-not-set"],

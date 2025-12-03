@@ -70,6 +70,10 @@ convention = "google"
 [tool.ruff.lint.mccabe]
 max-complexity = 10
 
+[tool.mypy]
+explicit_package_bases = true
+namespace_packages = true
+
 [tool.coverage.run]
 source = ["src"]
 

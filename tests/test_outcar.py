@@ -1,5 +1,6 @@
 """Test suite for OUTCAR parser."""
 
+import re
 from typing import List
 
 import pytest
@@ -260,7 +261,9 @@ class TestOutcarErrorHandling:
 
     def test_parser_initialization_with_invalid_path(self):
         """Test that VaspOutcarParser raises TypeError for non-string paths."""
-        with pytest.raises(TypeError, match="The OUTCAR path must be a string."):
+        with pytest.raises(
+            TypeError, match=re.escape("The OUTCAR path must be a string.")
+        ):
             VaspOutcarParser(123)  # type: ignore[arg-type]
 
     def test_parser_initialization_with_nonexistent_file(self, tmp_path):
@@ -275,7 +278,7 @@ class TestOutcarErrorHandling:
         outcar_file.write_text("test content")
         parser = VaspOutcarParser(str(outcar_file))
         with pytest.raises(
-            ValueError, match="At least one handler key must be provided."
+            ValueError, match=re.escape("At least one handler key must be provided.")
         ):
             parser.set_handlers([])
 
@@ -285,7 +288,7 @@ class TestOutcarErrorHandling:
         outcar_file.write_text("test content")
         parser = VaspOutcarParser(str(outcar_file))
         with pytest.raises(
-            ValueError, match="Handler 'Invalid Handler' is not registered."
+            ValueError, match=re.escape("Handler 'Invalid Handler' is not registered.")
         ):
             parser.set_handlers(["Invalid Handler"])
 
