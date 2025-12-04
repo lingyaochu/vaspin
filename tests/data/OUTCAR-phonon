@@ -1,3 +1,248 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:a1449dfdb19550245f34131bc79b9caef43a97a28fbf873a7bb7d8b5d43f2dd6
-size 2168937
+ Dimension of arrays:
+   k-points           NKPTS =     72   k-points in BZ     NKDIM =     72   number of bands    NBANDS=     80
+   number of dos      NEDOS =    301   number of ions     NIONS =      2
+   non local maximal  LDIM  =      4   non local SUM 2l+1 LMDIM =      8
+   total plane-waves  NPLWV =   8000
+   max r-space proj   IRMAX =      1   max aug-charges    IRDMAX=   8592
+   dimension x,y,z NGX =    20 NGY =   20 NGZ =   20
+   dimension x,y,z NGXF=    40 NGYF=   40 NGZF=   40
+   support grid    NGXF=    40 NGYF=   40 NGZF=   40
+   ions per type =               2
+   NGX,Y,Z   is equivalent  to a cutoff of  13.22, 13.22, 13.22 a.u.
+   NGXF,Y,Z  is equivalent  to a cutoff of  26.44, 26.44, 26.44 a.u.
+ INTERNAL STRAIN TENSOR  FOR ION    1  DIRECTION 1   (eV/Angst):
+ -----------------------------------------------------------------------------
+     0.00519  0.00000  0.00000
+     0.00000 -0.00212  3.95602
+     0.00000  3.95602 -0.00212
+
+
+ POSITION                   FORCE-CONSTANT FOR ION    1 DIRECTION 1 (eV/Angst/Angst)
+ -----------------------------------------------------------------------------------
+      1.77834      1.77834      1.77834       -37.772967     -0.000000      0.000000
+      2.66750      2.66750      2.66750        37.772967      0.000000     -0.000000
+ -----------------------------------------------------------------------------------
+    total drift:                                0.000000      0.000000      0.000000
+
+
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+  LATTYP: Found a face centered cubic cell.
+ ALAT       =     3.5566709448
+
+  Lattice vectors:
+
+ A1 = (   0.0000000000,   1.7783354724,   1.7783354724)
+ A2 = (   1.7783354724,   0.0000000000,   1.7783354724)
+ A3 = (   1.7783354724,   1.7783354724,   0.0000000000)
+
+
+Analysis of symmetry for initial positions (statically):
+=====================================================================
+ Subroutine PRICEL returns:
+ Original cell was already a primitive cell.
+
+
+ Routine SETGRP: Setting up the symmetry group for a
+ face centered cubic supercell.
+
+
+ Subroutine GETGRP returns: Found 48 space group operations
+ (whereof 24 operations were pure point group operations)
+ out of a pool of 48 trial point group operations.
+
+
+The static configuration has the point symmetry T_d .
+ The point group associated with its full space group is O_h .
+
+
+Analysis of symmetry for dynamics (positions and initial velocities):
+=====================================================================
+ Subroutine PRICEL returns:
+ Original cell was already a primitive cell.
+
+
+ Routine SETGRP: Setting up the symmetry group for a
+ face centered cubic supercell.
+
+
+ Subroutine GETGRP returns: Found 48 space group operations
+ (whereof 24 operations were pure point group operations)
+ out of a pool of 48 trial point group operations.
+
+
+The dynamic configuration has the point symmetry T_d .
+ The point group associated with its full space group is O_h .
+
+
+Analysis of structural, dynamic, and magnetic symmetry:
+=====================================================================
+ Subroutine PRICEL returns:
+ Original cell was already a primitive cell.
+
+
+ Routine SETGRP: Setting up the symmetry group for a
+ face centered cubic supercell.
+
+
+ Subroutine GETGRP returns: Found 48 space group operations
+ (whereof 24 operations were pure point group operations)
+ out of a pool of 48 trial point group operations.
+
+
+The overall configuration has the point symmetry T_d .
+ The point group associated with its full space group is O_h .
+
+
+ Subroutine INISYM returns: Found 48 space group operations
+ (whereof 24 operations are pure point group operations),
+ and found     1 'primitive' translations
+
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+ INTERNAL STRAIN TENSOR FOR ION    1 for displacements in x,y,z  (eV/Angst):
+          X           Y           Z          XY          YZ          ZX
+  --------------------------------------------------------------------------------
+  x     0.00000    -0.00000    -0.00000    -0.00000     3.95602     0.00000
+  y    -0.00000     0.00000     0.00000    -0.00000     0.00000     3.95602
+  z     0.00000     0.00000     0.00000     3.95602     0.00000    -0.00000
+
+ INTERNAL STRAIN TENSOR FOR ION    2 for displacements in x,y,z  (eV/Angst):
+          X           Y           Z          XY          YZ          ZX
+  --------------------------------------------------------------------------------
+  x    -0.00000     0.00000     0.00000     0.00000    -3.95602    -0.00000
+  y     0.00000    -0.00000    -0.00000     0.00000    -0.00000    -3.95602
+  z    -0.00000    -0.00000    -0.00000    -3.95602    -0.00000     0.00000
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+ SECOND DERIVATIVES (NOT SYMMETRIZED)
+ ------------------------------------
+               1X          1Y          1Z          2X          2Y          2Z
+  1X   -37.772967   -0.000000    0.000000   37.772967    0.000000   -0.000000
+  1Y    -0.000000  -37.772967    0.000000    0.000000   37.772967   -0.000000
+  1Z     0.000000    0.000000  -37.772967   -0.000000   -0.000000   37.772967
+  2X    37.772967    0.000000   -0.000000  -37.772967   -0.000000    0.000000
+  2Y     0.000000   37.772967   -0.000000   -0.000000  -37.772967    0.000000
+  2Z    -0.000000   -0.000000   37.772967    0.000000    0.000000  -37.772967
+
+
+ Eigenvectors and eigenvalues of the dynamical matrix
+ ----------------------------------------------------
+
+
+   1 f  =   39.207278 THz   246.346593 2PiTHz 1307.814022 cm-1   162.148200 meV
+             X         Y         Z           dx          dy          dz
+      1.778335  1.778335  1.778335     0.224710    0.596676   -0.305751
+      2.667503  2.667503  2.667503    -0.224710   -0.596676    0.305751
+
+   2 f  =   39.207278 THz   246.346593 2PiTHz 1307.814022 cm-1   162.148200 meV
+             X         Y         Z           dx          dy          dz
+      1.778335  1.778335  1.778335     0.277594    0.210727    0.615253
+      2.667503  2.667503  2.667503    -0.277594   -0.210727   -0.615253
+
+   3 f  =   39.207278 THz   246.346593 2PiTHz 1307.814022 cm-1   162.148200 meV
+             X         Y         Z           dx          dy          dz
+      1.778335  1.778335  1.778335     0.610284   -0.315550   -0.167275
+      2.667503  2.667503  2.667503    -0.610284    0.315550    0.167275
+
+   4 f  =    0.000001 THz     0.000004 2PiTHz    0.000019 cm-1     0.000002 meV
+             X         Y         Z           dx          dy          dz
+      1.778335  1.778335  1.778335     0.084778    0.701990   -0.004830
+      2.667503  2.667503  2.667503     0.084778    0.701990   -0.004830
+
+   5 f/i=    0.000000 THz     0.000002 2PiTHz    0.000013 cm-1     0.000002 meV
+             X         Y         Z           dx          dy          dz
+      1.778335  1.778335  1.778335     0.701268   -0.084464    0.032997
+      2.667503  2.667503  2.667503     0.701268   -0.084464    0.032997
+
+   6 f/i=    0.000001 THz     0.000004 2PiTHz    0.000020 cm-1     0.000002 meV
+             X         Y         Z           dx          dy          dz
+      1.778335  1.778335  1.778335    -0.032181    0.008746    0.706320
+      2.667503  2.667503  2.667503    -0.032181    0.008746    0.706320
+
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+
+ ELASTIC MODULI CONTR FROM IONIC RELAXATION (kBar)
+ Direction    XX          YY          ZZ          XY          YZ          ZX
+ --------------------------------------------------------------------------------
+ XX          -0.0000     -0.0000      0.0000     -0.0000     -0.0000      0.0000
+ YY          -0.0000     -0.0000     -0.0000     -0.0000      0.0000     -0.0000
+ ZZ           0.0000     -0.0000     -0.0000     -0.0000      0.0000     -0.0000
+ XY          -0.0000     -0.0000     -0.0000    -59.0168      0.0000      0.0000
+ YZ          -0.0000      0.0000      0.0000      0.0000    -59.0168      0.0000
+ ZX           0.0000     -0.0000     -0.0000      0.0000      0.0000    -59.0168
+ --------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+ writing wavefunctions
+     LOOP+:  cpu time    115.7519: real time    116.5325
+    4ORBIT:  cpu time      0.0000: real time      0.0000
+
+
+
+ total charge
+
+# of ion       s       p       d       tot
+------------------------------------------
+    1        0.825   1.751   0.000   2.576
+    2        0.825   1.751   0.000   2.576
+--------------------------------------------------
+tot          1.650   3.503   0.000   5.153
+
+
+
+ magnetization (x)
+
+# of ion       s       p       d       tot
+------------------------------------------
+    1       -0.000   0.000   0.000  -0.000
+    2       -0.000   0.000   0.000  -0.000
+--------------------------------------------------
+tot         -0.000   0.000   0.000  -0.000
+
+
+ total amount of memory used by VASP MPI-rank0    33289. kBytes
+=======================================================================
+
+   base                                    :      30000. kBytes
+   nonl-proj                               :       1484. kBytes
+   fftplans                                :        100. kBytes
+   grid                                    :        772. kBytes
+   one-center                              :         12. kBytes
+   wavefun                                 :        921. kBytes
+
+
+
+ General timing and accounting information for this job:
+ ========================================================
+
+                  Total CPU time used (sec):      119.789
+                            User time (sec):      117.792
+                          System time (sec):        1.997
+                         Elapsed time (sec):      121.532
+
+                   Maximum memory used (kb):      278216.
+                   Average memory used (kb):          N/A
+
+                          Minor page faults:        88406
+                          Major page faults:            0
+                 Voluntary context switches:         3140
