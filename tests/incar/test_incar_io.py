@@ -4,8 +4,8 @@ import json
 
 import pytest
 
-from vaspin.core.io import incar_to_json, read_incar, write_incar
 from vaspin.incar.tags import Tag
+from vaspin.io import incar_to_json, read_incar, write_incar
 
 
 class TestReadIncar:

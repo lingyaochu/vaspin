@@ -311,7 +311,7 @@ class TestOutcarErrorHandling:
 
 def test_handler_log_initialization():
     """Test that handler _log method initializes log list when not present."""
-    from vaspin.core.outcar import NElectronHandler
+    from vaspin.outcar.outcar import NElectronHandler
 
     handler = NElectronHandler()
     data = {}

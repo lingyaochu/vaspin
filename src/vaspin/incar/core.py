@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Iterator, Optional, Self
 
-from vaspin.core.io import read_incar, write_incar
+from vaspin.io import read_incar, write_incar
 
 from .tags import Tag
 
