@@ -7,10 +7,9 @@ from pprint import pprint
 
 import numpy as np
 
-from vaspin import VaspOutcarParser
-from vaspin.core.poscar import Poscar
+from vaspin import Poscar, VaspOutcarParser
 from vaspin.post.efnv import Efnv
-from vaspin.types.array import FloatArray
+from vaspin.types import FloatArray
 
 HANDLER_DIELE = ["Dielectric ele", "Dielectric ion"]
 HANDLER_POT = ["Site potential"]

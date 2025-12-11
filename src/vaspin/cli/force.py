@@ -6,7 +6,7 @@ import numpy as np
 from uniplot import plot
 
 from vaspin import VaspOutcarParser
-from vaspin.types.array import FloatArray
+from vaspin.types import FloatArray
 
 FORCE_HANDLER = ["N ions", "N electrons", "Energy", "Forces"]
 

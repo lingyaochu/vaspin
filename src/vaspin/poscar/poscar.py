@@ -13,8 +13,8 @@ from typing import List, Literal, Self, Tuple
 
 import numpy as np
 
-from vaspin.core.io import read_poscar, write_poscar
-from vaspin.types.array import FloatArray, IntArray, StrArray
+from vaspin.io import read_poscar, write_poscar
+from vaspin.types import FloatArray, IntArray, StrArray
 from vaspin.utils import PosData, StrainTensor, wrap_frac
 
 

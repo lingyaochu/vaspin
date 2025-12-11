@@ -11,8 +11,8 @@ The LICENSE file can be found at: /LICENSES/pydefect/LICENSE
 import numpy as np
 from scipy.special import erfc
 
-from vaspin.core.poscar import Defect, Poscar
-from vaspin.types.array import FloatArray, IntArray
+from vaspin.poscar import Defect, Poscar
+from vaspin.types import FloatArray, IntArray
 
 CUTOFF = 15
 UNIT_CONVERT = 180.95128169876497

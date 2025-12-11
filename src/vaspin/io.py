@@ -12,13 +12,13 @@ from typing import TYPE_CHECKING, Any, Callable, List
 
 import numpy as np
 
-from vaspin.core.outcar import VaspOutcarParser
-from vaspin.types.array import FloatArray, StrArray
+from vaspin.outcar import VaspOutcarParser
+from vaspin.types import FloatArray, StrArray
 
 if TYPE_CHECKING:
     from vaspin.incar.tags import Tag
 
-from ..utils.utils import createdir
+from vaspin.utils.utils import createdir
 
 
 def read_file(filepath: str, fallback: Callable[[str], str]) -> dict[str, Any]:

@@ -5,9 +5,9 @@ from typing import Self, overload
 
 import numpy as np
 
-from vaspin.core.io import read_phonon
-from vaspin.core.poscar import Poscar
-from vaspin.types.array import FloatArray, IntArray
+from vaspin import Poscar
+from vaspin.io import read_phonon
+from vaspin.types import FloatArray, IntArray
 from vaspin.utils.constants import ENERGY_UNITS
 from vaspin.utils.datatype import PhoData
 

@@ -5,7 +5,7 @@ import argparse
 import numpy as np
 
 from vaspin import Poscar, PosData
-from vaspin.types.array import FloatArray
+from vaspin.types import FloatArray
 
 
 def get_defect_coor(pos, defect_site: str | int | list) -> FloatArray:

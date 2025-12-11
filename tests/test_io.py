@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from vaspin.core.io import poscar_to_json, write_poscar
+from vaspin.io import poscar_to_json, write_poscar
 
 
 def test_write_poscar(tmp_path):

@@ -5,7 +5,7 @@ import os
 
 import numpy as np
 
-from vaspin.types.array import FloatArray
+from vaspin.types import FloatArray
 
 
 def createdir(target_dir: str) -> None:

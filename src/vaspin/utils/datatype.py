@@ -5,7 +5,7 @@ from typing import ClassVar, Self, Sequence, Tuple
 
 import numpy as np
 
-from vaspin.types.array import FloatArray, IntArray, StrArray
+from vaspin.types import FloatArray, IntArray, StrArray
 
 from .constants import MASS_DICT
 
