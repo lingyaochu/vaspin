@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING, Any, Callable, List
 import numpy as np
 
 from vaspin.outcar import VaspOutcarParser
-from vaspin.types.array import FloatArray, StrArray
+from vaspin.types import FloatArray, StrArray
 
 if TYPE_CHECKING:
     from vaspin.incar.tags import Tag

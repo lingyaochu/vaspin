@@ -6,7 +6,7 @@ import json
 from typing import Literal
 
 from vaspin import Poscar
-from vaspin.core.io import read_poscar
+from vaspin.io import read_poscar
 
 parser = argparse.ArgumentParser()
 parser.add_argument(

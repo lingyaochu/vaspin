@@ -12,7 +12,7 @@ import numpy as np
 from scipy.special import erfc
 
 from vaspin.poscar import Defect, Poscar
-from vaspin.types.array import FloatArray, IntArray
+from vaspin.types import FloatArray, IntArray
 
 CUTOFF = 15
 UNIT_CONVERT = 180.95128169876497
