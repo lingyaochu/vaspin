@@ -126,6 +126,16 @@ def encut_not_set(incar: Incar) -> bool:
 
 
 @ValidationRuleRegistry.register(
+    name="ispin-not-set",
+    level=ValidationLevel.WARNING,
+    message="ISPIN is not set. Set it unless you know it is correct.",
+)
+def ispin_not_set(incar: Incar) -> bool:
+    """Checks if ISPIN is set in the INCAR file"""
+    return "ISPIN" not in incar
+
+
+@ValidationRuleRegistry.register(
     "parallel-settings-missing",
     ValidationLevel.SUGGESTION,
     "NCORE or NSIM is not set. Setting them can save your time and money.",

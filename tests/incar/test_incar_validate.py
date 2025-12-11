@@ -14,6 +14,7 @@ from vaspin.incar import (
 from vaspin.incar.rules import (
     encut_not_set,
     hse_sym,
+    ispin_not_set,
     no_hse_opt,
     opt_potim,
     parallel_not_set,
@@ -27,6 +28,7 @@ def all_rules():
     """Fixture to provide all validation rules for testing."""
     return {
         "encut-not-set": encut_not_set,
+        "ispin-not-set": ispin_not_set,
         "parallel-settings-missing": parallel_not_set,
         "hse-with-optimization": no_hse_opt,
         "hse-symmetry-incompatible": hse_sym,
@@ -54,6 +56,21 @@ class TestIncarRulesSingle:
         incar["ENCUT"] = 520
         result = validator.validate(incar)
         assert result.errors == []
+
+    def test_ispin_not_set(self) -> None:
+        """Test the 'ispin-not-set' validation rule."""
+        incar = Incar({"ENCUT": 520})
+        validator = IncarValidator(include_rules=["ispin-not-set"])
+        result = validator.validate(incar)
+        expected_result = ValidationResult(
+            level=ValidationLevel.WARNING,
+            message="ISPIN is not set. Set it unless you know it is correct.",
+            name="ispin-not-set",
+        )
+        assert result.warnings == [expected_result]
+        incar["ISPIN"] = 2
+        result = validator.validate(incar)
+        assert result.warnings == []
 
     def test_parallel_setting_missing(self):
         """Test the 'parallel-settings-missing' validation rule."""
