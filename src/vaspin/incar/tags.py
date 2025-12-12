@@ -243,11 +243,3 @@ class Tag:
             if desc
             else f"{self.name} = {self.value}"
         )
-
-
-if __name__ == "__main__":
-    import pprint
-
-    # Example usage
-    ispin = TAG_DEFINITIONS["ISPIN"]
-    pprint.pprint(ispin.valid_choices)
