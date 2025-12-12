@@ -1,18 +1,18 @@
 """Test suite for OUTCAR parser."""
 
 import re
-from typing import List
 
 import pytest
 
 from vaspin import VaspOutcarParser
+from vaspin.types import PathType
 from vaspin.utils.datatype import SymTensor
 
 FLOAT_TOL = 1e-7
 
 
 def set_parser(
-    outcar_path: str, handlers: List[str], verbose: bool = True
+    outcar_path: PathType, handlers: list[str], verbose: bool = True
 ) -> VaspOutcarParser:
     """Set up the parser with the given path and handlers."""
     parser = VaspOutcarParser(outcar_path)
@@ -27,7 +27,7 @@ class TestOptOUTCAR:
     @pytest.fixture(scope="class")
     def parsed_data(self, data_path):
         """Fixture for parsed data from OUTCAR-opt."""
-        outcar_path = (data_path / "OUTCAR-opt").as_posix()
+        outcar_path = data_path / "OUTCAR-opt"
         handlers = ["N ions", "Energy", "Forces", "Site potential"]
         return set_parser(outcar_path, handlers)
 
@@ -79,7 +79,7 @@ class TestSpinOUTCAR:
     @pytest.fixture(scope="class")
     def parsed_data(self, data_path):
         """Fixture for parsed data from OUTCAR-spin."""
-        outcar_path = (data_path / "OUTCAR-spin").as_posix()
+        outcar_path = data_path / "OUTCAR-spin"
         handlers = ["N ions", "D tensor", "Hyperfine fermi", "Hyperfine dipolar"]
         return set_parser(outcar_path, handlers, verbose=False)
 
@@ -148,7 +148,7 @@ class TestPhononOUTCAR:
     @pytest.fixture(scope="class")
     def parsed_data(self, data_path):
         """Fixture for parsed data from OUTCAR-phonon."""
-        outcar_path = (data_path / "OUTCAR-phonon").as_posix()
+        outcar_path = data_path / "OUTCAR-phonon"
         handlers = ["N ions", "Phonon"]
         return set_parser(outcar_path, handlers)
 
@@ -211,7 +211,7 @@ class TestNormalOUTCAR:
     @pytest.fixture(scope="class")
     def parsed_data(self, data_path):
         """Fixture for parsed data from OUTCAR-normal."""
-        outcar_path = (data_path / "OUTCAR-normal").as_posix()
+        outcar_path = data_path / "OUTCAR-normal"
         handlers = ["N ions", "N electrons", "Dielectric ele", "Dielectric ion"]
         return set_parser(outcar_path, handlers)
 
@@ -270,13 +270,13 @@ class TestOutcarErrorHandling:
         """Test that VaspOutcarParser raises FileNotFoundError for non-existent file."""
         outcar_file = tmp_path / "OUTCAR"
         with pytest.raises(FileNotFoundError, match=f"File not found: {outcar_file}"):
-            VaspOutcarParser(str(outcar_file))
+            VaspOutcarParser(outcar_file)
 
     def test_set_handlers_with_empty_list(self, tmp_path):
         """Test that set_handlers raises ValueError for an empty list."""
         outcar_file = tmp_path / "OUTCAR"
         outcar_file.write_text("test content")
-        parser = VaspOutcarParser(str(outcar_file))
+        parser = VaspOutcarParser(outcar_file)
         with pytest.raises(
             ValueError, match=re.escape("At least one handler key must be provided.")
         ):
@@ -286,7 +286,7 @@ class TestOutcarErrorHandling:
         """Test that set_handlers raises ValueError for an unregistered handler."""
         outcar_file = tmp_path / "OUTCAR"
         outcar_file.write_text("test content")
-        parser = VaspOutcarParser(str(outcar_file))
+        parser = VaspOutcarParser(outcar_file)
         with pytest.raises(
             ValueError, match=re.escape("Handler 'Invalid Handler' is not registered.")
         ):
@@ -295,7 +295,7 @@ class TestOutcarErrorHandling:
     @pytest.mark.parametrize("verbose", [True, False])
     def test_parse_with_error_file(self, data_path, verbose):
         """Test that parse raises RuntimeError for an OUTCAR with errors."""
-        outcar_path = (data_path / "OUTCAR-normal-error").as_posix()
+        outcar_path = data_path / "OUTCAR-normal-error"
         handlers = ["N ions", "N electrons", "Dielectric ele", "Dielectric ion"]
         parsed_data = set_parser(outcar_path, handlers, verbose=verbose)
 

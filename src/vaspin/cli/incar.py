@@ -1,7 +1,7 @@
 """The cli for INCAR file handling and manipulation."""
 
 import argparse
-from typing import Callable
+from collections.abc import Callable
 
 from vaspin import Incar
 from vaspin.incar.validator import IncarValidator

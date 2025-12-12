@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Vaspin Utilities Module
 
 Contains utility functions for VASP file handling and structure manipulation.

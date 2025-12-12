@@ -6,9 +6,10 @@ Contains functionality for reading and writing VASP files.
 from __future__ import annotations
 
 import re
-from json import JSONDecodeError, dumps, load, loads
+from collections.abc import Callable
+from json import JSONDecodeError, dumps, loads
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable, List
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 
@@ -37,12 +38,12 @@ def read_file(filepath: PathType, fallback: Callable[[str], str]) -> dict[str, A
     Raises:
         FileNotFoundError: If the file does not exist
     """
-    if not Path(filepath).exists():
+    filepath = Path(filepath)
+    if not filepath.exists():
         raise FileNotFoundError(f"File does not exist: {filepath}")
 
     try:
-        with open(filepath, "r") as f:
-            data = load(f)
+        data = loads(filepath.read_text())
     except JSONDecodeError:
         data = loads(fallback(filepath))
 
@@ -74,9 +75,8 @@ def poscar_to_json(filepath: PathType) -> str:
         ValueError: Invalid file format
     """
     try:
-        with open(filepath, "r") as f:
-            poscar_lines = f.readlines()
-    except (IOError, ValueError) as e:
+        poscar_lines = Path(filepath).read_text().splitlines()
+    except (OSError, ValueError) as e:
         raise ValueError(f"Cannot parse POSCAR file {filepath}: {e}") from e
 
     comment = poscar_lines[0].strip()
@@ -159,8 +159,9 @@ def write_poscar(
         number_str += f" {atoms_list.count(atom)}"
 
     # Write to file
+    directory = Path(directory)
     createdir(directory)
-    with open(directory + f"/{name}", "w") as f:
+    with (directory / f"{name}").open("w") as f:
         f.write(comment + "\n")
         f.write(" 1.0\n")
         f.write(lattice_str)
@@ -170,7 +171,7 @@ def write_poscar(
         f.write(coor_str)
 
 
-def read_phonon(phononfile: PathType) -> dict[str, List[float]]:
+def read_phonon(phononfile: PathType) -> dict[str, list[float]]:
     """Read phonon data from files
 
     Args:
@@ -223,9 +224,8 @@ def incar_to_json(filepath: PathType) -> str:
         JSON formatted string
     """
     try:
-        with open(filepath, "r") as f:
-            incar_lines = f.readlines()
-    except (IOError, ValueError) as e:
+        incar_lines = filepath.read_text().splitlines()
+    except (OSError, ValueError) as e:
         raise ValueError(f"Cannot parse INCAR file {filepath}: {e}") from e
 
     incar_dict = {}
@@ -281,5 +281,4 @@ def write_incar(
     createdir(directory)
 
     incar_string = "\n".join(str(tag) for tag in tags)
-    with open(file_path, "w") as f:
-        f.write(incar_string)
+    file_path.write_text(incar_string)

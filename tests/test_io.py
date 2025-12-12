@@ -1,12 +1,14 @@
 """Test suite for io module"""
 
+from pathlib import Path
+
 import numpy as np
 import pytest
 
 from vaspin.io import poscar_to_json, write_poscar
 
 
-def test_write_poscar(tmp_path):
+def test_write_poscar(tmp_path: Path):
     """Test writing POSCAR file"""
     lattice = np.eye(3)
     atoms = np.array(["Si", "Si", "C"])
@@ -23,7 +25,7 @@ def test_write_poscar(tmp_path):
         lattice=lattice,
         atoms=atoms,
         coor_frac=coor_frac,
-        directory=str(tmp_path),
+        directory=tmp_path,
         comment=comment,
     )
 
@@ -43,13 +45,13 @@ Direct
    0.2500000000000000   0.2500000000000000   0.2500000000000000
 """
     # use readlines to avoid trailing newline issues
-    with open(poscar_path, "r") as f:
+    with poscar_path.open() as f:
         assert f.read().strip() == expected_content.strip(), (
             f"Content of {poscar_path} does not match expected content."
         )
 
 
-def test_poscar_to_json_invalid_format(tmp_path):
+def test_poscar_to_json_invalid_format(tmp_path: Path):
     """Test poscar_to_json with an invalid POSCAR file format"""
     invalid_poscar_content = """Invalid POSCAR
 not_a_number
@@ -62,8 +64,7 @@ Direct
 0 0 0
 """
     invalid_poscar_path = tmp_path / "POSCAR_invalid"
-    with open(invalid_poscar_path, "w") as f:
-        f.write(invalid_poscar_content)
+    invalid_poscar_path.write_text(invalid_poscar_content, encoding="utf-8")
 
     with pytest.raises(ValueError):
         poscar_to_json(str(invalid_poscar_path))

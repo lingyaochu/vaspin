@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import NamedTuple, Optional
+from typing import NamedTuple
 
 from rich.console import Console
 from rich.panel import Panel
@@ -58,8 +58,8 @@ class IncarValidator:
 
     def __init__(
         self,
-        include_rules: Optional[list[str]] = None,
-        exclude_rules: Optional[list[str]] = None,
+        include_rules: list[str] | None = None,
+        exclude_rules: list[str] | None = None,
     ):
         """Initializes the validator with a specified set of rules.
 

@@ -1,7 +1,8 @@
 """some dataclass for vaspin"""
 
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import ClassVar, Self, Sequence, Tuple
+from typing import ClassVar, Self
 
 import numpy as np
 
@@ -21,7 +22,7 @@ class SymTensor:
     yz: float = 0.0
     xz: float = 0.0
 
-    _COMPONENTS: ClassVar[Tuple[str, ...]] = ("xx", "yy", "zz", "xy", "xz", "yz")
+    _COMPONENTS: ClassVar[tuple[str, ...]] = ("xx", "yy", "zz", "xy", "xz", "yz")
 
     @classmethod
     def from_sequence(cls, values: Sequence[float]) -> Self:

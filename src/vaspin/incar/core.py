@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Any, Iterator, Optional, Self
+from typing import Any, Self
 
 from vaspin.io import read_incar, write_incar
 from vaspin.types import PathType
@@ -14,7 +15,7 @@ from .tags import Tag
 class Incar:
     """A class to represent the INCAR file."""
 
-    def __init__(self, data: Optional[dict[str, Any]] = None) -> None:
+    def __init__(self, data: dict[str, Any] | None = None) -> None:
         """Initialize the INCAR object with data.
 
         Args:

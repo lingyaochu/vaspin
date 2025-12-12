@@ -42,12 +42,11 @@ class TestIncarCore:
     def test_init_from_file(self, data_path_incar):
         """Test initialization from a file"""
         incar_file = data_path_incar / "INCAR"
-        incar_from_file = Incar.from_file(incar_file.as_posix())
+        incar_from_file = Incar.from_file(incar_file)
         assert isinstance(incar_from_file, Incar)
         assert len(incar_from_file) == 19
 
-        with open(data_path_incar / "incar.json", "r") as f:
-            incar_data = json.load(f)
+        incar_data = json.loads((data_path_incar / "incar.json").read_text())
 
         for key, value in incar_data.items():
             assert key in incar_from_file
@@ -78,10 +77,9 @@ class TestIncarCore:
 
     def test_write_incar(self, tmp_path, incar_instance):
         """Test writing INCAR to a file"""
-        incar_instance.write_incar(tmp_path.as_posix(), name="INCAR_TEST")
+        incar_instance.write_incar(tmp_path, name="INCAR_TEST")
         written_file = tmp_path / "INCAR_TEST"
         assert written_file.exists()
-        with open(written_file, "r") as f:
-            content = f.read()
+        content = written_file.read_text()
         assert "ENCUT = 520" in content
         assert "ISMEAR = 0" in content

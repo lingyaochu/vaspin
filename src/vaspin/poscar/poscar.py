@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Poscar Module
 
 Contains functionality for handling VASP POSCAR files and structure manipulation.
@@ -9,7 +8,7 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass, field, replace
 from itertools import product
-from typing import List, Literal, Self, Tuple
+from typing import Literal, Self
 
 import numpy as np
 
@@ -730,13 +729,13 @@ class StruMapping:
     dtol: float = 0.5
 
     # Atom mapping from stru_from to stru_to
-    mapping: List[Tuple[int, int, Tuple[str, str], float]] = field(init=False)
+    mapping: list[tuple[int, int, tuple[str, str], float]] = field(init=False)
 
     def __post_init__(self):
         """Get the mapping relation from one structure to another"""
         self.mapping = self.atom_relation()
 
-    def atom_relation(self) -> List[Tuple[int, int, Tuple[str, str], float]]:
+    def atom_relation(self) -> list[tuple[int, int, tuple[str, str], float]]:
         """Project atoms from one structure to another
 
         Args:
@@ -798,8 +797,8 @@ class StruMapping:
 
     @staticmethod
     def multi_cast(
-        multimap: dict[int, List[Tuple[int, int, Tuple[str, str], float]]],
-    ) -> List[Tuple[int, int, Tuple[str, str], float]]:
+        multimap: dict[int, list[tuple[int, int, tuple[str, str], float]]],
+    ) -> list[tuple[int, int, tuple[str, str], float]]:
         """Cast the multi_mapped result to get the redundant atoms based on distance"""
         redundant_atoms = []
         for _idto, idfrom_list in multimap.items():
