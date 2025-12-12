@@ -169,9 +169,7 @@ class TestPhonon:
         """Test the from_file method of the Phonon class"""
         outcar_path = data_path / "OUTCAR-phonon-SiC"
         poscar_path = data_path / "POSCAR-SiC"
-        phonon_obj_fromfile = Phonon.from_file(
-            outcar_path.as_posix(), poscar_path.as_posix()
-        )
+        phonon_obj_fromfile = Phonon.from_file(outcar_path, poscar_path)
 
         keys = ["freq", "mode", "mass"]
         for key in keys:

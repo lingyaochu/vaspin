@@ -36,12 +36,12 @@ class TestPoscar:
     @pytest.fixture(scope="class")
     def sample_poscar_file_frac(self, data_path):
         """Fixture for sample POSCAR file with fractional coordinates"""
-        return (data_path / "POSCAR_frac").as_posix()
+        return data_path / "POSCAR_frac"
 
     @pytest.fixture(scope="class")
     def sample_poscar_file_cate(self, data_path):
         """Fixture for sample POSCAR file with cartesian coordinates"""
-        return (data_path / "POSCAR_cate").as_posix()
+        return data_path / "POSCAR_cate"
 
     @pytest.fixture(scope="class")
     def sample_poscar_frac(self, sample_poscar_file_frac):
@@ -488,10 +488,10 @@ class TestPoscar:
         """Test write_poscar method"""
         poscar_tobe_written = request.getfixturevalue(poscar_tobe_written)
         file_name = "POSCAR_test"
-        poscar_tobe_written.write_poscar(directory=tmp_path.as_posix(), name=file_name)
+        poscar_tobe_written.write_poscar(directory=tmp_path, name=file_name)
         assert (tmp_path / file_name).exists(), "The output file was not created"
 
-        poscar_reload = Poscar.from_file((tmp_path / file_name).as_posix())
+        poscar_reload = Poscar.from_file(tmp_path / file_name)
         assert poscar_reload == poscar_tobe_written, (
             """The written POSCAR did not match the original"""
         )

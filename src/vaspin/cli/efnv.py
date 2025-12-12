@@ -9,13 +9,13 @@ import numpy as np
 
 from vaspin import Poscar, VaspOutcarParser
 from vaspin.post.efnv import Efnv
-from vaspin.types import FloatArray
+from vaspin.types import FloatArray, PathType
 
 HANDLER_DIELE = ["Dielectric ele", "Dielectric ion"]
 HANDLER_POT = ["Site potential"]
 
 
-def get_dielectric(outcar_file: str) -> FloatArray:
+def get_dielectric(outcar_file: PathType) -> FloatArray:
     """Extract dielectric constant from OUTCAR file."""
     parser = VaspOutcarParser(outcar_file)
     parser.set_handlers(HANDLER_DIELE)
@@ -27,7 +27,7 @@ def get_dielectric(outcar_file: str) -> FloatArray:
     return np.array(dielectric_ele) + np.array(dielectric_ion)
 
 
-def get_site_potential(outcar_file: str) -> FloatArray:
+def get_site_potential(outcar_file: PathType) -> FloatArray:
     """Extract site potential from OUTCAR file."""
     parser = VaspOutcarParser(outcar_file)
     parser.set_handlers(HANDLER_POT)
@@ -63,11 +63,11 @@ def main():
     poscar_de_path = Path(args.defect) / "CONTCAR"
     outcar_diele_path = Path(args.epsilon) / "OUTCAR"
 
-    poscar_sc = Poscar.from_file(poscar_sc_path.as_posix())
-    poscar_de = Poscar.from_file(poscar_de_path.as_posix())
-    dielectric = get_dielectric(outcar_diele_path.as_posix())
-    pot_sc = get_site_potential(outcar_sc_path.as_posix())
-    pot_de = get_site_potential(outcar_de_path.as_posix())
+    poscar_sc = Poscar.from_file(poscar_sc_path)
+    poscar_de = Poscar.from_file(poscar_de_path)
+    dielectric = get_dielectric(outcar_diele_path)
+    pot_sc = get_site_potential(outcar_sc_path)
+    pot_de = get_site_potential(outcar_de_path)
 
     efnv_corr = Efnv(poscar_sc, poscar_de, pot_sc, pot_de, dielectric, args.charge)
 
@@ -78,5 +78,4 @@ def main():
     }
 
     pprint(correction)
-    with open(Path(args.defect) / "efnv.json", "w") as f:
-        json.dump(correction, f, indent=4)
+    (Path(args.defect) / "efnv.json").write_text(json.dumps(correction, indent=4))

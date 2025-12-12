@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from enum import Enum
-from typing import Any, Callable, ClassVar, NamedTuple, Optional
+from typing import Any, ClassVar, NamedTuple
 
 from .core import Incar
 
@@ -24,7 +25,7 @@ class ValidationResult(NamedTuple):
     name: str
 
 
-ValidationRule = Callable[[Incar], Optional[ValidationResult]]
+ValidationRule = Callable[[Incar], ValidationResult | None]
 
 
 class ValidationRuleRegistry:
@@ -55,7 +56,7 @@ class ValidationRuleRegistry:
         def decorator(
             check_func: Callable[[Incar], bool | dict[str, Any]],
         ) -> ValidationRule:
-            def wrapper(incar: Incar) -> Optional[ValidationResult]:
+            def wrapper(incar: Incar) -> ValidationResult | None:
                 validation_failed = check_func(incar)
                 if not validation_failed:
                     return None

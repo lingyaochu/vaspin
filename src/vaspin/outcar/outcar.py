@@ -1,9 +1,10 @@
 """Module to parse VASP OUTCAR files."""
 
-import os
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Type
+from pathlib import Path
+from typing import Any
 
+from vaspin.types import PathType
 from vaspin.utils.datatype import SymTensor
 
 
@@ -42,7 +43,7 @@ class InfoHandler(ABC):
 
     @abstractmethod
     def parse(
-        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+        self, lines: list[str], line_idx: int, data: dict[str, Any], state: ParserState
     ) -> int:
         """Parse the relevant information starting from the matched line.
 
@@ -57,18 +58,18 @@ class InfoHandler(ABC):
         """
         pass  # pragma: no cover
 
-    def _log(self, data: Dict[str, Any], message: str):
+    def _log(self, data: dict[str, Any], message: str):
         """Helper to add logs to a common log list in the data dict."""
         if "_parse_log" not in data:
             data["_parse_log"] = []
         data["_parse_log"].append(f"{self.__class__.__name__}: {message}")
 
-    def _skip_lines(self, lines: List[str], line_idx: int, num_lines: int) -> int:
+    def _skip_lines(self, lines: list[str], line_idx: int, num_lines: int) -> int:
         """Skip a number of lines and return the new line index."""
         return min(line_idx + num_lines, len(lines))
 
 
-HANDLERS: Dict[str, Type[InfoHandler]] = {}
+HANDLERS: dict[str, type[InfoHandler]] = {}
 
 
 class NElectronHandler(InfoHandler):
@@ -82,7 +83,7 @@ class NElectronHandler(InfoHandler):
         return "total number of electrons"
 
     def parse(
-        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+        self, lines: list[str], line_idx: int, data: dict[str, Any], state: ParserState
     ) -> int:
         """Parse the number of electrons."""
         self._log(data, "Parsing number of electrons.")
@@ -103,7 +104,7 @@ class NIonsHandler(InfoHandler):
         return "number of ions     NIONS"
 
     def parse(
-        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+        self, lines: list[str], line_idx: int, data: dict[str, Any], state: ParserState
     ) -> int:
         """Parse the number of ions."""
         self._log(data, "Parsing number of ions.")
@@ -125,7 +126,7 @@ class DTensorHandler(InfoHandler):
         return "Spin-spin contribution to zero-field splitting tensor (MHz)"
 
     def parse(
-        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+        self, lines: list[str], line_idx: int, data: dict[str, Any], state: ParserState
     ) -> int:
         """Parse the D tensor block."""
         self._log(data, "Parsing D tensor block.")
@@ -150,7 +151,7 @@ class ForceHandler(InfoHandler):
         return "TOTAL-FORCE (eV/Angst)"
 
     def parse(
-        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+        self, lines: list[str], line_idx: int, data: dict[str, Any], state: ParserState
     ) -> int:
         """Parse the forces on atoms."""
         self._log(data, "Parsing forces on atoms.")
@@ -181,7 +182,7 @@ class IonicEnergyHandler(InfoHandler):
         return "FREE ENERGIE OF THE ION-ELECTRON SYSTEM (eV)"
 
     def parse(
-        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+        self, lines: list[str], line_idx: int, data: dict[str, Any], state: ParserState
     ) -> int:
         """Parse the energy of each ionic step."""
         self._log(data, "Parsing ionic energy.")
@@ -208,7 +209,7 @@ class PhononHandler(InfoHandler):
         return "Eigenvectors and eigenvalues of the dynamical matrix"
 
     def parse(
-        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+        self, lines: list[str], line_idx: int, data: dict[str, Any], state: ParserState
     ) -> int:
         """Parse the phonon frequencies and eigenvectors."""
         self._log(data, "Parsing phonon frequencies.")
@@ -259,7 +260,7 @@ class DielectricEleHandler(InfoHandler):
         )
 
     def parse(
-        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+        self, lines: list[str], line_idx: int, data: dict[str, Any], state: ParserState
     ) -> int:
         """Parse the dielectric tensor."""
         # the electronic part appears twice, skip the second
@@ -292,7 +293,7 @@ class DielectricIonHandler(InfoHandler):
         return "MACROSCOPIC STATIC DIELECTRIC TENSOR IONIC CONTRIBUTION"
 
     def parse(
-        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+        self, lines: list[str], line_idx: int, data: dict[str, Any], state: ParserState
     ) -> int:
         """Parse the ionic part of dielectric tensor."""
         self._log(data, "Parsing dielectric tensor, the ionic part.")
@@ -320,7 +321,7 @@ class HyperfineFermiHandler(InfoHandler):
         return "Fermi contact (isotropic) hyperfine coupling parameter (MHz)"
 
     def parse(
-        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+        self, lines: list[str], line_idx: int, data: dict[str, Any], state: ParserState
     ) -> int:
         """Parse the hyperfine interaction parameters from fermi contact."""
         self._log(data, "Parsing hyperfine interaction parameters from fermi contact.")
@@ -362,7 +363,7 @@ class HyperfineDipolarHandler(InfoHandler):
         return "Dipolar hyperfine coupling parameters (MHz)"
 
     def parse(
-        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+        self, lines: list[str], line_idx: int, data: dict[str, Any], state: ParserState
     ) -> int:
         """Parse the hyperfine interaction parameters from dipolar interaction."""
         self._log(
@@ -394,7 +395,7 @@ class SitePotHandler(InfoHandler):
         return "the norm of the test charge is"
 
     def parse(
-        self, lines: List[str], line_idx: int, data: Dict[str, Any], state: ParserState
+        self, lines: list[str], line_idx: int, data: dict[str, Any], state: ParserState
     ) -> int:
         """Parse the site potentials for each atom in the last ionic step."""
         self._log(data, "Parsing site potentials for each atom.")
@@ -420,21 +421,21 @@ class SitePotHandler(InfoHandler):
 class VaspOutcarParser:
     """Parses VASP OUTCAR files using a modular handler system."""
 
-    def __init__(self, outcar_path: str):
+    def __init__(self, outcar_path: PathType):
         """Initialize the parser with the path to the OUTCAR file."""
-        if not isinstance(outcar_path, str):
-            raise TypeError("The OUTCAR path must be a string.")
-
-        if not os.path.isfile(outcar_path):
+        if not isinstance(outcar_path, PathType):
+            raise TypeError("The OUTCAR path must be a string or Path")
+        outcar_path = Path(outcar_path)
+        if not Path.is_file(outcar_path):
             raise FileNotFoundError(f"File not found: {outcar_path}")
 
-        self.outcar_path: str = outcar_path
-        self.data: Dict[str, Any] = {}
+        self.outcar_path: Path = outcar_path
+        self.data: dict[str, Any] = {}
         self._state: ParserState = ParserState()
         # Register handler instances
-        self._handlers: List[InfoHandler] = self._initialize_handlers()
+        self._handlers: list[InfoHandler] = self._initialize_handlers()
 
-    def _initialize_handlers(self) -> List[InfoHandler]:
+    def _initialize_handlers(self) -> list[InfoHandler]:
         """Creates and returns a list of handler instances."""
         # The order might matter if some headers are substrings of others,
         # or if some handlers rely on state set by previous ones (like NIONS).
@@ -448,7 +449,7 @@ class VaspOutcarParser:
             DTensorHandler(),
         ]
 
-    def set_handlers(self, handler_keys: List[str]):
+    def set_handlers(self, handler_keys: list[str]):
         """Set custom handlers to be used for parsing."""
         if len(handler_keys) == 0:
             raise ValueError("At least one handler key must be provided.")
@@ -464,7 +465,7 @@ class VaspOutcarParser:
 
         self._handlers = handlers
 
-    def _find_handler_matches(self, lines: List[str]) -> List[tuple[InfoHandler, int]]:
+    def _find_handler_matches(self, lines: list[str]) -> list[tuple[InfoHandler, int]]:
         """Find all matches for registered handlers in the content."""
         matches = []
 
@@ -487,11 +488,7 @@ class VaspOutcarParser:
         self._log(f"Starting parsing of '{self.outcar_path}'")
 
         # Read the entire file content into memory as lines
-        with open(self.outcar_path, "r") as f:
-            lines = f.readlines()
-
-        # Strip newlines from each line
-        lines = [line.rstrip("\n\r") for line in lines]
+        lines = self.outcar_path.read_text().splitlines()
 
         self._log(f"File content loaded, {len(lines)} lines")
 
@@ -520,17 +517,17 @@ class VaspOutcarParser:
         self.data["_parse_log"].append(f"Parser: {message}")
 
     @property
-    def dmat(self) -> List[List[float]]:
+    def dmat(self) -> list[list[float]]:
         """Returns the D matrix from the parsed data."""
         return self.data.get("D tensor", [])
 
     @property
-    def force(self) -> List[List[List[float]]]:
+    def force(self) -> list[list[list[float]]]:
         """Returns the forces from the parsed data."""
         return self.data.get("forces", [])
 
     @property
-    def energy(self) -> List[float]:
+    def energy(self) -> list[float]:
         """Returns the ionic energy from the parsed data."""
         return self.data.get("Ionic energy", [])
 
@@ -545,36 +542,36 @@ class VaspOutcarParser:
         return self.data.get("N ions", 0)
 
     @property
-    def phonon(self) -> Dict[str, Any]:
+    def phonon(self) -> dict[str, Any]:
         """Returns the phonon data from the parsed data."""
         return self.data.get("phonon", {})
 
     @property
-    def dielectric_ele(self) -> List[List[float]]:
+    def dielectric_ele(self) -> list[list[float]]:
         """Returns the electronic part of dielectric tensor from the parsed data."""
         return self.data.get("dielectric_ele", [])
 
     @property
-    def dielectric_ion(self) -> List[List[float]]:
+    def dielectric_ion(self) -> list[list[float]]:
         """Returns the ionic part of dielectric tensor from the parsed data."""
         return self.data.get("dielectric_ion", [])
 
     @property
-    def hyperfine_fermi(self) -> Dict[str, List[float]]:
+    def hyperfine_fermi(self) -> dict[str, list[float]]:
         """Returns the fermi contact hyperfine parameters from the parsed data."""
         return self.data.get("hyperfine_fermi", {})
 
     @property
-    def hyperfine_dipolar(self) -> List[List[List[float]]]:
+    def hyperfine_dipolar(self) -> list[list[list[float]]]:
         """Returns the dipolar hyperfine parameters from the parsed data."""
         return self.data.get("hyperfine_dipolar", [])
 
     @property
-    def site_potential(self) -> List[float]:
+    def site_potential(self) -> list[float]:
         """Returns the site potentials for each atom from the parsed data."""
         return self.data.get("site_potential", [])
 
     @property
-    def log(self) -> List[str]:
+    def log(self) -> list[str]:
         """Returns the parse log."""
         return self.data.get("_parse_log", [])

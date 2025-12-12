@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Poscar Module
 
 Contains functionality for handling VASP POSCAR files and structure manipulation.
@@ -9,12 +8,12 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import dataclass, field, replace
 from itertools import product
-from typing import List, Literal, Self, Tuple
+from typing import Literal, Self
 
 import numpy as np
 
 from vaspin.io import read_poscar, write_poscar
-from vaspin.types import FloatArray, IntArray, StrArray
+from vaspin.types import FloatArray, IntArray, PathType, StrArray
 from vaspin.utils import PosData, StrainTensor, wrap_frac
 
 
@@ -37,7 +36,7 @@ class Poscar:
         self.data = posdata
 
     @classmethod
-    def from_file(cls, filepath: str) -> Self:
+    def from_file(cls, filepath: PathType) -> Self:
         """Create a Poscar object from a json or POSCAR file
 
         Args:
@@ -46,8 +45,8 @@ class Poscar:
         Returns:
             Poscar object
         """
-        if not isinstance(filepath, str):
-            raise TypeError("filepath must be a string")
+        if not isinstance(filepath, PathType):
+            raise TypeError("filepath must be a string or Path")
 
         __data = read_poscar(filepath)
         __data["lattice"] = np.array(__data["lattice"])
@@ -257,7 +256,7 @@ class Poscar:
         lattice: FloatArray | None = None,
         atoms: StrArray | None = None,
         coor_frac: FloatArray | None = None,
-        directory: str = ".",
+        directory: PathType = ".",
         comment: str | None = None,
         name: str = "POSCAR",
     ) -> None:
@@ -730,13 +729,13 @@ class StruMapping:
     dtol: float = 0.5
 
     # Atom mapping from stru_from to stru_to
-    mapping: List[Tuple[int, int, Tuple[str, str], float]] = field(init=False)
+    mapping: list[tuple[int, int, tuple[str, str], float]] = field(init=False)
 
     def __post_init__(self):
         """Get the mapping relation from one structure to another"""
         self.mapping = self.atom_relation()
 
-    def atom_relation(self) -> List[Tuple[int, int, Tuple[str, str], float]]:
+    def atom_relation(self) -> list[tuple[int, int, tuple[str, str], float]]:
         """Project atoms from one structure to another
 
         Args:
@@ -798,8 +797,8 @@ class StruMapping:
 
     @staticmethod
     def multi_cast(
-        multimap: dict[int, List[Tuple[int, int, Tuple[str, str], float]]],
-    ) -> List[Tuple[int, int, Tuple[str, str], float]]:
+        multimap: dict[int, list[tuple[int, int, tuple[str, str], float]]],
+    ) -> list[tuple[int, int, tuple[str, str], float]]:
         """Cast the multi_mapped result to get the redundant atoms based on distance"""
         redundant_atoms = []
         for _idto, idfrom_list in multimap.items():

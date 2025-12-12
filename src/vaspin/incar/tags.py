@@ -5,14 +5,14 @@ import re
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, List, Optional, Type
+from typing import Any
 
 # TAG_DATABASE is defined but not used in the file, so it's commented out.
 # TAG_DATABASE = Path(__file__).parent / "data" / "tags_info"
 TAG_FILE_PREDEFINED = Path(__file__).parent / "data" / "tag_data.json"
 
-with open(TAG_FILE_PREDEFINED, "r") as f:
-    ALL_TAGS_PREDEFINED: dict[str, dict] = json.load(f)
+ALL_TAGS_PREDEFINED = json.loads(TAG_FILE_PREDEFINED.read_text())
+
 TAGS_PREDEFINED = list(ALL_TAGS_PREDEFINED.keys())
 
 
@@ -36,13 +36,13 @@ class TagDefinition:
         self.name = name
         self.description = definition.get("description", "")
         self.type_str = definition.get("type", "string")
-        self.valid_choices: Optional[List[Any]] | dict[str, Any] = definition.get(
+        self.valid_choices: list[Any] | None | dict[str, Any] = definition.get(
             "valid_values"
         )
         self.base_type, self.sub_type = self._parse_type(self.type_str)
 
     @staticmethod
-    def _parse_type(type_str: str) -> tuple[IncarType, Type]:
+    def _parse_type(type_str: str) -> tuple[IncarType, type]:
         """Parses the type string to determine the base and sub-type.
 
         For simple types, returns the corresponding IncarType and None for sub_type.
@@ -67,7 +67,7 @@ class TagDefinition:
         if type_str_lower in simple_types:
             return simple_types[type_str_lower]
 
-        subtype_map: dict[str, Type] = {
+        subtype_map: dict[str, type] = {
             "int": int,
             "float": float,
             "bool": bool,

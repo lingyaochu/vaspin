@@ -3,6 +3,7 @@
 
 import argparse
 import json
+from pathlib import Path
 from typing import Literal
 
 from vaspin import Poscar
@@ -39,8 +40,7 @@ args = parser.parse_args()
 def write_json() -> None:
     """Write the POSCAR file to JSON file"""
     pos_json_str = read_poscar(args.directory + "/POSCAR")
-    with open(args.directory + "/pos.json", "w") as f:
-        json.dump(pos_json_str, f, indent=4)
+    (Path(args.directory) / "pos.json").write_text(json.dumps(pos_json_str, indent=4))
 
 
 def get_lattice() -> None:

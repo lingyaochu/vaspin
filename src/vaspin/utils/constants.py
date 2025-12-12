@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Helper functions for VASP file handling and structure manipulation."""
 
 # 元素质量字典

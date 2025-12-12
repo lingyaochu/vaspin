@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
 """Utility functions for VASP file handling and structure manipulation."""
 
-import os
+from pathlib import Path
 
 import numpy as np
 
-from vaspin.types import FloatArray
+from vaspin.types import FloatArray, PathType
 
 
-def createdir(target_dir: str) -> None:
+def createdir(target_dir: PathType) -> None:
     """Create the target directory if it does not exist.
 
     Args:
@@ -17,10 +16,11 @@ def createdir(target_dir: str) -> None:
     Returns:
         None
     """
-    if os.path.exists(target_dir):
+    target_dir = Path(target_dir)
+    if target_dir.exists():
         return
 
-    os.makedirs(target_dir)
+    target_dir.mkdir(parents=True, exist_ok=True)
     return None
 
 
