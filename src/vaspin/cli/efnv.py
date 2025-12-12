@@ -9,13 +9,13 @@ import numpy as np
 
 from vaspin import Poscar, VaspOutcarParser
 from vaspin.post.efnv import Efnv
-from vaspin.types import FloatArray
+from vaspin.types import FloatArray, PathType
 
 HANDLER_DIELE = ["Dielectric ele", "Dielectric ion"]
 HANDLER_POT = ["Site potential"]
 
 
-def get_dielectric(outcar_file: str) -> FloatArray:
+def get_dielectric(outcar_file: PathType) -> FloatArray:
     """Extract dielectric constant from OUTCAR file."""
     parser = VaspOutcarParser(outcar_file)
     parser.set_handlers(HANDLER_DIELE)
@@ -27,7 +27,7 @@ def get_dielectric(outcar_file: str) -> FloatArray:
     return np.array(dielectric_ele) + np.array(dielectric_ion)
 
 
-def get_site_potential(outcar_file: str) -> FloatArray:
+def get_site_potential(outcar_file: PathType) -> FloatArray:
     """Extract site potential from OUTCAR file."""
     parser = VaspOutcarParser(outcar_file)
     parser.set_handlers(HANDLER_POT)

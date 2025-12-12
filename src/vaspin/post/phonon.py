@@ -7,7 +7,7 @@ import numpy as np
 
 from vaspin import Poscar
 from vaspin.io import read_phonon
-from vaspin.types import FloatArray, IntArray
+from vaspin.types import FloatArray, IntArray, PathType
 from vaspin.utils.constants import ENERGY_UNITS
 from vaspin.utils.datatype import PhoData
 
@@ -23,7 +23,7 @@ class Phonon:
         self.mass = phodata.mass
 
     @classmethod
-    def from_file(cls, phononfile: str, posfile: str) -> Self:
+    def from_file(cls, phononfile: PathType, posfile: PathType) -> Self:
         """Create a Phonon object from an OUTCAR file
 
         Args:

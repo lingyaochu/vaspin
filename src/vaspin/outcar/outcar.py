@@ -4,6 +4,7 @@ import os
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Type
 
+from vaspin.types import PathType
 from vaspin.utils.datatype import SymTensor
 
 
@@ -420,15 +421,15 @@ class SitePotHandler(InfoHandler):
 class VaspOutcarParser:
     """Parses VASP OUTCAR files using a modular handler system."""
 
-    def __init__(self, outcar_path: str):
+    def __init__(self, outcar_path: PathType):
         """Initialize the parser with the path to the OUTCAR file."""
-        if not isinstance(outcar_path, str):
-            raise TypeError("The OUTCAR path must be a string.")
+        if not isinstance(outcar_path, PathType):
+            raise TypeError("The OUTCAR path must be a string or Path")
 
         if not os.path.isfile(outcar_path):
             raise FileNotFoundError(f"File not found: {outcar_path}")
 
-        self.outcar_path: str = outcar_path
+        self.outcar_path: PathType = outcar_path
         self.data: Dict[str, Any] = {}
         self._state: ParserState = ParserState()
         # Register handler instances

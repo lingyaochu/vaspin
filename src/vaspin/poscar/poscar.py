@@ -14,7 +14,7 @@ from typing import List, Literal, Self, Tuple
 import numpy as np
 
 from vaspin.io import read_poscar, write_poscar
-from vaspin.types import FloatArray, IntArray, StrArray
+from vaspin.types import FloatArray, IntArray, PathType, StrArray
 from vaspin.utils import PosData, StrainTensor, wrap_frac
 
 
@@ -37,7 +37,7 @@ class Poscar:
         self.data = posdata
 
     @classmethod
-    def from_file(cls, filepath: str) -> Self:
+    def from_file(cls, filepath: PathType) -> Self:
         """Create a Poscar object from a json or POSCAR file
 
         Args:
@@ -46,8 +46,8 @@ class Poscar:
         Returns:
             Poscar object
         """
-        if not isinstance(filepath, str):
-            raise TypeError("filepath must be a string")
+        if not isinstance(filepath, PathType):
+            raise TypeError("filepath must be a string or Path")
 
         __data = read_poscar(filepath)
         __data["lattice"] = np.array(__data["lattice"])
@@ -257,7 +257,7 @@ class Poscar:
         lattice: FloatArray | None = None,
         atoms: StrArray | None = None,
         coor_frac: FloatArray | None = None,
-        directory: str = ".",
+        directory: PathType = ".",
         comment: str | None = None,
         name: str = "POSCAR",
     ) -> None:

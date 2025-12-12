@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Iterator, Optional, Self
 
 from vaspin.io import read_incar, write_incar
+from vaspin.types import PathType
 
 from .tags import Tag
 
@@ -54,7 +55,7 @@ class Incar:
             return default
 
     @classmethod
-    def from_file(cls, filepath: str | Path) -> Self:
+    def from_file(cls, filepath: PathType) -> Self:
         """Read INCAR from a file.
 
         Args:
@@ -71,7 +72,7 @@ class Incar:
         incar_data = read_incar(str(path))
         return cls(incar_data)
 
-    def write_incar(self, directory: str = ".", name: str = "INCAR") -> None:
+    def write_incar(self, directory: PathType = ".", name: str = "INCAR") -> None:
         """Write INCAR to a file.
 
         Args:

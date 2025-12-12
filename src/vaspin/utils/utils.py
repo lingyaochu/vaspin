@@ -5,10 +5,10 @@ import os
 
 import numpy as np
 
-from vaspin.types import FloatArray
+from vaspin.types import FloatArray, PathType
 
 
-def createdir(target_dir: str) -> None:
+def createdir(target_dir: PathType) -> None:
     """Create the target directory if it does not exist.
 
     Args:

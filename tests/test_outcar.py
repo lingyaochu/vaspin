@@ -262,7 +262,7 @@ class TestOutcarErrorHandling:
     def test_parser_initialization_with_invalid_path(self):
         """Test that VaspOutcarParser raises TypeError for non-string paths."""
         with pytest.raises(
-            TypeError, match=re.escape("The OUTCAR path must be a string.")
+            TypeError, match=re.escape("The OUTCAR path must be a string or Path")
         ):
             VaspOutcarParser(123)  # type: ignore[arg-type]
 

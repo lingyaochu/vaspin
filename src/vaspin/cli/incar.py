@@ -5,9 +5,10 @@ from typing import Callable
 
 from vaspin import Incar
 from vaspin.incar.validator import IncarValidator
+from vaspin.types import PathType
 
 
-def validate_incar(incar_file: str) -> None:
+def validate_incar(incar_file: PathType) -> None:
     """Check the INCAR file for validity.
 
     Check the INCAR file for common errors and inconsistencies using IncarValidator.
