@@ -476,6 +476,36 @@ class Poscar:
             f"({coor_vac[0]:.3f}, {coor_vac[1]:.3f}, {coor_vac[2]:.3f})",
         )
 
+    def defect_create_int(self, coor_frac: FloatArray, specie: str) -> PosData:
+        """Create an interstitial defect in the POSCAR
+
+        Args:
+            coor_frac: the fractional coordinate to create defect
+            specie: the interstitial atom
+
+        Return:
+            the PosData object with the interstitial defect
+        """
+        exist, _ = self.check_coor(coor_frac)
+        if exist:
+            raise ValueError(
+                "You can't create an interstitial at this site, the site is occupied!"
+            )
+
+        atoms_new = np.append(self.atoms, specie)
+        coor_frac_new = np.vstack((self.coor_frac, coor_frac))
+        species_final, number_final, coor_frac_final = self._species_numbers_coor(
+            atoms_new, coor_frac_new
+        )
+        return PosData(
+            lattice=self.lattice,
+            species=species_final,
+            number=number_final,
+            frac=coor_frac_final,
+            comment=f"{self.comment} {specie}_i at "
+            f"({coor_frac[0]:.3f}, {coor_frac[1]:.3f}, {coor_frac[2]:.3f}",
+        )
+
     def max_sphere_radius(self) -> np.floating:
         """The maximum radius of a sphere that can be inscribed in the unit cell.
 
