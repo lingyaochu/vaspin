@@ -115,7 +115,7 @@ def main():
     """The main logic"""
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-f", "--file", type="str", default="POSCAR", help="The structure file"
+        "-f", "--file", type=str, default="POSCAR", help="The structure file"
     )
     parser.add_argument(
         "-a", "--atom", help="input the dopant symbol, or index counting from 1"
