@@ -115,6 +115,9 @@ def main():
     """The main logic"""
     parser = argparse.ArgumentParser()
     parser.add_argument(
+        "-f", "--file", type="str", default="POSCAR", help="The structure file"
+    )
+    parser.add_argument(
         "-a", "--atom", help="input the dopant symbol, or index counting from 1"
     )
     parser.add_argument(
@@ -147,7 +150,7 @@ def main():
 
     defect_site = args.atom if args.atom else args.position
 
-    pos = Poscar.from_file("POSCAR")
+    pos = Poscar.from_file(args.file)
     defect_coor = get_defect_coor(pos, defect_site)
     local_posdata = get_local_stru(pos, defect_coor, args.dmax)
     local_pos = Poscar(local_posdata)
