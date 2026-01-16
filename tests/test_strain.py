@@ -114,4 +114,4 @@ def test_invalid_value():
     invalid_input = [0.1, 0.2, "invalid_value"]
     match_error = r"All values must be numeric \(int or float\)."
     with pytest.raises(TypeError, match=match_error):
-        StrainTensor.from_sequence(invalid_input)
+        StrainTensor.from_sequence(invalid_input)  # type: ignore

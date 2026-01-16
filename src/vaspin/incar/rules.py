@@ -68,8 +68,8 @@ class ValidationRuleRegistry:
                 )
                 return ValidationResult(level=level, message=msg, name=name)
 
-            wrapper.__doc__ = check_func.__doc__
-            wrapper.__name__ = check_func.__name__
+            wrapper.__name__ = getattr(check_func, "__name__", "unknown_rule")
+            wrapper.__doc__ = getattr(check_func, "__doc__", None)
             wrapper.__module__ = check_func.__module__
             cls._rules[name] = wrapper
             return wrapper

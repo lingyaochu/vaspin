@@ -22,7 +22,9 @@ if TYPE_CHECKING:
 from vaspin.utils.utils import createdir
 
 
-def read_file(filepath: PathType, fallback: Callable[[str], str]) -> dict[str, Any]:
+def read_file(
+    filepath: PathType, fallback: Callable[[PathType], str]
+) -> dict[str, Any]:
     """The general method to read a file
 
     The file should be a json file
@@ -224,7 +226,7 @@ def incar_to_json(filepath: PathType) -> str:
         JSON formatted string
     """
     try:
-        incar_lines = filepath.read_text().splitlines()
+        incar_lines = Path(filepath).read_text().splitlines()
     except (OSError, ValueError) as e:
         raise ValueError(f"Cannot parse INCAR file {filepath}: {e}") from e
 
