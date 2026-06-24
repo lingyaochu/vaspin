@@ -269,7 +269,9 @@ class TestOutcarErrorHandling:
     def test_parser_initialization_with_nonexistent_file(self, tmp_path):
         """Test that VaspOutcarParser raises FileNotFoundError for non-existent file."""
         outcar_file = tmp_path / "OUTCAR"
-        with pytest.raises(FileNotFoundError, match=f"File not found: {outcar_file}"):
+        with pytest.raises(
+            FileNotFoundError, match=re.escape(f"File not found: {outcar_file}")
+        ):
             VaspOutcarParser(outcar_file)
 
     def test_set_handlers_with_empty_list(self, tmp_path):
